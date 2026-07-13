@@ -19,7 +19,7 @@
   --font-sans: 'Assistant', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   
   /* Layout */
-  --max-width: 900px;
+  --max-width: 1080px;
 }
 
 [data-theme="dark"] {
@@ -145,6 +145,7 @@ pre code {
   font-size: 1.15rem;
   text-decoration: none;
   color: var(--text-color);
+  white-space: nowrap;
 }
 
 .logo-accent {
