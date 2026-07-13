@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reinforcement Learning — Romeo Mhakayakora</title>
+  <title>Language Models — Romeo Mhakayakora</title>
   
   <!-- Google Fonts: Lora (Editorial Serif) & Assistant (Clean Sans-serif) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,7 +12,7 @@
   
   <link rel="stylesheet" href="style.css">
 </head>
-<body data-page="rl">
+<body data-page="lm">
 
   <!-- Header / Navigation -->
   <header class="header">
@@ -21,8 +21,8 @@
       <nav class="nav">
         <a href="index.html" class="nav-link">Home</a>
         <a href="projects.html" class="nav-link">Projects</a>
-        <a href="rl.html" class="nav-link active">RL</a>
-        <a href="lm.html" class="nav-link">Language Models</a>
+        <a href="rl.html" class="nav-link">RL</a>
+        <a href="lm.html" class="nav-link active">Language Models</a>
         <a href="blogs.html" class="nav-link">Blogs</a>
         <a href="courses.html" class="nav-link">Courses</a>
         <a href="papers.html" class="nav-link">Papers</a>
@@ -41,82 +41,70 @@
     <!-- Page Header -->
     <header class="page-header">
       <span class="page-label">Research & Core Focus</span>
-      <h1 class="page-title">Reinforcement Learning</h1>
-      <p class="page-subtitle">Centralized logs tracking my alignment research, agentic architectures, and landmark papers.</p>
+      <h1 class="page-title">Language Models</h1>
+      <p class="page-subtitle">Exploring architectures, scaling laws, pre-training dynamics, and inference optimization across both LLMs and SLMs.</p>
     </header>
 
-    <!-- Section 1: Blogs & Deep Dives -->
+    <!-- Section 1: SLMs vs LLMs -->
     <section class="section-compact">
       <div class="section-header-sub">
-        <h3 class="section-title-sub">RL Blogs & Deep Dives</h3>
+        <h3 class="section-title-sub">Architectures & Scope</h3>
       </div>
-      <div class="blogs-list">
-        <div class="paper-item-empty" style="color: var(--text-muted); font-style: italic; padding: 1.5rem 0; font-size: 0.95rem;">
-          Reinforcement Learning alignment and agentic policy write-ups coming soon.
-        </div>
-      </div>
+      <p style="font-family: var(--font-sans); color: var(--text-muted); line-height: 1.6; margin-bottom: 1.5rem; font-size: 0.98rem;">
+        Modern language modeling spans multiple design regimes. While Large Language Models (LLMs) push the envelope on emergent capabilities and complex reasoning, Small Language Models (SLMs) focus on high-efficiency execution, specialized domains, and deployment on edge devices. My focus is on the training, distillation, and quantization methods that allow compact architectures to retain high cognitive capabilities.
+      </p>
     </section>
 
-    <!-- Section 2: Landmark Literature -->
+    <!-- Section 2: Write-ups & Projects -->
     <section class="section-compact" style="padding-top: 0;">
       <div class="section-header-sub">
-        <h3 class="section-title-sub">Landmark Literature Reading Log</h3>
+        <h3 class="section-title-sub">LM Projects & Codebases</h3>
       </div>
       <div class="papers-list">
-
-        <!-- Paper: OpenClaw-RL -->
+        
+        <!-- Project 1: build-slm-from-scratch -->
         <div class="paper-item" style="padding-top: 0; border-top: none;">
           <div class="paper-meta">
-            <span class="paper-category">Agentic RL</span>
+            <span class="paper-category">Efficient LM</span>
             <span class="paper-year">2026</span>
           </div>
           <h4 class="paper-title">
-            <a href="https://arxiv.org/abs/2603.10165" target="_blank" rel="noopener">
-              OpenClaw-RL: Train Any Agent Simply by Talking
+            <a href="https://github.com/romeo-mhakayakora/build-slm-from-scratch" target="_blank" rel="noopener">
+              build-slm-from-scratch: Training compact models
             </a>
           </h4>
-          <p class="paper-authors">Yinjie Wang, Xuyang Chen, Xiaolong Jin, Mengdi Wang, Ling Yang (Princeton University)</p>
-          <p class="paper-summary">Introduces a fully asynchronous reinforcement learning framework that optimizes agent policies in real-time during live deployment. Decouples serving, execution, reward judging, and training loops, leveraging scalar Process Reward Models and token-level Hindsight-Guided On-Policy Distillation.</p>
-        </div>
-
-        <!-- Paper: On-Policy Distillation -->
-        <div class="paper-item">
-          <div class="paper-meta">
-            <span class="paper-category">RL Distillation</span>
-            <span class="paper-year">2025</span>
-          </div>
-          <h4 class="paper-title">
-            <a href="https://thinkingmachines.ai/blog/on-policy-distillation" target="_blank" rel="noopener">
-              On-Policy Distillation
-            </a>
-          </h4>
-          <p class="paper-authors">Kevin Lu, Thinking Machines Lab</p>
-          <p class="paper-summary">On-policy distillation optimizes student LLM policies by evaluating student rollouts against a fixed teacher using token-level reverse KL divergence. This eliminates compounding off-policy evaluation errors, providing a dense training signal that matches RL reasoning performance at a fraction of the compute cost.</p>
+          <p class="paper-authors">Romeo Mhakayakora</p>
+          <p class="paper-summary">A step-by-step implementation of custom small language model training pipelines, detailing tokenizer choices, RoPE embeddings, group-query attention (GQA), and optimized pre-training configurations for models under 1B parameters.</p>
         </div>
 
       </div>
     </section>
 
-    <!-- Section 3: Recommended Paths -->
+    <!-- Section 3: Recommended Reading -->
     <section class="section-compact" style="padding-top: 0;">
       <div class="section-header-sub">
-        <h3 class="section-title-sub">Academic Learning Path</h3>
+        <h3 class="section-title-sub">Landmark Literature & Reference Logs</h3>
       </div>
-      <div class="courses-grid" style="grid-template-columns: 1fr;">
-        
-        <!-- Course: RL for LLM Alignment -->
-        <div class="course-card">
-          <span class="card-badge">RL Alignment</span>
-          <h4 class="card-title">RL for LLM Alignment & Agentic Safety</h4>
-          <p class="card-description">
-            A curated curriculum covering human preference elicitation, reward model training, PPO policy optimization, and agentic reasoning safety bounds.
-          </p>
-          <a href="/knowledge/ai/" class="card-link" target="_blank" rel="noopener">View Syllabus</a>
+      <div class="papers-list">
+
+        <!-- Paper 1: SmolLM2 -->
+        <div class="paper-item" style="padding-top: 0; border-top: none;">
+          <div class="paper-meta">
+            <span class="paper-category">SLM Architectures</span>
+            <span class="paper-year">2024</span>
+          </div>
+          <h4 class="paper-title">
+            <a href="https://arxiv.org/abs/2412.01633" target="_blank" rel="noopener">
+              SmolLM2: Why Data Beats Parameters for Small Scale Models
+            </a>
+          </h4>
+          <p class="paper-authors">Hugging Face Content Team</p>
+          <p class="paper-summary">Demonstrates that carefully curated datasets allow extremely small models (135M, 360M, and 1.7B params) to outperform larger models by training on multiple tokens per parameter and optimizing data mixtures for reasoning and instruction following.</p>
         </div>
 
       </div>
     </section>
-
+    
   </main>
 
   <!-- Footer -->
