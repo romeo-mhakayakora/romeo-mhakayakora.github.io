@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blogs — Romeo Mhakayakora</title>
+  
+  <!-- Google Fonts: Lora (Editorial Serif) & Assistant (Clean Sans-serif) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="blogs">
+
+  <!-- Header / Navigation -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">Romeo Mhakayakora <span class="logo-accent">/></span></a>
+      <nav class="nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="projects.html" class="nav-link">Projects</a>
+        <a href="blogs.html" class="nav-link active">Blogs</a>
+        <a href="courses.html" class="nav-link">Courses</a>
+        <a href="papers.html" class="nav-link">Papers</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+        <button id="theme-toggle" class="theme-btn" aria-label="Toggle dark mode">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+    
+    <!-- Page Header -->
+    <header class="page-header">
+      <span class="page-label">03 // Writing</span>
+      <h1 class="page-title">Blogs</h1>
+      <p class="page-subtitle">Deep dives into reinforcement learning alignment, GPU acceleration stalls, and distributed algorithms.</p>
+    </header>
+
+    <!-- Section 1: Deep Learning -->
+    <section class="section-compact">
+      <div class="section-header-sub">
+        <h3 class="section-title-sub">Deep Learning</h3>
+      </div>
+      
+      <div class="blog-subtopic-header" style="font-family: var(--font-sans); font-size: 0.82rem; font-weight: 700; text-transform: uppercase; color: var(--accent-color); letter-spacing: 0.08em; margin: 0 0 1.2rem 0; border-bottom: 1px solid rgba(170, 170, 170, 0.12); padding-bottom: 0.35rem;">
+        Subtopic // Numerical Computation
+      </div>
+
+      <div class="blogs-list">
+        
+        <!-- Blog 1: Why Your AI Model Is Silently Breaking -->
+        <article class="blog-item" style="padding-top: 0; border-top: none;">
+          <div class="blog-meta">
+            <span class="blog-date">July 13, 2026</span>
+            <span class="blog-category">Numerical Computation</span>
+          </div>
+          <h4 class="blog-title">
+            <a href="blogs/why-your-ai-model-is-silently-breaking.html">Part 1 &mdash; Why Your AI Model Is Silently Breaking: Underflow, Overflow, and the Hidden World of Numerical Computation</a>
+          </h4>
+          <p class="blog-description">
+            How floating-point arithmetic, underflow, and overflow silently destroy machine learning models in production, and how stable softmax and log-softmax functions address them.
+          </p>
+        </article>
+
+        <!-- Blog 2: When Your Matrix Is a Ticking Time Bomb -->
+        <article class="blog-item">
+          <div class="blog-meta">
+            <span class="blog-date">June 28, 2026</span>
+            <span class="blog-category">Numerical Computation</span>
+          </div>
+          <h4 class="blog-title">
+            <a href="blogs/poor-conditioning-matrix-time-bomb.html">Part 2 &mdash; When Your Matrix Is a Ticking Time Bomb: Poor Conditioning and Why It Haunts ML</a>
+          </h4>
+          <p class="blog-description">
+            The mathematical proof that your data can amplify rounding errors by a million times, and how regularization, feature scaling, and BatchNorm mitigate it.
+          </p>
+        </article>
+
+        <!-- Blog 3: The Compass and the Terrain -->
+        <article class="blog-item">
+          <div class="blog-meta">
+            <span class="blog-date">July 6, 2026</span>
+            <span class="blog-category">Numerical Computation</span>
+          </div>
+          <h4 class="blog-title">
+            <a href="blogs/compass-and-terrain-gradient-descent.html">Part 3 &mdash; The Compass and the Terrain: Why Gradient Descent Gets Stuck</a>
+          </h4>
+          <p class="blog-description">
+            The mathematical proof that the negative gradient direction is the steepest descent direction, and why critical points like saddle surfaces present obstacles in high dimensions.
+          </p>
+        </article>
+
+        <!-- Blog 4: The Shape of the Valley -->
+        <article class="blog-item">
+          <div class="blog-meta">
+            <span class="blog-date">July 13, 2026</span>
+            <span class="blog-category">Numerical Computation</span>
+          </div>
+          <h4 class="blog-title">
+            <a href="blogs/shape-of-the-valley-jacobian-hessian.html">Part 4 &mdash; The Shape of the Valley: Jacobian, Hessian, and the Geometry of Curvature</a>
+          </h4>
+          <p class="blog-description">
+            Why the gradient is blind, the Hessian sees, and Newton's method jumps to the bottom of the landscape in a single step using second-order adaptation.
+          </p>
+        </article>
+
+        <!-- Blog 5: The Invisible Walls -->
+        <article class="blog-item">
+          <div class="blog-meta">
+            <span class="blog-date">July 13, 2026</span>
+            <span class="blog-category">Numerical Computation</span>
+          </div>
+          <h4 class="blog-title">
+            <a href="blogs/invisible-walls-constrained-optimization.html">Part 5 &mdash; The Invisible Walls: Constrained Optimization and the Geometry of the Possible</a>
+          </h4>
+          <p class="blog-description">
+            Why the best solution often lives on a wall, and how the KKT conditions tell you exactly which wall using duality and Lagrange multipliers.
+          </p>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- Section 2: Distributed Systems -->
+    <section class="section-compact" style="padding-top: 0;">
+      <div class="section-header-sub">
+        <h3 class="section-title-sub">Distributed Systems</h3>
+      </div>
+
+      <div class="blog-subtopic-header" style="font-family: var(--font-sans); font-size: 0.82rem; font-weight: 700; text-transform: uppercase; color: var(--accent-color); letter-spacing: 0.08em; margin: 0 0 1.2rem 0; border-bottom: 1px solid rgba(170, 170, 170, 0.12); padding-bottom: 0.35rem;">
+        Subtopic // Consensus Engines
+      </div>
+
+      <div class="blogs-list">
+        <div class="paper-item-empty" style="color: var(--text-muted); font-style: italic; padding: 1.5rem 0; font-size: 0.95rem;">
+          Distributed consensus and scale deep-dives coming soon.
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <p class="footer-copy">&copy; 2026 Romeo Mhakayakora. Designed with an editorial aesthetic.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

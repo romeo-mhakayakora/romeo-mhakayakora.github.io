@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Romeo Mhakayakora — Portfolio Portal</title>
+  <meta name="description" content="Personal portal and digital garden of Romeo Mhakayakora. Tracing reinforcement learning, high-performance computing, distributed and decentralized systems.">
+  
+  <!-- Google Fonts: Lora (Editorial Serif) & Assistant (Clean Sans-serif) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="home">
+
+  <!-- Header / Navigation -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">Romeo Mhakayakora <span class="logo-accent">/></span></a>
+      <nav class="nav">
+        <a href="index.html" class="nav-link active">Home</a>
+        <a href="projects.html" class="nav-link">Projects</a>
+        <a href="rl.html" class="nav-link">RL</a>
+        <a href="blogs.html" class="nav-link">Blogs</a>
+        <a href="courses.html" class="nav-link">Courses</a>
+        <a href="papers.html" class="nav-link">Papers</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+        <button id="theme-toggle" class="theme-btn" aria-label="Toggle dark mode">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+    
+    <!-- Hero / About Section -->
+    <section class="hero">
+      <div class="hero-inner-layout">
+        <div class="hero-image-wrapper">
+          <img src="profile.png" alt="Romeo Mhakayakora" class="hero-profile-img">
+        </div>
+        <div class="hero-content">
+          <span class="hero-badge">Systems & RL Student</span>
+          <h1 class="hero-title">Hey, I am <em>Romeo</em>.</h1>
+          <p class="hero-subtitle">
+            I am a student focused on <em>reinforcement learning</em>, building my knowledge in <em>distributed systems</em> and <em>CUDA C++</em>. I document my learning path across agent alignment and high-performance systems.
+          </p>
+          <div class="hero-actions">
+            <a href="projects.html" class="btn btn-primary">View Projects</a>
+            <a href="/knowledge/" class="btn btn-secondary" target="_blank" rel="noopener">Explore Knowledge</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Digital Garden Card Highlight -->
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-label">01 // Digital Garden</h2>
+        <h3 class="section-title">Knowledge Wiki</h3>
+      </div>
+      <div class="knowledge-card">
+        <div class="knowledge-card-body">
+          <span class="card-badge">Live Wiki</span>
+          <h4 class="card-title">My Personal Knowledge Repository</h4>
+          <p class="card-description">
+            A structured wiki documenting my notes, derivations, and system designs. Spanning reinforcement learning alignment, distributed algorithms, and CUDA C++ optimizations.
+          </p>
+          <a href="/knowledge/" class="card-link" target="_blank" rel="noopener">
+            Explore the Wiki 
+            <svg class="link-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Previews Grid (Split columns on desktop for projects & blogs) -->
+    <section class="section">
+      <div class="split-preview-grid">
+        
+        <!-- Left: Recent Writing -->
+        <div class="preview-column">
+          <div class="section-header-compact">
+            <h3 class="section-title-compact">Recent Writing</h3>
+            <a href="blogs.html" class="view-all-link">All posts &rarr;</a>
+          </div>
+          <div class="blogs-list-compact">
+            <article class="blog-item-compact">
+              <span class="blog-date-compact">July 13, 2026</span>
+              <h4 class="blog-title-compact"><a href="blogs/invisible-walls-constrained-optimization.html">The Invisible Walls: Constrained Optimization</a></h4>
+            </article>
+            <article class="blog-item-compact">
+              <span class="blog-date-compact">July 13, 2026</span>
+              <h4 class="blog-title-compact"><a href="blogs/shape-of-the-valley-jacobian-hessian.html">The Shape of the Valley: Curvature & Hessian</a></h4>
+            </article>
+            <article class="blog-item-compact">
+              <span class="blog-date-compact">July 13, 2026</span>
+              <h4 class="blog-title-compact"><a href="blogs/why-your-ai-model-is-silently-breaking.html">Why Your AI Model Is Silently Breaking: Underflow & Overflow</a></h4>
+            </article>
+          </div>
+        </div>
+
+        <!-- Right: Featured Projects -->
+        <div class="preview-column">
+          <div class="section-header-compact">
+            <h3 class="section-title-compact">Featured Projects</h3>
+            <a href="projects.html" class="view-all-link">All projects &rarr;</a>
+          </div>
+          <div class="blogs-list-compact">
+            <article class="blog-item-compact">
+              <span class="blog-date-compact">RL Alignment / Transformers</span>
+              <h4 class="blog-title-compact"><a href="projects.html">RLHF & RLAIF Alignment Engines</a></h4>
+            </article>
+            <article class="blog-item-compact">
+              <span class="blog-date-compact">HPC & Distributed / Go</span>
+              <h4 class="blog-title-compact"><a href="projects.html">Consensus & Compute Engines</a></h4>
+            </article>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <p class="footer-copy">&copy; 2026 Romeo Mhakayakora. Designed with an editorial aesthetic.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

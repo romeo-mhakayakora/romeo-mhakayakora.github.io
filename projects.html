@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects — Romeo Mhakayakora</title>
+  
+  <!-- Google Fonts: Lora (Editorial Serif) & Assistant (Clean Sans-serif) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="projects">
+
+  <!-- Header / Navigation -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">Romeo Mhakayakora <span class="logo-accent">/></span></a>
+      <nav class="nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="projects.html" class="nav-link active">Projects</a>
+        <a href="rl.html" class="nav-link">RL</a>
+        <a href="blogs.html" class="nav-link">Blogs</a>
+        <a href="courses.html" class="nav-link">Courses</a>
+        <a href="papers.html" class="nav-link">Papers</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+        <button id="theme-toggle" class="theme-btn" aria-label="Toggle dark mode">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+    
+    <!-- Page Header -->
+    <header class="page-header">
+      <span class="page-label">02 // Selected Works</span>
+      <h1 class="page-title">Projects</h1>
+      <p class="page-subtitle">A collection of systems implementations and experimental models built to solidify theory.</p>
+    </header>
+
+    <!-- Projects Grid -->
+    <section class="section-compact">
+      <div class="projects-grid">
+        
+        <!-- Project 1: Knowledge Wiki -->
+        <div class="project-card">
+          <div class="project-card-header">
+            <span class="card-badge">Static Site / Python</span>
+            <h4 class="card-title">Knowledge Wiki</h4>
+            <p class="card-description">
+              MkDocs Material learning site built with custom plugins for automated wiki-linking, backlink maps, and resizable layout structures.
+            </p>
+          </div>
+          <a href="https://github.com/romeo-mhakayakora/knowledge" class="card-link" target="_blank" rel="noopener">GitHub Repo</a>
+        </div>
+
+        <!-- Project 2: RLHF & RLAIF Alignment Engines -->
+        <div class="project-card">
+          <div class="project-card-header">
+            <span class="card-badge">RL Alignment / Transformers</span>
+            <h4 class="card-title">RLHF & RLAIF Engines</h4>
+            <p class="card-description">
+              Implementations of Reinforcement Learning from Human Feedback (PPO) and AI Feedback (RLAIF) alignment pipelines, optimizing Llama policy agents against reward models in PyTorch.
+            </p>
+          </div>
+          <a href="#" class="card-link">Learn More</a>
+        </div>
+
+        <!-- Project 3: HPC & Distributed Systems -->
+        <div class="project-card">
+          <div class="project-card-header">
+            <span class="card-badge">HPC & Distributed / Go & CUDA</span>
+            <h4 class="card-title">Consensus & Compute</h4>
+            <p class="card-description">
+              A distributed Paxos consensus engine written in Go, paired with a custom GPU-accelerated matrix multiplication library written in C++/CUDA.
+            </p>
+          </div>
+          <a href="#" class="card-link">Learn More</a>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <p class="footer-copy">&copy; 2026 Romeo Mhakayakora. Designed with an editorial aesthetic.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+title: 'DHTs: Pastry and Freenet'
+chapter: 03-dhts
+description: Structured peer-to-peer overlays, prefix matching, and adaptive anonymous
+  datastores.
+topics:
+- 01-pastry
+- 02-freenet

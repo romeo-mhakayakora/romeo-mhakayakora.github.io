@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Courses & Paths — Romeo Mhakayakora</title>
+  
+  <!-- Google Fonts: Lora (Editorial Serif) & Assistant (Clean Sans-serif) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="courses">
+
+  <!-- Header / Navigation -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">Romeo Mhakayakora <span class="logo-accent">/></span></a>
+      <nav class="nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="projects.html" class="nav-link">Projects</a>
+        <a href="rl.html" class="nav-link">RL</a>
+        <a href="blogs.html" class="nav-link">Blogs</a>
+        <a href="courses.html" class="nav-link active">Courses</a>
+        <a href="papers.html" class="nav-link">Papers</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+        <button id="theme-toggle" class="theme-btn" aria-label="Toggle dark mode">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+    
+    <!-- Page Header -->
+    <header class="page-header">
+      <span class="page-label">04 // Curated Learning</span>
+      <h1 class="page-title">Courses & Recommended Paths</h1>
+      <p class="page-subtitle">Syllabi outlines and lists of materials I compile to structure study topics.</p>
+    </header>
+
+    <!-- Courses Grid -->
+    <section class="section-compact">
+      <div class="courses-grid">
+        
+        <!-- Course 1: Distributed Algorithms -->
+        <div class="course-card">
+          <span class="card-badge">Distributed Systems</span>
+          <h4 class="card-title">Distributed Algorithms & Consensus</h4>
+          <p class="card-description">
+            A self-guided curriculum exploring logical time, virtual synchrony, replicated data structures (CRDTs), and Paxos/Raft consensus.
+          </p>
+          <a href="/knowledge/computer-science/distributed-systems/" class="card-link" target="_blank" rel="noopener">View Syllabus</a>
+        </div>
+
+        <!-- Course 2: Probability Theory -->
+        <div class="course-card">
+          <span class="card-badge">Mathematics</span>
+          <h4 class="card-title">Probability Theory & Stochastic Processes</h4>
+          <p class="card-description">
+            A rigorous mathematical sequence covering random variables, expectations, transformations, limit theorems, Markov chains, and Poisson processes.
+          </p>
+          <a href="/knowledge/mathematics/probability/" class="card-link" target="_blank" rel="noopener">View Syllabus</a>
+        </div>
+
+        <!-- Course 3: Game Theory -->
+        <div class="course-card">
+          <span class="card-badge">Economics</span>
+          <h4 class="card-title">Game Theory & Strategic Interaction</h4>
+          <p class="card-description">
+            An advanced path covering Nash equilibria, duopoly models, Bayesian games, auctions, repeated interactions, and bargaining theory.
+          </p>
+          <a href="/knowledge/economics/game-theory/" class="card-link" target="_blank" rel="noopener">View Syllabus</a>
+        </div>
+
+        <!-- Course 4: Linear Algebra & ML -->
+        <div class="course-card">
+          <span class="card-badge">Mathematics</span>
+          <h4 class="card-title">Linear Algebra, ML & Quantum Computing</h4>
+          <p class="card-description">
+            Foundational vector spaces, eigen-decomposition, singular value decomposition (SVD), principal component analysis (PCA), and quantum states.
+          </p>
+          <a href="/knowledge/mathematics/linear-algebra-ml-qc/" class="card-link" target="_blank" rel="noopener">View Syllabus</a>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <p class="footer-copy">&copy; 2026 Romeo Mhakayakora. Designed with an editorial aesthetic.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

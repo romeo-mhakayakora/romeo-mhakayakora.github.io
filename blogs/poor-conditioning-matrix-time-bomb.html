@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>When Your Matrix Is a Ticking Time Bomb — Romeo Mhakayakora</title>
+  
+  <!-- Google Fonts: Lora (Editorial Serif) & Assistant (Clean Sans-serif) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  
+  <!-- MathJax for rendering scientific/mathematical notation -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body data-page="blog-post">
+
+  <!-- Header / Navigation (Relative paths) -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="../index.html" class="logo">Romeo Mhakayakora <span class="logo-accent">/></span></a>
+      <nav class="nav">
+        <a href="../index.html" class="nav-link">Home</a>
+        <a href="../projects.html" class="nav-link">Projects</a>
+        <a href="../rl.html" class="nav-link">RL</a>
+        <a href="../blogs.html" class="nav-link active">Blogs</a>
+        <a href="../courses.html" class="nav-link">Courses</a>
+        <a href="../papers.html" class="nav-link">Papers</a>
+        <a href="../contact.html" class="nav-link">Contact</a>
+        <button id="theme-toggle" class="theme-btn" aria-label="Toggle dark mode">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+    
+    <!-- Article Layout -->
+    <article class="post-layout">
+      <header class="post-header">
+        <div class="post-meta-details">
+          <span class="post-category-tag">Deep Learning</span>
+          <span class="post-separator">&bull;</span>
+          <span class="post-date-tag">June 28, 2026</span>
+        </div>
+        <h1 class="post-full-title">Part 2 &mdash; When Your Matrix Is a Ticking Time Bomb: Poor Conditioning and Why It Haunts ML</h1>
+        <p class="post-lead-intro">The mathematical proof that your data can amplify hardware rounding errors by a million times.</p>
+        <div class="post-author-block">
+          <img src="../profile.png" alt="Romeo Mhakayakora" class="post-author-avatar">
+          <div class="post-author-info">
+            <span class="post-author-name">Romeo Mhakayakora</span>
+            <span class="post-author-meta">Systems & RL Student</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Article Body -->
+      <div class="post-body-content">
+        
+        <h2>What Is Conditioning?</h2>
+        <p>
+          Conditioning refers to how rapidly the output of a function changes when its inputs are perturbed slightly. This is arguably the most important concept when you transition from pure, theoretical math on a chalkboard to messy, real-world computation on a GPU. A well-conditioned function tolerates small input errors gracefully. A poorly conditioned function amplifies them catastrophically.
+        </p>
+        <p>
+          Consider the function $f(x) = A^{-1}x$, where $A$ is a square matrix. This function appears everywhere in machine learning: solving linear systems, computing least-squares solutions, and performing the backward pass of gradient descent. Goodfellow defines the condition number of $A$, when $A$ has an eigenvalue decomposition, as the ratio of the largest eigenvalue magnitude to the smallest:
+        </p>
+
+        <div class="math-block" style="text-align: center; margin: 1.8rem 0; font-family: var(--font-serif); font-size: 1.15rem; background-color: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; border: 1px solid rgba(170,170,170,0.12);">
+          <strong>Eq. 1 — Condition number as eigenvalue ratio:</strong>
+          $$\kappa(A) = \frac{|\lambda_{\max}|}{|\lambda_{\min}|}$$
+        </div>
+
+        <p>
+          When this number is large, matrix inversion is particularly sensitive to error in the input. This sensitivity is an intrinsic property of the matrix itself, not the result of rounding error during matrix inversion. That last sentence is critical. It means you cannot fix poor conditioning by buying a better computer or writing more careful C++ code. The matrix itself is the amplifier.
+        </p>
+
+        <h2>The Tug-of-War: Eigenvalues as Pull Strength</h2>
+        <p>
+          An eigenvalue measures how much a matrix stretches or squashes data in a specific direction. Imagine your matrix as a rope in a tug-of-war. A matrix pulls data in different directions (the eigenvectors), and the strength of the pull in each direction is the eigenvalue. If your largest eigenvalue is $1000$, the matrix stretches data $1000$ times in that direction. If your smallest eigenvalue is $1$, the matrix barely influences data in another direction.
+        </p>
+        <p>
+          The condition number is the ratio of the Giant's strength to the Dwarf's strength. If the Giant pulls at $1000$ and the Dwarf pulls at $1$, the condition number is $1000$. That is a massive power imbalance. Now here is where the damage happens. In machine learning, we often need to invert the matrix (work backward). To invert, you have to precisely reverse the forces: shrink the Giant's pull by $1000$, and amplify the Dwarf's pull by the same factor. If there is even a microscopic rounding error in the Dwarf's direction, the computer has to massively overcompensate to fix it. A tiny $0.001$ input error becomes a $1.0$ error in the solution. The Dwarf has been pulled $50$ metres just to stay in the game, and the required compensation is enormous.
+        </p>
+        <p>
+          Contrast this with a well-conditioned matrix. If the eigenvalues are $60$ and $40$, the condition number is only $1.5$. Both directions have plenty of strength. A microscopic rounding error does not require massive overcompensation. The computer finds the correct solution reliably.
+        </p>
+
+        <div class="math-block" style="text-align: center; margin: 1.8rem 0; font-family: var(--font-serif); font-size: 1.15rem; background-color: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; border: 1px solid rgba(170,170,170,0.12);">
+          <strong>Eq. 2 — Poorly conditioned: error amplification = 1000x:</strong>
+          $$\kappa(A) = \frac{1000}{1} = 1000$$
+        </div>
+
+        <div class="math-block" style="text-align: center; margin: 1.8rem 0; font-family: var(--font-serif); font-size: 1.15rem; background-color: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; border: 1px solid rgba(170,170,170,0.12);">
+          <strong>Eq. 3 — Well conditioned: error amplification = 1.5x:</strong>
+          $$\kappa(A) = \frac{60}{40} = 1.5$$
+        </div>
+
+        <h2>The Worst Case: The Singular Matrix</h2>
+        <p>
+          If the smallest eigenvalue is exactly $0$, the condition number is infinity. The matrix has squashed an entire dimension of your data into a point of zero size. This is called a singular matrix, and it is non-invertible. Trying to invert it is mathematically equivalent to dividing by zero. In the tug-of-war analogy, the Dwarf is dead. No amount of compensation can revive a pull strength of zero.
+        </p>
+
+        <div class="math-block" style="text-align: center; margin: 1.8rem 0; font-family: var(--font-serif); font-size: 1.15rem; background-color: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; border: 1px solid rgba(170,170,170,0.12);">
+          <strong>Eq. 4 — Singular matrix: condition number is infinite:</strong>
+          $$\kappa(A) = \frac{|\lambda_{\max}|}{0} = \infty$$
+        </div>
+
+        <h2>The Proof: Why Error Explodes</h2>
+        <p>
+          The danger of poor conditioning is not an empirical observation. It is a rigorously proven theorem in numerical linear algebra. Let us walk through the proof step by step. Consider the standard problem of solving a system of linear equations:
+        </p>
+
+        <div class="math-block" style="text-align: center; margin: 1.8rem 0; font-family: var(--font-serif); font-size: 1.15rem; background-color: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; border: 1px solid rgba(170,170,170,0.12);">
+          <strong>Eq. 5 — The linear system:</strong>
+          $$Ax = b$$
+        </div>
+
+        <p>
+          Here $A$ is your matrix (data or weights), $x$ is the true solution, and $b$ is the output vector. Because a computer has rounding errors, you can never store the exact $b$. You are always storing $b + \Delta b$. Because $b$ has a tiny error, the solution the computer finds will not be the perfect $x$. It will be $x + \Delta x$. So the computer is actually solving:
+        </p>
+
+        <div class="math-block" style="text-align: center; margin: 1.8rem 0; font-family: var(--font-serif); font-size: 1.15rem; background-color: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; border: 1px solid rgba(170,170,170,0.12);">
+          <strong>Eq. 6 — Perturbed system:</strong>
+          $$A(x + \Delta x) = b + \Delta b$$
+        </div>
+
+        <p>
+          Expanding the left side: $Ax + A \Delta x = b + \Delta b$. Since we defined $Ax = b$, we subtract those out, leaving the core relationship between the errors:
+        </p>
+
+        <div class="math-block" style="text-align: center; margin: 1.8rem 0; font-family: var(--font-serif); font-size: 1.15rem; background-color: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; border: 1px solid rgba(170,170,170,0.12);">
+          <strong>Eq. 7 — Error propagation:</strong>
+          $$A \Delta x = \Delta b$$
+        </div>
+
+        <p>
+          To find the error in the solution, multiply both sides by $A^{-1}$: $\Delta x = A^{-1} \Delta b$. Taking norms (magnitudes) of both sides, and applying the submultiplicative property of matrix norms, we get the absolute error bound:
+        </p>
+
+        <div class="math-block" style="text-align: center; margin: 1.8rem 0; font-family: var(--font-serif); font-size: 1.15rem; background-color: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; border: 1px solid rgba(170,170,170,0.12);">
+          <strong>Eq. 8 — Absolute error bound:</strong>
+          $$\|\Delta x\| \leq \|A^{-1}\| \|\Delta b\|$$
+        </div>
+
+        <p>
+          Now comes the crucial step. We rearrange to look at the relative error (error as a fraction of the solution magnitude). Combining the error equation with the original $Ax = b$, and applying norm inequalities, we arrive at the foundational theorem of numerical conditioning:
+        </p>
+
+        <div class="math-block" style="text-align: center; margin: 1.8rem 0; font-family: var(--font-serif); font-size: 1.15rem; background-color: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; border: 1px solid rgba(170,170,170,0.12);">
+          <strong>Eq. 9 — Relative error bound conditioning theorem:</strong>
+          $$\frac{\|\Delta x\|}{\|x\|} \leq \left(\|A\| \|A^{-1}\|\right) \frac{\|\Delta b\|}{\|b\|} = \kappa(A) \frac{\|\Delta b\|}{\|b\|}$$
+        </div>
+
+        <p>
+          The term $(\|A\| \|A^{-1}\|)$ is defined as the condition number, written as $\kappa(A)$. This equation proves the danger in plain English: <strong>Relative Solution Error is at most Condition Number times Relative Input Error.</strong> If $\kappa$ is $2$ and your rounding error is $0.001\%$, your solution error is at most $0.002\%$. Fine. If $\kappa$ is $1,000,000$ and your rounding error is $0.001\%$, your solution error can be up to $1,000\%$. The condition number acts as a pure, mathematical amplifier on hardware rounding errors. This is not a bug. This is a theorem.
+        </p>
+
+        <h2>Why This Is an Intrinsic Property</h2>
+        <p>
+          Goodfellow makes a crucial distinction: this sensitivity is an intrinsic property of the matrix itself, not the result of rounding error during matrix inversion. Even if you had a magical quantum computer that made zero calculation errors, a poorly conditioned matrix would still destroy your answer. Why? Because the raw data you feed into the computer already has errors from measurement, sensor noise, or the finite precision of storage. The matrix amplifies those pre-existing errors. In practice, the error is compounded further by numerical errors in the inversion process itself, making the situation even worse.
+        </p>
+
+        <h2>How We Fix Poor Conditioning</h2>
+        <p>
+          We do not just calculate harder. We fundamentally change the game so that the Giant and the Dwarf have roughly equal power. Here are the four principal techniques used in production machine learning systems.
+        </p>
+
+        <h3>1. Feature Normalization (The Equalizer)</h3>
+        <p>
+          If your data has one feature ranging from $0$ to $1$ and another from $0$ to $1,000,000$, your matrix will automatically be poorly conditioned. The solution is to standardize the data: subtract the mean and divide by the standard deviation for each feature column. This forces every input column to have a mean of $0$ and a variance of $1$. In the tug-of-war analogy, you are making sure the Giant and the Dwarf wear the same shoes and have similar fitness levels before the match starts. No single input dimension dominates the others.
+        </p>
+
+        <h3>2. L2 Regularization / Weight Decay (The Dwarf Boost)</h3>
+        <p>
+          A matrix is poorly conditioned when some eigenvalues are near zero. L2 regularization adds a small penalty term $\alpha$ to the diagonal of the matrix. In eigenvalue terms, this shifts every eigenvalue upward:
+        </p>
+
+        <div class="math-block" style="text-align: center; margin: 1.8rem 0; font-family: var(--font-serif); font-size: 1.15rem; background-color: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; border: 1px solid rgba(170,170,170,0.12);">
+          <strong>Eq. 10 — L2 regularization shifts eigenvalues away from zero:</strong>
+          $$\lambda_i(A + \alpha I) = \lambda_i(A) + \alpha$$
+        </div>
+
+        <p>
+          If your smallest eigenvalue was $0.001$ (nearly singular), adding $\alpha = 0.1$ changes it to $0.101$, dramatically improving the condition number. You are giving the Dwarf a motorized boost. Even if he was nearly powerless, he now has enough strength that the matrix is not singular. This is why Ridge Regression is fundamentally more numerically stable than plain least squares.
+        </p>
+
+        <h3>3. Batch Normalization (The Constant Coach)</h3>
+        <p>
+          In a deep neural network, the distributions of layer outputs shift during training, causing the weight matrices of subsequent layers to become progressively more poorly conditioned. Batch Normalization, introduced by Ioffe and Szegedy in 2015, inserts a normalization layer between network layers. For each mini-batch of $m$ samples, it computes the batch mean and variance, then normalizes:
+        </p>
+
+        <div class="math-block" style="text-align: center; margin: 1.8rem 0; font-family: var(--font-serif); font-size: 1.15rem; background-color: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; border: 1px solid rgba(170,170,170,0.12);">
+          <strong>Eq. 11 — Batch mean:</strong>
+          $$\mu_B = \frac{1}{m} \sum_{i=1}^m x_i$$
+        </div>
+
+        <div class="math-block" style="text-align: center; margin: 1.8rem 0; font-family: var(--font-serif); font-size: 1.15rem; background-color: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; border: 1px solid rgba(170,170,170,0.12);">
+          <strong>Eq. 12 — Batch variance:</strong>
+          $$\sigma_B^2 = \frac{1}{m} \sum_{i=1}^m (x_i - \mu_B)^2$$
+        </div>
+
+        <div class="math-block" style="text-align: center; margin: 1.8rem 0; font-family: var(--font-serif); font-size: 1.15rem; background-color: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; border: 1px solid rgba(170,170,170,0.12);">
+          <strong>Eq. 13 — Normalized input:</strong>
+          $$\hat{x}_i = \frac{x_i - \mu_B}{\sqrt{\sigma_B^2 + \epsilon}}$$
+        </div>
+
+        <p>
+          The $\epsilon$ term in the denominator is a numerical stability trick. If all inputs in the batch are identical, the variance is exactly $0$, and without $\epsilon$ you would have a division by zero. Adding $\epsilon$ (typically $1\text{e-}5$) guarantees the denominator is always nonzero. After normalization, the output is scaled and shifted by learned parameters $\gamma$ and $\beta$:
+        </p>
+
+        <div class="math-block" style="text-align: center; margin: 1.8rem 0; font-family: var(--font-serif); font-size: 1.15rem; background-color: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; border: 1px solid rgba(170,170,170,0.12);">
+          <strong>Eq. 14 — Scale and shift:</strong>
+          $$y_i = \gamma \hat{x}_i + \beta$$
+        </div>
+
+        <p>
+          BatchNorm dynamically keeps the eigenvalues of downstream weight matrices clustered together. It is like a coach standing in the middle of the tug-of-war, forcing the Giant to slow down and giving the Dwarf a breather every single step of training.
+        </p>
+
+        <h3>4. Residual Connections (The Highway)</h3>
+        <p>
+          The breakthrough that allowed networks to go from 20 layers to 1000+ layers (ResNet, He et al. 2016) also has a conditioning interpretation. Instead of computing $f(x)$, a residual block computes $f(x) + x$. The identity matrix $I$ (the $+x$ term) is perfectly conditioned with a condition number of 1. This keeps the overall condition number of the layer transformation close to 1, because the identity component prevents the eigenvalue spectrum from degenerating as depth increases.
+        </p>
+
+        <h2>C++ Implementation: Batch Normalization Kernel</h2>
+        <p>
+          Below is a simplified C++ implementation of a Batch Normalization forward pass, written in the style of PyTorch's ATen backend. The key design decisions mirror what we have discussed: in-place memory operations to avoid allocation overhead, and the epsilon constant to prevent division by zero.
+        </p>
+
+        <pre><code>#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;cmath&gt;
+#include &lt;numeric&gt;
+#include &lt;algorithm&gt;
+#include &lt;iomanip&gt;
+
+using namespace std;
+
+// ─── Batch Normalization Forward Pass ───
+// Written in the style of PyTorch's ATen backend.
+// All operations are in-place on pre-allocated buffers.
+void batch_norm_forward(
+    const vector&lt;float&gt;&amp; input,     // [m] flattened input batch
+    vector&lt;float&gt;&amp; output,          // [m] pre-allocated output
+    float gamma,                    // scale parameter (learned)
+    float beta,                     // shift parameter (learned)
+    float epsilon = 1e-5f           // NUMERICAL STABILITY TRICK
+) {
+    const size_t m = input.size();
+    if (m == 0) return;
+
+    // Step 1: Compute batch mean
+    float mu = accumulate(input.begin(), input.end(), 0.0f) / m;
+
+    // Step 2: Compute batch variance
+    float variance = 0.0f;
+    for (size_t i = 0; i &lt; m; i++) {
+        float diff = input[i] - mu;
+        variance += diff * diff;
+    }
+    variance /= m;
+
+    // Step 3: Compute inverse standard deviation
+    // The epsilon here is the reason this function doesn't crash when variance = 0.
+    float inv_std = 1.0f / sqrtf(variance + epsilon);
+
+    // Step 4: Normalize, scale, and shift (fused)
+    for (size_t i = 0; i &lt; m; i++) {
+        float x_hat = (input[i] - mu) * inv_std;
+        output[i] = gamma * x_hat + beta;
+    }
+}
+
+int main() {
+    // Scenario 1: Well-conditioned data (normalized)
+    vector&lt;float&gt; normalized = {0.2f, -0.8f, 1.1f, -0.3f, 0.5f, -0.7f};
+
+    // Scenario 2: Poorly conditioned data (unnormalized)
+    vector&lt;float&gt; unnormalized = {0.0002f, -0.0008f, 1100.0f, -0.0003f, 0.0005f, -0.0007f};
+
+    vector&lt;float&gt; out_norm(normalized.size());
+    vector&lt;float&gt; out_unnorm(unnormalized.size());
+
+    batch_norm_forward(normalized, out_norm, 1.0f, 0.0f);
+    batch_norm_forward(unnormalized, out_unnorm, 1.0f, 0.0f);
+
+    cout &lt;&lt; fixed &lt;&lt; setprecision(6);
+    cout &lt;&lt; "=== Normalized input (well-conditioned) ===" &lt;&lt; endl;
+    for (auto v : out_norm) cout &lt;&lt; v &lt;&lt; " ";
+    cout &lt;&lt; "\n\n";
+
+    cout &lt;&lt; "=== Unnormalized input (poorly conditioned) ===" &lt;&lt; endl;
+    for (auto v : out_unnorm) cout &lt;&lt; v &lt;&lt; " ";
+    cout &lt;&lt; endl;
+
+    return 0;
+}</code></pre>
+
+        <p>
+          Notice the critical role of epsilon. If your data is constant (all inputs are 1.0), the variance is exactly 0. Without epsilon, you compute 1/sqrt(0), which produces infinity, and every subsequent operation becomes NaN. By adding 1e-5, you guarantee the denominator is at least 0.00001. This is a direct application of the principle of numerical scaling.
+        </p>
+        <p>
+          When you run this program, notice how the normalized data produces clean, well-distributed output values near zero, while the unnormalized data forces BatchNorm to work overtime to compensate for the massive scale imbalance. The mathematics is identical in both cases, but the conditioning of the input matrix determines how much numerical stress the operation endures. In a deep network with hundreds of layers, that stress compounds, and it is the difference between a model that converges and one that diverges to NaN.
+        </p>
+
+      </div>
+    </article>
+    
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <p class="footer-copy">&copy; 2026 Romeo Mhakayakora. Designed with an editorial aesthetic.</p>
+    </div>
+  </footer>
+
+  <script src="../script.js"></script>
+</body>
+</html>

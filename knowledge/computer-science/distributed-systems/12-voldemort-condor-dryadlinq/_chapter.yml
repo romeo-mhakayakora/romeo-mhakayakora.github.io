@@ -1,0 +1,8 @@
+title: Voldemort, Condor, and Microsoft DryadLINQ
+chapter: 12-voldemort-condor-dryadlinq
+description: Industrial key-value routing, high-throughput scheduling, and compiler-integrated
+  dataflow graphs.
+topics:
+- project-voldemort
+- condor-scheduler
+- dryadlinq-execution

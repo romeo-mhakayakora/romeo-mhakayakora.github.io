@@ -1,0 +1,8 @@
+title: Logical Clocks and Mutual Exclusion
+chapter: 04-logical-clocks-mutual-exclusion
+description: Event ordering, causal consistency, vector timestamps, and distributed
+  critical sections.
+topics:
+- logical-clocks
+- vector-clocks
+- mutual-exclusion

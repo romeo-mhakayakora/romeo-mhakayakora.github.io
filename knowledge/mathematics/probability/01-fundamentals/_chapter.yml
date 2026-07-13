@@ -1,0 +1,11 @@
+title: Fundamentals of Probability
+chapter: 01-fundamentals
+description: Basic probability concepts and foundational theorems
+
+topics:
+  - sample-spaces-and-events
+  - probability-axioms
+  - conditional-probability
+  - independence
+  - bayes-theorem
+  - total-probability

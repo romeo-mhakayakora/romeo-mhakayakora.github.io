@@ -1,0 +1,16 @@
+chapter: 12-markov-chains
+title: Markov Chains
+description: Reversible and non-reversible discrete time Markov chains, stationary distributions, and classification of states.
+
+topics:
+  - 11.1-Markov-Property
+  - 11.1.6-Marginal-Distributions
+  - 11.2-State-Classification
+  - 11.2.8-Periodicity
+  - 11.3-Stationary-Distributions
+  - 11.3.5-Existence-Uniqueness
+  - 11.3.6-Convergence
+  - Examples
+  - Questions
+  - Cheat-Sheet
+  - lecture

@@ -1,0 +1,8 @@
+title: Paxos and Raft Consensus Protocols
+chapter: 08-paxos-raft
+description: Multi-Paxos round dynamics, consensus safety, and Raft leader election
+  invariants.
+topics:
+- paxos-consensus
+- raft-consensus
+- consensus-comparison

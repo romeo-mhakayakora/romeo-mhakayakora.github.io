@@ -1,0 +1,8 @@
+title: Distributed MST and the FLP Result
+chapter: 06-dmst-flp
+description: Gallager-Humblet-Spira (GHS) distributed MST, and the limits of asynchronous
+  consensus.
+topics:
+- distributed-mst
+- flp-impossibility
+- consensus-bounds

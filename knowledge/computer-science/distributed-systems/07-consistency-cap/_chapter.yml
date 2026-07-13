@@ -1,0 +1,8 @@
+title: Consistency Models and the CAP Theorem
+chapter: 07-consistency-cap
+description: Linearizability, causal systems, the formal CAP theorem proof, and PACELC
+  trade-offs.
+topics:
+- consistency-models
+- cap-theorem
+- pacelc-theorem

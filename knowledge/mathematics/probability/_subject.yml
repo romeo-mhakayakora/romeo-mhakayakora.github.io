@@ -1,0 +1,30 @@
+name: Probability Theory
+slug: probability
+domain: mathematics
+icon: 🎲
+color: "#8B5CF6"
+
+description: |
+  Foundation of probability, random variables, distributions,
+  and fundamental theorems. Essential for machine learning and statistics.
+
+chapters:
+  - 01-fundamentals
+  - 02-random-variables
+
+estimated_hours: 40
+difficulty: beginner
+
+learning_outcomes:
+  - Understand probability spaces and axioms
+  - Master conditional probability and Bayes' theorem
+  - Work with random variables and distributions
+  - Apply limit theorems
+
+resources:
+  textbook: "Ross - A First Course in Probability"
+  course: "MIT 6.041 - Probabilistic Systems Analysis"
+  videos: "Khan Academy - Probability"
+
+prerequisites: []
+related_subjects: [statistics, information-theory]

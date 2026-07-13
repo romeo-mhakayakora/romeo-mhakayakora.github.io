@@ -1,0 +1,8511 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://romeo-mhakayakora.github.io/knowledge/mathematics/linear-algebra-ml-qc/week-01-vector-spaces-projections/05-orthogonal-vectors-subspaces/">
+      
+      
+        <link rel="prev" href="../04-four-fundamental-subspaces/">
+      
+      
+        <link rel="next" href="../06-projections-onto-subspaces/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>05 — Orthogonal Vectors and Subspaces (Complete) - Knowledge</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#05-orthogonal-vectors-and-subspaces-complete" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Knowledge" class="md-header__button md-logo" aria-label="Knowledge" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Knowledge
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              05 — Orthogonal Vectors and Subspaces (Complete)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/romeo-mhakayakora/knowledge" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    romeo-mhakayakora/knowledge
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Knowledge" class="md-nav__button md-logo" aria-label="Knowledge" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Knowledge
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/romeo-mhakayakora/knowledge" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    romeo-mhakayakora/knowledge
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Welcome
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../_concepts/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+     concepts
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+     concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../_concepts/common-mistakes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Common mistakes
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../_concepts/distributions-cheatsheet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Distributions cheatsheet
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../_concepts/named-distributions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Named distributions
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../_concepts/proof-techniques/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Proof techniques
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../_concepts/r-functions-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    R functions reference
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../ai/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ai
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ai
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../computer-science/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Computer science
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Computer science
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../computer-science/distributed-systems/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Distributed systems
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Distributed systems
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../computer-science/distributed-systems/01-epidemic-gossip/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Communication Between Nodes: Epidemic Protocols and Gossip-Based Protocols
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../computer-science/distributed-systems/02-napster-gnutella/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    First and Second Generation Peer-to-Peer Networks: Napster and Gnutella
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../computer-science/distributed-systems/03-dhts/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 dhts
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_2_4" id="__nav_4_2_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    03 dhts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../computer-science/distributed-systems/03-dhts/01-pastry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Pastry DHT Protocol
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../computer-science/distributed-systems/03-dhts/02-freenet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Freenet Protocol
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../computer-science/distributed-systems/04-logical-clocks-mutual-exclusion/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 logical clocks mutual exclusion
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_2_5" id="__nav_4_2_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    04 logical clocks mutual exclusion
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../computer-science/distributed-systems/04-logical-clocks-mutual-exclusion/logical-clocks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lamport Logical Clocks
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../computer-science/distributed-systems/04-logical-clocks-mutual-exclusion/mutual-exclusion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Distributed Mutual Exclusion Algorithms
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../computer-science/distributed-systems/04-logical-clocks-mutual-exclusion/vector-clocks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vector Clocks and Causality
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../computer-science/distributed-systems/05-distributed-leader-election/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 distributed leader election
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_2_6" id="__nav_4_2_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    05 distributed leader election
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../computer-science/distributed-systems/05-distributed-leader-election/bully-algorithm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Bully Election Algorithm
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../computer-science/distributed-systems/05-distributed-leader-election/lcr-algorithm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The LeLann-Chang-Roberts (LCR) Bound
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../computer-science/distributed-systems/05-distributed-leader-election/ring-election/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ring-Based Election Algorithms
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../computer-science/distributed-systems/06-dmst-flp/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 dmst flp
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_2_7" id="__nav_4_2_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    06 dmst flp
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../computer-science/distributed-systems/06-dmst-flp/consensus-bounds/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Theoretical Bounds on Consensus
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../computer-science/distributed-systems/06-dmst-flp/distributed-mst/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Distributed Minimum Spanning Tree (GHS)
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../computer-science/distributed-systems/06-dmst-flp/flp-impossibility/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The FLP Impossibility Proof
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../computer-science/distributed-systems/07-consistency-cap/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 consistency cap
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_2_8" id="__nav_4_2_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_2_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    07 consistency cap
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../computer-science/distributed-systems/07-consistency-cap/cap-theorem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The CAP Theorem and Proof
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../computer-science/distributed-systems/07-consistency-cap/consistency-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Consistency Models
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../computer-science/distributed-systems/07-consistency-cap/pacelc-theorem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The PACELC Theorem Extension
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../computer-science/distributed-systems/08-paxos-raft/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 paxos raft
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_2_9" id="__nav_4_2_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_2_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    08 paxos raft
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../computer-science/distributed-systems/08-paxos-raft/consensus-comparison/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paxos vs. Raft Comparison
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../computer-science/distributed-systems/08-paxos-raft/paxos-consensus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paxos Consensus Protocol
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../computer-science/distributed-systems/08-paxos-raft/raft-consensus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Raft Consensus Protocol
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../computer-science/distributed-systems/09-byzantine-virtual-synchrony/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 byzantine virtual synchrony
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_2_10" id="__nav_4_2_10_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_2_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    09 byzantine virtual synchrony
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../computer-science/distributed-systems/09-byzantine-virtual-synchrony/byzantine-generals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Byzantine Generals Problem
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../computer-science/distributed-systems/09-byzantine-virtual-synchrony/virtual-synchrony/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Virtual Synchrony
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../computer-science/distributed-systems/10-bitcoin-blockchains/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 bitcoin blockchains
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_2_11" id="__nav_4_2_11_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_2_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    10 bitcoin blockchains
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../computer-science/distributed-systems/10-bitcoin-blockchains/blockchain-mechanics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blockchain Data Structures
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../computer-science/distributed-systems/10-bitcoin-blockchains/proof-of-work/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nakamoto Consensus and Proof of Work
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../computer-science/distributed-systems/11-dynamo-cassandra-percolator/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11 dynamo cassandra percolator
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_2_12" id="__nav_4_2_12_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_2_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    11 dynamo cassandra percolator
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../computer-science/distributed-systems/11-dynamo-cassandra-percolator/amazon-dynamo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon Dynamo
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../computer-science/distributed-systems/11-dynamo-cassandra-percolator/facebook-cassandra/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Facebook Cassandra
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../computer-science/distributed-systems/11-dynamo-cassandra-percolator/google-percolator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Percolator
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2_13" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../computer-science/distributed-systems/12-voldemort-condor-dryadlinq/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12 voldemort condor dryadlinq
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_2_13" id="__nav_4_2_13_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_2_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2_13">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    12 voldemort condor dryadlinq
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../computer-science/distributed-systems/12-voldemort-condor-dryadlinq/condor-scheduler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Condor High Throughput Scheduler
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../computer-science/distributed-systems/12-voldemort-condor-dryadlinq/dryadlinq-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft DryadLINQ
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../computer-science/distributed-systems/12-voldemort-condor-dryadlinq/project-voldemort/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Voldemort (LinkedIn)
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../economics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Economics
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Economics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../economics/game-theory/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Game theory
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Game theory
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../economics/game-theory/01-Introduction-and-Dominance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction and Dominant Strategies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../economics/game-theory/02-Coordination-and-Commons/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Coordination Games and Tragedy of the Commons
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../economics/game-theory/03-Cournot-Duopoly/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cournot Duopoly Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../economics/game-theory/04-Mixed-Strategies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mixed Strategies and MSNE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../economics/game-theory/05-Rationality-and-IESDS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rationality and IESDS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../economics/game-theory/06-Auctions-and-Paradoxes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auctions and Network Paradoxes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../economics/game-theory/07-Extensive-Form-Games/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extensive Form Games
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../economics/game-theory/08-Subgame-Perfection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Subgame Perfect Equilibrium
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../economics/game-theory/09-Stackelberg-Leadership/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stackelberg Leadership Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../economics/game-theory/10-Bayesian-Games/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bayesian Games
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../economics/game-theory/11-Bayesian-Auctions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auctions as Bayesian Games
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../economics/game-theory/12-Evolutionary-Games/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evolutionary Game Theory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../economics/game-theory/13-Repeated-Games/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Repeated Games
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../economics/game-theory/14-Bargaining-Theory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bargaining Theory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../economics/game-theory/15-Incomplete-Information-and-PBE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Incomplete Information and PBE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Mathematics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linear algebra ml qc
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Linear algebra ml qc
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Week 01 vector spaces projections
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6_2_2" id="__nav_6_2_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_6_2_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Week 01 vector spaces projections
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-geometry-linear-equations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01: Geometry of Linear Equations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-column-space-nullspace/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02: Column Space and Nullspace
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-independence-basis-dimension/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03: Independence, Basis, and Dimension
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-four-fundamental-subspaces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04: Four Fundamental Subspaces
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 — Orthogonal Vectors and Subspaces (Complete)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 — Orthogonal Vectors and Subspaces (Complete)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-quick-recap-the-four-fundamental-subspaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. Quick recap: the four fundamental subspaces
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0. Quick recap: the four fundamental subspaces">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-completeness-property-b-p-e" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The completeness property: \(b = p + e\)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-dimensional-real-estate-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The "dimensional real estate" picture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-orthogonal-vectors-proving-the-dot-product-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Orthogonal vectors — proving the dot-product test
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Orthogonal vectors — proving the dot-product test">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-the-dot-product-is-the-right-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why the dot product is the right test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#worked-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-orthogonal-subspaces-why-doesnt-intersect-isnt-enough" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Orthogonal subspaces — why "doesn't intersect" isn't enough
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Orthogonal subspaces — why &#34;doesn&#39;t intersect&#34; isn&#39;t enough">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quick-check-in-mathbbr2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick check in \(\mathbb{R}^2\)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-main-result-row-space-null-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The main result: row space ⊥ null space
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. The main result: row space ⊥ null space">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#worked-example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3a-what-happens-to-the-null-space-piece-when-it-passes-through-a" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3a. What happens to the null-space piece when it passes through \(A\)?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-orthogonal-complements-all-not-just-some" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Orthogonal complements — "all," not just "some"
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-ata-and-least-squares-the-geometric-derivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. \(A^TA\) and least squares — the geometric derivation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. \(A^TA\) and least squares — the geometric derivation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-derivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The derivation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#worked-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-the-full-picture-left-inverse-right-inverse-pseudoinverse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. The full picture: left inverse, right inverse, pseudoinverse
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. The full picture: left inverse, right inverse, pseudoinverse">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-right-inverse-the-minimum-norm-case" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Right inverse — the minimum-norm case
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-rank-deficient-neither-inverse-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Rank-deficient — neither inverse works
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-applied-walkthroughs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Applied walkthroughs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-quick-self-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Quick self-test
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-this-shows-up-later" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where this shows up later
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#questions-things-to-revisit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Questions / things to revisit
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-projections-onto-subspaces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 — Projections onto Subspaces
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-projection-matrices-least-squares/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 — Projection Matrices and Least Squares
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../week-02-eigen-svd/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Week 02 eigen svd
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6_2_3" id="__nav_6_2_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_6_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Week 02 eigen svd
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../week-02-eigen-svd/01-orthogonal-matrices-gram-schmidt/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01: Orthogonal Matrices and Gram-Schmidt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../week-02-eigen-svd/02-eigenvalues-eigenvectors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02: Eigenvalues and Eigenvectors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../week-02-eigen-svd/03-diagonalization-powers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03: Diagonalization and Powers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../week-02-eigen-svd/04-symmetric-positive-definite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04: Symmetric Positive Definite Matrices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../week-02-eigen-svd/05-positive-definite-minima/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05: Positive Definite Matrices and Minima
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../week-02-eigen-svd/06-svd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06: Singular Value Decomposition
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../probability/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Probability
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6_3" id="__nav_6_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Probability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../probability/01-fundamentals/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 fundamentals
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6_3_2" id="__nav_6_3_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_6_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    01 fundamentals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/01-fundamentals/probability-axioms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Probability Axioms
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/01-fundamentals/sample-spaces-and-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sample Spaces and Events
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_3_3" id="__nav_6_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 probability counting
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_6_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    02 probability counting
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/02-probability-counting/exercises/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exercises
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/02-probability-counting/probability-counting-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Probability & Counting
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_3_3_3" id="__nav_6_3_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lectures
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_6_3_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lectures
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/02-probability-counting/lectures/l01-probability-and-counting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Probability and Counting
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/02-probability-counting/lectures/l02-story-proofs-axioms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Story Proofs & Axioms
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/02-probability-counting/lectures/l03-birthday-problem-properties/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Birthday Problem & Properties
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_3_4" id="__nav_6_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 conditional probability
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_6_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    03 conditional probability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/03-conditional-probability/conditional-probability-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conditional Probability
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/03-conditional-probability/exercises/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exercises
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_3_4_3" id="__nav_6_3_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lectures
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_6_3_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lectures
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/03-conditional-probability/lectures/l04-conditional-probability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conditional Probability
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/03-conditional-probability/lectures/l05-conditioning-continued/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conditioning Continued, Law of Total Probability
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_3_5" id="__nav_6_3_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 random variables
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_6_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    04 random variables
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/04-random-variables/00-introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Random Variables and Their Distributions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/04-random-variables/01-random-variables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Random Variables
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/04-random-variables/02-distributions-and-probability-mass-functions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Distributions and Probability Mass Functions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/04-random-variables/03-bernoulli-and-binomial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bernoulli and Binomial Distributions
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/04-random-variables/04-hypergeometric/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hypergeometric Distribution
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/04-random-variables/05-discrete-uniform/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discrete Uniform Distribution
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/04-random-variables/06-cumulative-distribution-functions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cumulative Distribution Functions
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/04-random-variables/07-functions-of-random-variables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Functions of Random Variables
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/04-random-variables/08-independence-of-rvs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Independence of Random Variables
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/04-random-variables/09-connections-between-binomial-and-hypergeometric/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Connections Between Binomial and Hypergeometric
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/04-random-variables/10-recap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Recap
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/04-random-variables/11-r/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    R
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/04-random-variables/12-exercises/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exercises
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_3_6" id="__nav_6_3_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 expectation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_6_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    05 expectation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/05-expectation/00-introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Expectation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/05-expectation/01-definition-of-expectation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Definition of Expectation
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/05-expectation/02-linearity-of-expectation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linearity of Expectation
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/05-expectation/03-geometric-and-negative-binomial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Geometric and Negative Binomial Expectation
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/05-expectation/04-indicator-rvs-and-the-fundamental-bridge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Indicator Random Variables and the Fundamental Bridge
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/05-expectation/05-law-of-the-unconscious-statistician/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Law of the Unconscious Statistician (LOTUS)
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/05-expectation/06-variance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Variance
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/05-expectation/07-poisson/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poisson Distribution
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/05-expectation/08-connections-between-poisson-and-binomial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Connections Between Poisson and Binomial
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/05-expectation/09-using-probability-and-expectation-to-prove-existence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Using Probability and Expectation to Prove Existence
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/05-expectation/10-recap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Recap
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/05-expectation/11-r/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    R
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/05-expectation/12-exercises/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exercises
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_3_7" id="__nav_6_3_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 continuous random variables
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_6_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    06 continuous random variables
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/06-continuous-random-variables/continuous-random-variables-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discrete Uniform, CDF, and Functions of R.V.s
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--complete"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/06-continuous-random-variables/exercises/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exercises
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_3_8" id="__nav_6_3_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 moments
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_6_3_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    07 moments
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/07-moments/exercises/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exercises
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/07-moments/moments-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Moments
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_3_9" id="__nav_6_3_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 joint distributions
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_6_3_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    08 joint distributions
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/08-joint-distributions/exercises/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exercises
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/08-joint-distributions/joint-distributions-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Joint Distributions
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_3_10" id="__nav_6_3_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 transformations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_6_3_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    09 transformations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/09-transformations/exercises/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exercises
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/09-transformations/transformations-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transformations
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_3_11" id="__nav_6_3_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 conditional expectation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_6_3_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    10 conditional expectation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/10-conditional-expectation/conditional-expectation-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conditional Expectation
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/10-conditional-expectation/exercises/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exercises
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_12" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_3_12" id="__nav_6_3_12_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11 inequalities limit theorems
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_6_3_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    11 inequalities limit theorems
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/11-inequalities-limit-theorems/exercises/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exercises
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/11-inequalities-limit-theorems/inequalities-limit-theorems-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inequalities & Limit Theorems
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_13" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../probability/12-markov-chains/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12 markov chains
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6_3_13" id="__nav_6_3_13_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_6_3_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3_13">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    12 markov chains
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/12-markov-chains/11.1-Markov-Property/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Markov Property and Transition Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/12-markov-chains/11.1.6-Marginal-Distributions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Marginal Distribution of X_n
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/12-markov-chains/11.2-State-Classification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Classification of States
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/12-markov-chains/11.2.8-Periodicity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Period of a State
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/12-markov-chains/11.3-Stationary-Distributions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stationary Distributions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/12-markov-chains/11.3.5-Existence-Uniqueness/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solving for Stationary Distributions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/12-markov-chains/11.3.6-Convergence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Convergence to Stationary Distribution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/12-markov-chains/Cheat-Sheet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Markov Chains Cheat Sheet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/12-markov-chains/Examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Worked Examples & Applications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/12-markov-chains/Questions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discussion and Questions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/12-markov-chains/lecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Markov Chains — Notes (Lecture + Worked Discussion)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_14" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_3_14" id="__nav_6_3_14_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13 markov chain monte carlo
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_6_3_14_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3_14">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    13 markov chain monte carlo
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/13-markov-chain-monte-carlo/exercises/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exercises
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/13-markov-chain-monte-carlo/markov-chain-monte-carlo-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Markov Chain Monte Carlo
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_15" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_3_15" id="__nav_6_3_15_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14 poisson processes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_6_3_15_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3_15">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    14 poisson processes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/14-poisson-processes/exercises/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exercises
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/14-poisson-processes/poisson-processes-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Markov Property and Transition Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_15_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_3_15_3" id="__nav_6_3_15_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lectures
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_6_3_15_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3_15_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lectures
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/14-poisson-processes/lectures/l34-goodbye-stats110/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Goodbye Stats 110
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_16" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_3_16" id="__nav_6_3_16_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Problem sets
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_6_3_16_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3_16">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Problem sets
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/problem-sets/ps01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Problem Set 01
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../probability/problem-sets/ps02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Problem Set 02
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../systems/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Systems
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Systems
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-quick-recap-the-four-fundamental-subspaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. Quick recap: the four fundamental subspaces
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0. Quick recap: the four fundamental subspaces">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-completeness-property-b-p-e" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The completeness property: \(b = p + e\)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-dimensional-real-estate-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The "dimensional real estate" picture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-orthogonal-vectors-proving-the-dot-product-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Orthogonal vectors — proving the dot-product test
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Orthogonal vectors — proving the dot-product test">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-the-dot-product-is-the-right-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why the dot product is the right test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#worked-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-orthogonal-subspaces-why-doesnt-intersect-isnt-enough" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Orthogonal subspaces — why "doesn't intersect" isn't enough
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Orthogonal subspaces — why &#34;doesn&#39;t intersect&#34; isn&#39;t enough">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quick-check-in-mathbbr2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick check in \(\mathbb{R}^2\)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-main-result-row-space-null-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The main result: row space ⊥ null space
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. The main result: row space ⊥ null space">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#worked-example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3a-what-happens-to-the-null-space-piece-when-it-passes-through-a" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3a. What happens to the null-space piece when it passes through \(A\)?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-orthogonal-complements-all-not-just-some" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Orthogonal complements — "all," not just "some"
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-ata-and-least-squares-the-geometric-derivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. \(A^TA\) and least squares — the geometric derivation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. \(A^TA\) and least squares — the geometric derivation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-derivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The derivation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#worked-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-the-full-picture-left-inverse-right-inverse-pseudoinverse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. The full picture: left inverse, right inverse, pseudoinverse
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. The full picture: left inverse, right inverse, pseudoinverse">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-right-inverse-the-minimum-norm-case" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Right inverse — the minimum-norm case
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-rank-deficient-neither-inverse-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Rank-deficient — neither inverse works
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-applied-walkthroughs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Applied walkthroughs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-quick-self-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Quick self-test
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-this-shows-up-later" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where this shows up later
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#questions-things-to-revisit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Questions / things to revisit
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+
+  
+                  
+
+
+  
+  
+
+
+<h1 id="05-orthogonal-vectors-and-subspaces-complete">05 — Orthogonal Vectors and Subspaces (Complete)<a class="headerlink" href="#05-orthogonal-vectors-and-subspaces-complete" title="Permanent link">&para;</a></h1>
+<p><strong>MIT Lecture:</strong> 14 — Orthogonal Vectors and Subspaces
+<strong>Builds on:</strong> Lecture 10 — Four Fundamental Subspaces (recapped below so this note is self-contained; full depth in note 04)
+<strong>Maps to:</strong> IIT Indore Week 1, Topic 4 — Inner products, norms, and orthogonality (extends into Topic 3 and Topic 5)
+<strong>Also covers:</strong> Left inverse, right inverse, pseudoinverse — foreshadows SVD (Week 2)</p>
+<hr />
+<h2 id="0-quick-recap-the-four-fundamental-subspaces">0. Quick recap: the four fundamental subspaces<a class="headerlink" href="#0-quick-recap-the-four-fundamental-subspaces" title="Permanent link">&para;</a></h2>
+<p>Let <span class="arithmatex">\(A\)</span> be <span class="arithmatex">\(m \times n\)</span> with rank <span class="arithmatex">\(r\)</span> — the number of genuinely independent directions among its rows or columns.</p>
+<p><strong>Input domain <span class="arithmatex">\(\mathbb{R}^n\)</span>:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Subspace</th>
+<th>Definition</th>
+<th>Dimension</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Row space</td>
+<td>span of <span class="arithmatex">\(A\)</span>'s rows</td>
+<td><span class="arithmatex">\(r\)</span></td>
+</tr>
+<tr>
+<td>Null space</td>
+<td>all <span class="arithmatex">\(x\)</span> with <span class="arithmatex">\(Ax=0\)</span></td>
+<td><span class="arithmatex">\(n-r\)</span></td>
+</tr>
+</tbody>
+</table>
+<div class="arithmatex">\[r + (n-r) = n \quad \text{(Rank-Nullity Theorem)}\]</div>
+<p><strong>Output domain <span class="arithmatex">\(\mathbb{R}^m\)</span>:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Subspace</th>
+<th>Definition</th>
+<th>Dimension</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Column space</td>
+<td>span of <span class="arithmatex">\(A\)</span>'s columns</td>
+<td><span class="arithmatex">\(r\)</span></td>
+</tr>
+<tr>
+<td>Left null space</td>
+<td>all <span class="arithmatex">\(y\)</span> with <span class="arithmatex">\(A^Ty=0\)</span></td>
+<td><span class="arithmatex">\(m-r\)</span></td>
+</tr>
+</tbody>
+</table>
+<div class="arithmatex">\[r + (m-r) = m\]</div>
+<p><strong>Why "left"?</strong> Transpose <span class="arithmatex">\(A^Ty=0\)</span> to get <span class="arithmatex">\(y^TA = 0^T\)</span> — <span class="arithmatex">\(y^T\)</span> multiplies <span class="arithmatex">\(A\)</span> from the left. There are two equivalent ways to read that equation, and both are worth holding onto:</p>
+<ul>
+<li><strong>By columns:</strong> each entry of <span class="arithmatex">\(y^TA\)</span> is <span class="arithmatex">\(y\)</span> dotted with one column of <span class="arithmatex">\(A\)</span>, so the whole product is zero exactly when <span class="arithmatex">\(y\)</span> is orthogonal to <em>every column</em> — i.e. orthogonal to the entire column space.</li>
+<li><strong>By rows:</strong> <span class="arithmatex">\(y^TA=0^T\)</span> is literally asking, "what combination of the rows of <span class="arithmatex">\(A\)</span>, weighted by <span class="arithmatex">\(y\)</span>, adds up to a row of all zeros?" — the same question the ordinary null space asks of columns, just mirrored.</li>
+</ul>
+<p>If the column space is everywhere <span class="arithmatex">\(A\)</span> <em>can</em> reach in the output space, the left null space is exactly the set of directions in the output space that <span class="arithmatex">\(A\)</span> <em>cannot</em> reach.</p>
+<h3 id="the-completeness-property-b-p-e">The completeness property: <span class="arithmatex">\(b = p + e\)</span><a class="headerlink" href="#the-completeness-property-b-p-e" title="Permanent link">&para;</a></h3>
+<p>This is the output-space mirror of the <span class="arithmatex">\(x = x_{\text{row}} + x_{\text{null}}\)</span> decomposition from Section 3a. Because the column space and left null space are orthogonal complements (proved in Section 4, but stated here since it belongs with the setup), <em>any</em> vector <span class="arithmatex">\(b\)</span> in <span class="arithmatex">\(\mathbb{R}^m\)</span> — reachable by <span class="arithmatex">\(A\)</span> or not — splits cleanly and uniquely into</p>
+<div class="arithmatex">\[
+b = p + e, \qquad p \in \text{column space}, \;\; e \in \text{left null space}
+\]</div>
+<p><span class="arithmatex">\(p\)</span> is the part of <span class="arithmatex">\(b\)</span> that <span class="arithmatex">\(A\)</span> can actually produce; <span class="arithmatex">\(e\)</span> is the part it fundamentally can't. This single decomposition is what makes least squares possible at all (Section 5) — without it, "the closest reachable point to <span class="arithmatex">\(b\)</span>" wouldn't even be a well-defined idea.</p>
+<h3 id="the-dimensional-real-estate-picture">The "dimensional real estate" picture<a class="headerlink" href="#the-dimensional-real-estate-picture" title="Permanent link">&para;</a></h3>
+<p>Treat <span class="arithmatex">\(\mathbb{R}^n\)</span> as having exactly <span class="arithmatex">\(n\)</span> dimensions of usable space, which the row space and null space must divide between them completely — no more, no less. This framing makes two special cases fall out immediately, without recomputing anything:</p>
+<p><strong>Full column rank (<span class="arithmatex">\(r=n\)</span>, matrix is tall or square):</strong>
+- The row space claims all <span class="arithmatex">\(n\)</span> dimensions, so the null space gets <span class="arithmatex">\(n-n=0\)</span> — it shrinks to <span class="arithmatex">\(\{0\}\)</span>.
+- <em>Physical meaning:</em> the null space measures redundancy — it's literally the size of the set of distinct inputs that all get crushed down onto the same output. If it has dimension zero, no two different inputs ever collide on the same output: every column pulls the result in a genuinely new, necessary direction, none of them can combine to cancel each other to zero, and no information from the input is ever lost or compressed away. The map is <strong>injective</strong>.
+- <em>Solving <span class="arithmatex">\(Ax=b\)</span>:</em> there are no free variables left to scale, so you never get infinitely many solutions. For any target <span class="arithmatex">\(b\)</span>, there's either <strong>exactly one</strong> solution (if <span class="arithmatex">\(b\)</span> happens to land inside the column space) or <strong>zero</strong> exact solutions (if it doesn't — the everyday case once there's any noise, which is exactly what Section 5 is built to handle).</p>
+<p><strong>Full row rank (<span class="arithmatex">\(r=m\)</span>, matrix is wide or square):</strong>
+- The column space claims all <span class="arithmatex">\(m\)</span> dimensions of the output, so the left null space gets <span class="arithmatex">\(m-m=0\)</span>.
+- <em>Physical meaning:</em> if a zero null space means "no information lost," a zero left null space means "no unreachable space." The columns span the <em>entire</em> output space, so some combination of them can hit absolutely any target <span class="arithmatex">\(b\)</span> — the map is <strong>surjective</strong>.
+- <em>Solving <span class="arithmatex">\(Ax=b\)</span>:</em> because there's no unreachable space, you're guaranteed at least one exact solution for <em>any</em> <span class="arithmatex">\(b\)</span> you could name — you never even need least squares here, since <span class="arithmatex">\(b\)</span> is already inside the column space by construction. But the input-space null space is non-trivial whenever <span class="arithmatex">\(n&gt;m\)</span>, so that one solution is never alone — you get <strong>1 or infinitely many</strong> solutions, never zero.</p>
+<p><strong>Full rank, square (<span class="arithmatex">\(r=m=n\)</span>):</strong> both shrink to <span class="arithmatex">\(\{0\}\)</span> at once — bijective, invertible, <strong>exactly one</strong> solution, always.</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Null space</th>
+<th>Left null space</th>
+<th>Behavior</th>
+<th>Solutions to <span class="arithmatex">\(Ax=b\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Full column rank</td>
+<td><span class="arithmatex">\(\{0\}\)</span></td>
+<td><span class="arithmatex">\(\dim = m-n\)</span></td>
+<td>Injective</td>
+<td>0 or 1</td>
+</tr>
+<tr>
+<td>Full row rank</td>
+<td><span class="arithmatex">\(\dim = n-m\)</span></td>
+<td><span class="arithmatex">\(\{0\}\)</span></td>
+<td>Surjective</td>
+<td>1 or ∞</td>
+</tr>
+<tr>
+<td>Full rank, square</td>
+<td><span class="arithmatex">\(\{0\}\)</span></td>
+<td><span class="arithmatex">\(\{0\}\)</span></td>
+<td>Bijective</td>
+<td>exactly 1</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why a tall, full-column-rank matrix is forced to have dependent rows:</strong> this feels like a contradiction the first time you see it — "independent columns" sounds like it should mean "independent everything." It doesn't, for a purely dimensional reason. Each row has <span class="arithmatex">\(n\)</span> entries, so every row lives in <span class="arithmatex">\(\mathbb{R}^n\)</span> — and you can't fit more than <span class="arithmatex">\(n\)</span> linearly independent vectors into an <span class="arithmatex">\(n\)</span>-dimensional space (you can't have 5 independent directions crammed into 3-D space, for instance). If <span class="arithmatex">\(A\)</span> is tall (<span class="arithmatex">\(m&gt;n\)</span>) with full column rank, it has <span class="arithmatex">\(m\)</span> rows squeezed into that <span class="arithmatex">\(n\)</span>-dimensional space with <span class="arithmatex">\(m&gt;n\)</span>, so <strong>at least <span class="arithmatex">\(m-n\)</span> of those rows are guaranteed to be combinations of the others</strong> — not approximately, not usually, but as a matter of dimension-counting necessity. This isn't a flaw; it's the literal structural reason least squares exists — see Section 5.</p>
+<p><em>(This section is a compressed recap. Full derivations and more worked dimension examples live in note 04 — read that first if any of the above feels unfamiliar.)</em></p>
+<hr />
+<h2 id="1-orthogonal-vectors-proving-the-dot-product-test">1. Orthogonal vectors — proving the dot-product test<a class="headerlink" href="#1-orthogonal-vectors-proving-the-dot-product-test" title="Permanent link">&para;</a></h2>
+<p><strong>Definition.</strong> Two vectors are orthogonal if the angle between them is <span class="arithmatex">\(90^\circ\)</span>.</p>
+<p><strong>Test.</strong> <span class="arithmatex">\(x\)</span> and <span class="arithmatex">\(y\)</span> are orthogonal exactly when <span class="arithmatex">\(x^Ty = 0\)</span>.</p>
+<h3 id="why-the-dot-product-is-the-right-test">Why the dot product is the right test<a class="headerlink" href="#why-the-dot-product-is-the-right-test" title="Permanent link">&para;</a></h3>
+<p>In one line, without algebra: a right angle means the two short sides squared add up to <em>exactly</em> the long side squared (Pythagoras) — nothing more. When you expand the long side <span class="arithmatex">\(\|x+y\|^2\)</span> algebraically, it naturally splits into <span class="arithmatex">\(\|x\|^2 + \|y\|^2\)</span> plus one extra leftover piece, <span class="arithmatex">\(2x^Ty\)</span>. For the Pythagorean equality to hold <em>exactly</em>, that leftover piece has nowhere to go but zero. So <span class="arithmatex">\(x^Ty=0\)</span> isn't a separate rule — it's the only way the geometry can balance.</p>
+<p>In full algebra: picture a triangle with sides <span class="arithmatex">\(x\)</span>, <span class="arithmatex">\(y\)</span>, and hypotenuse <span class="arithmatex">\(x+y\)</span>. The triangle has a right angle exactly when</p>
+<div class="arithmatex">\[
+\|x\|^2 + \|y\|^2 = \|x+y\|^2
+\]</div>
+<p>Expand the right side using <span class="arithmatex">\(\|v\|^2 = v^Tv\)</span>:</p>
+<div class="arithmatex">\[
+\|x+y\|^2 = (x+y)^T(x+y) = x^Tx + x^Ty + y^Tx + y^Ty
+\]</div>
+<p>Since <span class="arithmatex">\(x^Ty = y^Tx\)</span> for real vectors, this becomes <span class="arithmatex">\(\|x\|^2 + \|y\|^2 + 2x^Ty\)</span>. Plug back into the Pythagorean equation:</p>
+<div class="arithmatex">\[
+\|x\|^2 + \|y\|^2 = \|x\|^2 + \|y\|^2 + 2x^Ty \;\;\Longrightarrow\;\; x^Ty = 0
+\]</div>
+<p>Everything cancels except the cross term — Pythagoras <em>is</em> the dot-product test, just multiplied out.</p>
+<p><strong>Edge case:</strong> the zero vector is orthogonal to everything, since <span class="arithmatex">\(0^Ty=0\)</span> always. "Angle" is meaningless for the zero vector, but the algebra still passes, which keeps later definitions (orthogonal subspaces, complements) consistent.</p>
+<h3 id="worked-example">Worked example<a class="headerlink" href="#worked-example" title="Permanent link">&para;</a></h3>
+<p><span class="arithmatex">\(x = (3, 1, -2)\)</span>, <span class="arithmatex">\(y = (1, -1, 1)\)</span>:</p>
+<div class="arithmatex">\[
+x^Ty = 3 - 1 - 2 = 0 \quad \checkmark
+$$
+$$
+\|x\|^2 = 14, \;\; \|y\|^2 = 3, \;\; x+y=(4,0,-1), \;\; \|x+y\|^2 = 17 = 14+3 \quad \checkmark
+\]</div>
+<hr />
+<h2 id="2-orthogonal-subspaces-why-doesnt-intersect-isnt-enough">2. Orthogonal subspaces — why "doesn't intersect" isn't enough<a class="headerlink" href="#2-orthogonal-subspaces-why-doesnt-intersect-isnt-enough" title="Permanent link">&para;</a></h2>
+<p><strong>Definition.</strong> <span class="arithmatex">\(S\)</span> is orthogonal to <span class="arithmatex">\(T\)</span> if <em>every</em> vector in <span class="arithmatex">\(S\)</span> is orthogonal to <em>every</em> vector in <span class="arithmatex">\(T\)</span>.</p>
+<p>The natural guess — "two subspaces are orthogonal if they only meet at the origin" — is <strong>necessary but not sufficient</strong>. Two examples make this concrete:</p>
+<ul>
+<li><strong>In the plane:</strong> draw two lines crossing at a shallow <span class="arithmatex">\(15^\circ\)</span> angle. They're both 1-D subspaces, and they only intersect at the origin — yet they're obviously nowhere near <span class="arithmatex">\(90^\circ\)</span>. No shared "seam," and the test still fails.</li>
+<li><strong>In 3-D, the wall and floor of a room:</strong> these intersect along a whole line (the corner seam), so they fail even more directly — any vector on that seam belongs to both planes, so it would have to be orthogonal to itself, which is impossible unless it's zero. And even ignoring the seam, a <span class="arithmatex">\(45^\circ\)</span> vector on the wall and a vector along the floor aren't at <span class="arithmatex">\(90^\circ\)</span> to each other anyway.</li>
+</ul>
+<h3 id="quick-check-in-mathbbr2">Quick check in <span class="arithmatex">\(\mathbb{R}^2\)</span><a class="headerlink" href="#quick-check-in-mathbbr2" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th><span class="arithmatex">\(S\)</span></th>
+<th><span class="arithmatex">\(T\)</span></th>
+<th>Orthogonal?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Line</td>
+<td><span class="arithmatex">\(\{0\}\)</span></td>
+<td>Always (vacuously)</td>
+</tr>
+<tr>
+<td>Line</td>
+<td>Whole plane</td>
+<td>Never (line is <em>inside</em> the plane)</td>
+</tr>
+<tr>
+<td>Line</td>
+<td>A different line</td>
+<td>Only if literally perpendicular</td>
+</tr>
+</tbody>
+</table>
+<p>So "orthogonal subspaces" is a much stricter condition than "different subspaces."</p>
+<hr />
+<h2 id="3-the-main-result-row-space-null-space">3. The main result: row space ⊥ null space<a class="headerlink" href="#3-the-main-result-row-space-null-space" title="Permanent link">&para;</a></h2>
+<p><strong>Claim:</strong> every vector in the null space of <span class="arithmatex">\(A\)</span> is orthogonal to every vector in the row space of <span class="arithmatex">\(A\)</span>.</p>
+<h3 id="why">Why<a class="headerlink" href="#why" title="Permanent link">&para;</a></h3>
+<p><span class="arithmatex">\(x\)</span> in the null space means <span class="arithmatex">\(Ax=0\)</span>. Written row by row, each entry of that equation is literally a dot product: <span class="arithmatex">\(\text{row}_i \cdot x = 0\)</span> for every row. So <span class="arithmatex">\(x\)</span> is automatically orthogonal to every individual row — that fact was hiding inside <span class="arithmatex">\(Ax=0\)</span> the whole time.</p>
+<p>But the row <em>space</em> is more than the rows themselves — it's every combination of them. That extends for free, by linearity of the dot product: if <span class="arithmatex">\(\text{row}_1 \cdot x = 0\)</span> and <span class="arithmatex">\(\text{row}_2 \cdot x = 0\)</span>, then for any scalars,</p>
+<div class="arithmatex">\[
+(c_1\,\text{row}_1 + c_2\,\text{row}_2)\cdot x = c_1(\text{row}_1\cdot x) + c_2(\text{row}_2\cdot x) = 0
+\]</div>
+<p>So <span class="arithmatex">\(x\)</span> is orthogonal to <em>any</em> combination of the rows — the entire row space. The same argument on <span class="arithmatex">\(A^T\)</span> gives column space ⊥ left null space.</p>
+<h3 id="worked-example_1">Worked example<a class="headerlink" href="#worked-example_1" title="Permanent link">&para;</a></h3>
+<p><span class="arithmatex">\(A = \begin{pmatrix} 1 &amp; -1 &amp; 2 \\ 2 &amp; -2 &amp; 4 \end{pmatrix}\)</span> — both rows are multiples of <span class="arithmatex">\((1,-1,2)\)</span>, rank 1.</p>
+<p>Null space: solve <span class="arithmatex">\(x_1-x_2+2x_3=0\)</span>. Take <span class="arithmatex">\(x=(1,1,0)\)</span>: checks out, and <span class="arithmatex">\((1)(1)+(-1)(1)+(2)(0)=0\)</span> — orthogonal to the row, as required. Geometrically, this null space is the entire plane perpendicular to <span class="arithmatex">\((1,-1,2)\)</span> — the same "normal vector" idea from calculus.</p>
+<h3 id="3a-what-happens-to-the-null-space-piece-when-it-passes-through-a">3a. What happens to the null-space piece when it passes through <span class="arithmatex">\(A\)</span>?<a class="headerlink" href="#3a-what-happens-to-the-null-space-piece-when-it-passes-through-a" title="Permanent link">&para;</a></h3>
+<p>Since row space and null space split all of <span class="arithmatex">\(\mathbb{R}^n\)</span> between them (Section 4), any <span class="arithmatex">\(x\)</span> decomposes uniquely as <span class="arithmatex">\(x = x_{\text{row}} + x_{\text{null}}\)</span>. Applying <span class="arithmatex">\(A\)</span>:</p>
+<div class="arithmatex">\[
+Ax = Ax_{\text{row}} + Ax_{\text{null}} = Ax_{\text{row}} + 0
+\]</div>
+<p>The null-space piece doesn't shrink or distort — it's <strong>completely erased</strong> the instant <span class="arithmatex">\(A\)</span> acts, by definition. <span class="arithmatex">\(A\)</span> never "sees" that component at all; only <span class="arithmatex">\(x_{\text{row}}\)</span> survives. The row space carries all the real information; the null space is the part <span class="arithmatex">\(A\)</span> is structurally blind to.</p>
+<hr />
+<h2 id="4-orthogonal-complements-all-not-just-some">4. Orthogonal complements — "all," not just "some"<a class="headerlink" href="#4-orthogonal-complements-all-not-just-some" title="Permanent link">&para;</a></h2>
+<p><strong>Definition.</strong> The orthogonal complement of <span class="arithmatex">\(S\)</span> contains <em>every</em> vector orthogonal to <span class="arithmatex">\(S\)</span> — not merely some.</p>
+<p>Two illustrations of why "some" isn't enough:</p>
+<ul>
+<li>In <span class="arithmatex">\(\mathbb{R}^3\)</span>, let <span class="arithmatex">\(S\)</span> be the vertical <span class="arithmatex">\(z\)</span>-axis. The <span class="arithmatex">\(x\)</span>-axis alone is orthogonal to <span class="arithmatex">\(S\)</span> — but it's not the complement, since it leaves out the <span class="arithmatex">\(y\)</span>-axis and every diagonal line in the floor that's also at <span class="arithmatex">\(90^\circ\)</span> to <span class="arithmatex">\(S\)</span>. The actual orthogonal complement is the <em>entire</em> floor (the <span class="arithmatex">\(xy\)</span>-plane) — the full, exhaustive set.</li>
+<li>The null space isn't just <em>a</em> subspace that happens to be orthogonal to the row space — by the proof in Section 3, it gathers up <em>every</em> vector orthogonal to the row space. It's the complete complement, not a sample of one.</li>
+</ul>
+<p>The dimension count confirms it:</p>
+<div class="arithmatex">\[
+\dim(\text{row space}) + \dim(\text{null space}) = r + (n-r) = n
+\]</div>
+<p>No room left over — which is why you can never have a 1-D line as both the row space and the null space in <span class="arithmatex">\(\mathbb{R}^3\)</span> (<span class="arithmatex">\(1+1\ne3\)</span>). A rank-1 matrix in <span class="arithmatex">\(\mathbb{R}^3\)</span> must pair a 1-D row space with a 2-D null space.</p>
+<blockquote>
+<p><strong>Fundamental Theorem of Linear Algebra — Part 2:</strong> the four subspaces aren't just correctly sized (Part 1, rank-nullity); they're oriented at <span class="arithmatex">\(90^\circ\)</span> as orthogonal complements.</p>
+</blockquote>
+<hr />
+<h2 id="5-ata-and-least-squares-the-geometric-derivation">5. <span class="arithmatex">\(A^TA\)</span> and least squares — the geometric derivation<a class="headerlink" href="#5-ata-and-least-squares-the-geometric-derivation" title="Permanent link">&para;</a></h2>
+<p><strong>The real problem:</strong> solve <span class="arithmatex">\(Ax=b\)</span> when <span class="arithmatex">\(b\)</span> isn't in the column space — the everyday case with more equations (rows) than unknowns (columns) and any measurement noise.</p>
+<p><strong>Why <span class="arithmatex">\(A^TA\)</span> is square and symmetric:</strong> <span class="arithmatex">\(A\)</span> is <span class="arithmatex">\(m\times n\)</span>, so <span class="arithmatex">\(A^TA\)</span> is <span class="arithmatex">\(n\times n\)</span>; and <span class="arithmatex">\((A^TA)^T = A^T(A^T)^T = A^TA\)</span>.</p>
+<h3 id="the-derivation">The derivation<a class="headerlink" href="#the-derivation" title="Permanent link">&para;</a></h3>
+<p>Since <span class="arithmatex">\(b\)</span> is unreachable, find the closest reachable point instead. "Closest" inside a subspace always means dropping a perpendicular — Section 1's idea, applied to a whole subspace. Call that point <span class="arithmatex">\(p\)</span>, the <strong>projection</strong> of <span class="arithmatex">\(b\)</span> onto the column space, with <span class="arithmatex">\(A\hat{x}=p\)</span> for some <span class="arithmatex">\(\hat{x}\)</span>.</p>
+<p>The gap is the <strong>error vector</strong> <span class="arithmatex">\(e = b - A\hat{x}\)</span>. Because <span class="arithmatex">\(p\)</span> is the <em>closest</em> point, <span class="arithmatex">\(e\)</span> must be perpendicular to the entire column space — any other direction would mean <span class="arithmatex">\(p\)</span> wasn't actually closest. "Perpendicular to the entire column space" is exactly the left null space (Section 0), whose defining property is <span class="arithmatex">\(A^Ty=0\)</span>. Apply <span class="arithmatex">\(A^T\)</span> to the error vector:</p>
+<div class="arithmatex">\[
+A^T(b - A\hat{x}) = 0 \;\;\Longrightarrow\;\; A^TA\,\hat{x} = A^Tb
+\]</div>
+<p>That's the normal equation, derived from nothing but "closest point ⟹ perpendicular error ⟹ error lives in the left null space."</p>
+<p><strong>Key fact:</strong> <span class="arithmatex">\(\text{null space}(A^TA) = \text{null space}(A)\)</span> and <span class="arithmatex">\(\text{rank}(A^TA)=\text{rank}(A)\)</span>, so <span class="arithmatex">\(A^TA\)</span> is invertible exactly when <span class="arithmatex">\(A\)</span> has independent columns. This gives the <strong>left inverse</strong>:</p>
+<div class="arithmatex">\[
+\hat{x} = (A^TA)^{-1}A^Tb
+\]</div>
+<h3 id="worked-examples">Worked examples<a class="headerlink" href="#worked-examples" title="Permanent link">&para;</a></h3>
+<p>Full column rank: <span class="arithmatex">\(A=\begin{pmatrix}1&amp;0\\0&amp;1\\1&amp;1\end{pmatrix}\)</span>, <span class="arithmatex">\(A^TA=\begin{pmatrix}2&amp;1\\1&amp;2\end{pmatrix}\)</span>, <span class="arithmatex">\(\det=3\ne0\)</span> — invertible.</p>
+<p>Dependent columns: <span class="arithmatex">\(A=\begin{pmatrix}1&amp;2\\2&amp;4\\3&amp;6\end{pmatrix}\)</span> (col 2 = 2×col 1), <span class="arithmatex">\(A^TA=\begin{pmatrix}14&amp;28\\28&amp;56\end{pmatrix}\)</span>, <span class="arithmatex">\(\det=0\)</span> — singular, exactly as predicted.</p>
+<p><strong>Why row dependence never threatens this:</strong> <span class="arithmatex">\((A^TA)\)</span> only depends on column rank. A tall matrix with independent columns is <em>guaranteed</em> to have dependent rows (Section 0) — harmless here, since <span class="arithmatex">\((A^TA)\)</span> never references row rank. Physically: consistent dependent rows (row 2 exactly double row 1, target doubled too) add no new information; conflicting dependent rows (the realistic case with noise) are exactly what pushes <span class="arithmatex">\(b\)</span> outside the column space in the first place — and the left inverse is the mediator that minimizes the total squared disagreement.</p>
+<hr />
+<h2 id="6-the-full-picture-left-inverse-right-inverse-pseudoinverse">6. The full picture: left inverse, right inverse, pseudoinverse<a class="headerlink" href="#6-the-full-picture-left-inverse-right-inverse-pseudoinverse" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Matrix shape</th>
+<th>Rank condition</th>
+<th>What's trivial</th>
+<th>Tool</th>
+<th>Formula</th>
+<th>What it optimizes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tall (<span class="arithmatex">\(m&gt;n\)</span>)</td>
+<td>Full column rank</td>
+<td>Null space</td>
+<td><strong>Left inverse</strong></td>
+<td><span class="arithmatex">\((A^TA)^{-1}A^T\)</span></td>
+<td><span class="arithmatex">\(\min\lVert b-Ax\rVert\)</span> (Section 5)</td>
+</tr>
+<tr>
+<td>Wide (<span class="arithmatex">\(n&gt;m\)</span>)</td>
+<td>Full row rank</td>
+<td>Left null space</td>
+<td><strong>Right inverse</strong></td>
+<td><span class="arithmatex">\(A^T(AA^T)^{-1}\)</span></td>
+<td><span class="arithmatex">\(\min\lVert x\rVert\)</span> among exact solutions</td>
+</tr>
+<tr>
+<td>Square</td>
+<td>Full rank</td>
+<td>Both</td>
+<td><strong>True inverse</strong></td>
+<td><span class="arithmatex">\(A^{-1}\)</span></td>
+<td>Exact, unique — nothing to optimize</td>
+</tr>
+<tr>
+<td>Any</td>
+<td>Rank-deficient</td>
+<td>Neither</td>
+<td><strong>Pseudoinverse</strong></td>
+<td><span class="arithmatex">\(A^+\)</span> (via SVD)</td>
+<td>Both simultaneously</td>
+</tr>
+</tbody>
+</table>
+<h3 id="61-right-inverse-the-minimum-norm-case">6.1 Right inverse — the minimum-norm case<a class="headerlink" href="#61-right-inverse-the-minimum-norm-case" title="Permanent link">&para;</a></h3>
+<p>Flip the shape: <span class="arithmatex">\(n&gt;m\)</span> (underdetermined), rows independent (<span class="arithmatex">\(r=m\)</span>). The left null space vanishes, so every <span class="arithmatex">\(b\)</span> is reachable — but the input-space null space is now non-trivial (<span class="arithmatex">\(n-m&gt;0\)</span>), so there are <strong>infinitely many exact solutions</strong>. The question flips from "what's closest?" to "which exact solution is best?"</p>
+<p>Forcing the normal-equation approach fails: <span class="arithmatex">\(A^TA\)</span> is <span class="arithmatex">\(n\times n\)</span> but only rank <span class="arithmatex">\(m&lt;n\)</span>, so it's singular. Use <span class="arithmatex">\(AA^T\)</span> instead — <span class="arithmatex">\(m\times m\)</span>, full rank (rows independent), giving the <strong>right inverse</strong>:</p>
+<div class="arithmatex">\[
+x^* = A^T(AA^T)^{-1}b
+\]</div>
+<p>Geometrically, <span class="arithmatex">\(x^*\)</span> is the exact solution with smallest length — it lives entirely in the row space, contributing nothing from the null space (recall Section 3a: <span class="arithmatex">\(A\)</span> can't even see that component anyway).</p>
+<h3 id="62-rank-deficient-neither-inverse-works">6.2 Rank-deficient — neither inverse works<a class="headerlink" href="#62-rank-deficient-neither-inverse-works" title="Permanent link">&para;</a></h3>
+<p>If both rows and columns are dependent (<span class="arithmatex">\(r&lt;m\)</span> and <span class="arithmatex">\(r&lt;n\)</span>), <span class="arithmatex">\((A^TA)\)</span> and <span class="arithmatex">\((AA^T)\)</span> are both singular. Neither inverse exists. The fix is the <strong>Singular Value Decomposition</strong>, isolating exactly the <span class="arithmatex">\(r\)</span> informative directions and building the <strong>Moore–Penrose pseudoinverse</strong> <span class="arithmatex">\(A^+\)</span> — which reduces to the left inverse, right inverse, or true inverse in their respective special cases. See Week 2, Topic 4.</p>
+<hr />
+<h2 id="7-applied-walkthroughs">7. Applied walkthroughs<a class="headerlink" href="#7-applied-walkthroughs" title="Permanent link">&para;</a></h2>
+<p>Short, worked-through scenarios to ground the theory in something concrete.</p>
+<p><strong>A neural net layer, <span class="arithmatex">\(100\times80\)</span>, full column rank.</strong> Row space: dim 80 (= all of <span class="arithmatex">\(\mathbb{R}^{80}\)</span>). Null space: dim 0. Column space: dim 80, sitting inside the 100-dimensional output. Left null space: dim 20 — twenty output directions this layer's weights simply cannot reach.</p>
+<p><strong>A square <span class="arithmatex">\(50\times50\)</span> matrix with a null space of dimension 5.</strong> By rank-nullity, <span class="arithmatex">\(r + 5 = 50\)</span>, so <span class="arithmatex">\(r=45\)</span> — this matrix is rank-deficient, not full rank, even though it's square. Can it reach every point in <span class="arithmatex">\(\mathbb{R}^{50}\)</span>? No: since <span class="arithmatex">\(m=n=50\)</span> here, row rank = column rank = <span class="arithmatex">\(r=45\)</span> too, so the left null space has dimension <span class="arithmatex">\(m-r = 50-45=5\)</span> as well — five full dimensions of the output are unreachable. A non-trivial null space and a non-trivial left null space <em>both</em> show up together here precisely because the matrix is square: for a square matrix, <span class="arithmatex">\(r&lt;n\)</span> always forces <span class="arithmatex">\(r&lt;m\)</span> in lockstep, so injectivity and surjectivity fail or hold together, never just one of them (this is Section 0's "impossible matrix" fact, Q4 below, working in reverse).</p>
+<p><strong>A robot at a kinematic singularity.</strong> The Jacobian <span class="arithmatex">\(J\)</span> normally maps joint velocities to 3-D foot velocity. At full leg extension, the column space of <span class="arithmatex">\(J\)</span> momentarily <em>loses a dimension</em> — the robot can no longer push its foot directly along the leg's axis. By Section 0's "real estate" logic, that lost dimension has to go <em>somewhere</em>: it shows up as the left null space gaining exactly that dimension. Physically, the expanded left null space is the literal direction of motion the robot has lost control over in that instant.</p>
+<p><strong>A trading pipeline: 1,000 indicator columns, 50,000 timestamp rows, <span class="arithmatex">\(A^TA\)</span> still won't invert.</strong> With <span class="arithmatex">\(m \gg n\)</span>, you'd expect a clean left-inverse setup — row dependence here is expected and harmless (Section 5). A singular <span class="arithmatex">\(A^TA\)</span> despite the huge row count means the <em>columns themselves</em> aren't actually independent: some indicators are exact or near-exact combinations of others (duplicated or derived features). That shows up as a non-trivial null space tied directly to those columns — no number of additional rows can fix column dependence, since <span class="arithmatex">\((A^TA)\)</span> never looks at row count at all.</p>
+<p><strong>A Markov/RL transition matrix where every state is reachable, but several actions land on the same state.</strong> "Every state reachable" means the column space spans the whole output — full row rank, left null space <span class="arithmatex">\(=\{0\}\)</span>. "Multiple actions, same state" means the map isn't injective — the null space is non-trivial. To trace an optimal action sequence backward through this many-to-one-but-fully-reachable system, you want the <strong>right inverse</strong>: it picks the minimum-effort action sequence among the many that land exactly on target, rather than approximating something unreachable.</p>
+<p><strong>A wide recommender system: 1,000 user features mapped to 5 behavior categories, rows independent.</strong> Left null space vanishes — every category combination is reachable. Use <span class="arithmatex">\((AA^T)^{-1}\)</span>, the right inverse, which finds the smallest-magnitude feature-weight vector that exactly reproduces the target category mix — minimizing redundant, unnecessary weight rather than minimizing error (there is none to minimize here).</p>
+<hr />
+<h2 id="8-quick-self-test">8. Quick self-test<a class="headerlink" href="#8-quick-self-test" title="Permanent link">&para;</a></h2>
+<p>Answer from memory before checking the section reference.</p>
+<ol>
+<li><strong>The proof, in words only:</strong> how does Pythagoras force the dot product of perpendicular vectors to be exactly zero? <em>(→ §1)</em></li>
+<li><strong>The "all vs. some" trap:</strong> in <span class="arithmatex">\(\mathbb{R}^4\)</span>, you find a 2-D plane <span class="arithmatex">\(S\)</span> and a 1-D line <span class="arithmatex">\(T\)</span> where every vector in <span class="arithmatex">\(S\)</span> is orthogonal to every vector in <span class="arithmatex">\(T\)</span>. Are they necessarily orthogonal complements? <em>(→ §4)</em></li>
+<li><strong>The error vector:</strong> why is <span class="arithmatex">\(e=b-A\hat{x}\)</span> forced specifically into the left null space, not just "some" perpendicular subspace? <em>(→ §5)</em></li>
+<li><strong>The impossible matrix:</strong> why can a matrix never have both its null space and left null space equal to <span class="arithmatex">\(\{0\}\)</span> unless it's square? <em>(→ §0)</em></li>
+<li><strong>The orthogonal paradox:</strong> <span class="arithmatex">\(A\)</span> is square, <span class="arithmatex">\(n\times n\)</span>. You find a non-zero <span class="arithmatex">\(v\)</span> in the row space with <span class="arithmatex">\(Av=0\)</span>. Why is this impossible? <em>(→ §3 + §4 together)</em></li>
+<li><strong>No free variables:</strong> explain in your own words why full column rank rules out "infinitely many solutions" as an outcome for <span class="arithmatex">\(Ax=b\)</span> — what specifically would have to exist for that outcome to be possible, and why does full column rank kill it? <em>(→ §0, full column rank bullet)</em></li>
+<li><strong>Diagnosing a crash, generalized:</strong> an optimization script throws a singular-matrix error inverting <span class="arithmatex">\(A^TA\)</span>, on a matrix where <span class="arithmatex">\(m \gg n\)</span>. Walk through, from first principles, why row count alone can never rescue this — what's the one and only thing that determines whether <span class="arithmatex">\(A^TA\)</span> is invertible? <em>(→ §5, "why row dependence never threatens this," then invert the logic to find what </em>would<em> threaten it)</em></li>
+<li><strong>The recommender system:</strong> <span class="arithmatex">\(n=1000\)</span> user features map to <span class="arithmatex">\(m=5\)</span> behavior categories, rows independent. Which subspace vanishes completely, and do you reach for <span class="arithmatex">\((A^TA)^{-1}\)</span> or <span class="arithmatex">\((AA^T)^{-1}\)</span> to find the optimal weights — and what are you actually minimizing when you do? <em>(→ §6.1, then the worked walkthrough in §7)</em></li>
+<li><strong>Mixed case:</strong> suppose <span class="arithmatex">\(A\)</span> is tall (<span class="arithmatex">\(m&gt;n\)</span>) but rank-deficient — the columns are <em>also</em> dependent, not just the rows. Which of the four tools in §6's table applies, and why do both the left and right inverse fail here even though the matrix is tall like the "normal" least-squares case? <em>(→ §6.2)</em></li>
+</ol>
+<hr />
+<h2 id="where-this-shows-up-later">Where this shows up later<a class="headerlink" href="#where-this-shows-up-later" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Topic 5 (Projections, least squares):</strong> Section 5 <em>is</em> the theory behind <span class="arithmatex">\(A^TA\hat{x}=A^Tb\)</span> — the rest of that topic builds the computational machinery on top of it.</li>
+<li><strong>Week 2, Gram-Schmidt/QR:</strong> building orthogonal <em>bases</em>, not just orthogonal subspaces, is the natural next step.</li>
+<li><strong>Week 2, Symmetric matrices:</strong> <span class="arithmatex">\(A^TA\)</span> being symmetric foreshadows why symmetric matrices get real eigenvalues and orthogonal eigenvectors.</li>
+<li><strong>Week 2, SVD:</strong> Section 6.2's rank-deficient case is exactly what the SVD and pseudoinverse are built to handle.</li>
+</ul>
+<h2 id="questions-things-to-revisit">Questions / things to revisit<a class="headerlink" href="#questions-things-to-revisit" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Re-derive row space ⊥ null space from scratch — the linearity step is the part most worth being able to reproduce instantly.</li>
+<li>Make the "dimensions add to <span class="arithmatex">\(n\)</span>" fact feel obvious, not memorized.</li>
+<li>Re-derive why <span class="arithmatex">\(A^TA\)</span> inherits <span class="arithmatex">\(A\)</span>'s null space once Topic 5 formalizes it.</li>
+<li>Make sure §5 (left inverse) and §6.1 (right inverse) feel like mirror-image derivations, not two separate things to memorize.</li>
+</ul>
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      <span class="md-source-file__fact">
+        Created <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 20, 2026 16:28:04 UTC">June 20, 2026</span>
+      </span>
+      <span class="md-source-file__fact">
+        · Updated <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 21, 2026 05:51:14 UTC">June 21, 2026</span>
+      </span>
+    
+  </aside>
+
+
+
+
+
+                
+
+  
+
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../04-four-fundamental-subspaces/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 04: Four Fundamental Subspaces">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                04: Four Fundamental Subspaces
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../06-projections-onto-subspaces/" class="md-footer__link md-footer__link--next" aria-label="Next: 06 — Projections onto Subspaces">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                06 — Projections onto Subspaces
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.indexes", "navigation.top", "navigation.tracking", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.tabs.link"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../../../javascripts/mathjax.js"></script>
+      
+        <script src="../../../../javascripts/resizable-sidebars.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

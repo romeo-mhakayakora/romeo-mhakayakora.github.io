@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Why Your AI Model Is Silently Breaking: Underflow & Overflow — Romeo Mhakayakora</title>
+  
+  <!-- Google Fonts: Lora (Editorial Serif) & Assistant (Clean Sans-serif) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  
+  <!-- MathJax for rendering scientific/mathematical notation -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body data-page="blog-post">
+
+  <!-- Header / Navigation (Relative paths) -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="../index.html" class="logo">Romeo Mhakayakora <span class="logo-accent">/></span></a>
+      <nav class="nav">
+        <a href="../index.html" class="nav-link">Home</a>
+        <a href="../projects.html" class="nav-link">Projects</a>
+        <a href="../rl.html" class="nav-link">RL</a>
+        <a href="../blogs.html" class="nav-link active">Blogs</a>
+        <a href="../courses.html" class="nav-link">Courses</a>
+        <a href="../papers.html" class="nav-link">Papers</a>
+        <a href="../contact.html" class="nav-link">Contact</a>
+        <button id="theme-toggle" class="theme-btn" aria-label="Toggle dark mode">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+    
+    <!-- Article Layout -->
+    <article class="post-layout">
+      <header class="post-header">
+        <div class="post-meta-details">
+          <span class="post-category-tag">Deep Learning</span>
+          <span class="post-separator">&bull;</span>
+          <span class="post-date-tag">July 13, 2026</span>
+        </div>
+        <h1 class="post-full-title">Part 1 &mdash; Why Your AI Model Is Silently Breaking: Underflow, Overflow, and the Hidden World of Numerical Computation</h1>
+        <p class="post-lead-intro">How floating-point arithmetic, underflow, and overflow silently destroy machine learning models in production.</p>
+        <div class="post-author-block">
+          <img src="../profile.png" alt="Romeo Mhakayakora" class="post-author-avatar">
+          <div class="post-author-info">
+            <span class="post-author-name">Romeo Mhakayakora</span>
+            <span class="post-author-meta">Systems & RL Student</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Article Body -->
+      <div class="post-body-content">
+        
+        <h2>The Invisible Math Behind Every AI Model</h2>
+        <p>
+          When you type a prompt into ChatGPT, scroll through a TikTok feed, or unlock your phone with face recognition, you are interacting with systems that perform billions of mathematical operations every second. Yet most people, even many software developers, never stop to think about how those operations actually happen inside a computer. The gap between the clean, elegant equations you see in textbooks and the messy reality of digital computation is one of the most underappreciated challenges in all of machine learning.
+        </p>
+        <p>
+          On a piece of paper, numbers are infinite. You can write down pi to as many decimal places as you like, or divide 1 by 3 and keep writing 3s until your hand cramps. A computer, however, has finite memory. It cannot store an infinite decimal expansion. Instead, it uses a system called floating-point arithmetic, which approximates real numbers using a fixed number of binary digits. Most modern hardware uses the IEEE 754 double-precision format (64 bits), which provides a representable range of approximately:
+        </p>
+        
+        <div class="math-block" style="text-align: center; margin: 1.8rem 0; font-family: var(--font-serif); font-size: 1.15rem; background-color: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; border: 1px solid rgba(170,170,170,0.12);">
+          <strong>Eq. 1 — IEEE 754 double-precision representable range:</strong>
+          $$[2^{-1022}, (2 - 2^{-52}) \times 2^{1023}] \approx [2.23 \times 10^{-308}, 1.79 \times 10^{308}]$$
+        </div>
+
+        <p>
+          This is enough precision for everyday tasks like calculating a grocery bill, but it becomes dangerously fragile when you are training a neural network that involves multiplying millions of these approximate numbers together in long chains of computation. The consequences are not abstract. They are concrete, reproducible, and occasionally catastrophic. A model that works perfectly in theory can crash, produce garbage results, or silently degrade in accuracy, all because of a tiny rounding error that snowballed across billions of calculations. Understanding why this happens, and how to prevent it, is not optional knowledge for anyone working in machine learning. It is foundational.
+        </p>
+
+        <h2>Two Ways to Solve a Problem: Analytical vs. Iterative</h2>
+        <p>
+          Before we can understand why numerical errors are so dangerous in machine learning, we need to understand how ML algorithms actually solve problems. There are two fundamentally different approaches to mathematical problem-solving, and the distinction between them is crucial.
+        </p>
+        
+        <h3>The Analytical Approach: Solving Directly</h3>
+        <p>
+          When you solve the equation $2x = 10$ on paper, you divide both sides by 2 and arrive at $x = 5$ in a single step. This is the analytical method. You have found an exact, symbolic expression for the correct solution. The answer is perfect, precise, and complete. For simple equations, this works beautifully. Many problems in physics and engineering can be solved this way, at least in principle. You set up the equations, manipulate them according to the rules of algebra or calculus, and arrive at a closed-form solution that tells you exactly what the answer is.
+        </p>
+
+        <h3>The Iterative Approach: Guessing and Updating</h3>
+        <p>
+          Machine learning almost never gets to use the analytical method. The problems that AI systems need to solve, such as finding the optimal weights for a neural network with billions of parameters, do not have clean closed-form solutions. Instead, the computer relies on the iterative approach. It starts with a random guess (for example, setting all weights to small random numbers), evaluates how wrong the current guess is using a mathematical score called a loss function, and then makes a small adjustment intended to reduce that error. This cycle of evaluate, adjust, repeat is the heartbeat of every machine learning algorithm.
+        </p>
+        <p>
+          Think of it like trying to find the bottom of a valley while blindfolded. You cannot see the landscape, but you can feel the slope under your feet. You take a step downhill. Then another. Each step brings you closer to the lowest point, but you never know exactly when you have arrived. In machine learning, this process is called gradient descent, and it may repeat millions or even billions of times before the model converges on an acceptable solution. The entire field of deep learning, from GPT to image generators, is built on this simple but powerful idea.
+        </p>
+
+        <h2>The Finite Memory Problem: Why Computers Cannot Do Exact Math</h2>
+        <p>
+          Here is a fact that surprises many people: your computer cannot exactly represent the number $0.1$. In the decimal system, $0.1$ looks simple enough, but in binary (the language computers speak), it becomes an infinitely repeating fraction, much like $1/3$ in decimal ($0.33333\dots$). Since the computer has only $64$ bits to store this number, it must round it off. The stored value is actually something like $0.1000000000000000055511151231257827021181583404541015625$. For a single calculation, this error is invisible. But what happens when you perform billions of calculations, each introducing its own tiny error?
+        </p>
+        <p>
+          This is the core problem of floating-point precision. Real numbers have infinite decimal expansions, but computer memory is finite. Every real number that a computer stores is, by definition, an approximation. In most everyday applications, this does not matter. Your spreadsheet adds up numbers correctly to the cent. Your GPS locates you within a few meters. The errors are too small to notice. But machine learning is different. Training a large language model involves performing trillions of floating-point operations. At that scale, rounding errors do not just accumulate. They can compound, amplify, and cascade through the computation graph, causing algorithms that are mathematically correct in theory to fail spectacularly in practice.
+        </p>
+        <p>
+          This is not a theoretical concern. Some of the most frustrating bugs in machine learning research come not from logic errors in the code, but from numerical instability. A researcher implements a new algorithm based on a published paper, tests it, and finds that the results are complete nonsense. After days of debugging, they discover that the issue is not a coding mistake at all. It is a numerical one: somewhere deep in the computation, a number became too small, too large, or too precise for the computer to handle, and the entire calculation silently derailed.
+        </p>
+
+        <h2>When Numbers Betray You: Underflow and Overflow</h2>
+        <p>
+          Among all the forms of numerical error that plague machine learning, two stand out as particularly devastating: underflow and overflow. Both are consequences of the finite range of numbers that floating-point arithmetic can represent. Anything smaller than approximately $10^{-308}$ becomes zero. Anything larger than approximately $10^{308}$ becomes infinity. These boundary failures are what we call underflow and overflow, respectively.
+        </p>
+        <p>
+          Underflow occurs when a number is so close to zero that the computer rounds it to exactly zero. This might sound harmless. After all, zero is close to the original value, so how much damage can it do? The answer is: potentially catastrophic. Many mathematical functions behave in fundamentally different ways when their argument is exactly zero versus a very small positive number. Division by zero is the classic example. Most programming environments will either throw an exception or return a special not-a-number (NaN) value when you divide by zero. Similarly, taking the logarithm of zero is mathematically undefined and is typically treated as $-\infty$, which then poisons any subsequent calculation that uses it.
+        </p>
+        <p>
+          Overflow is the mirror image. When a number exceeds the maximum representable value, the computer stores it as positive or negative infinity. On its own, infinity might seem manageable, but arithmetic involving infinity almost always produces NaN, and NaN has the nasty property of propagating through every subsequent operation. Once a single NaN enters your computation, it infects everything it touches, like a drop of black ink in a glass of water. The final result is not just slightly wrong; it is completely meaningless.
+        </p>
+
+        <div style="margin: 2rem 0; overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; font-family: var(--font-sans); font-size: 0.95rem;">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--accent-color); text-align: left;">
+                <th style="padding: 0.75rem;">Aspect</th>
+                <th style="padding: 0.75rem;">Underflow</th>
+                <th style="padding: 0.75rem;">Overflow</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid rgba(170,170,170,0.15);">
+                <td style="padding: 0.75rem; font-weight: 600;">Definition</td>
+                <td style="padding: 0.75rem;">Numbers near zero rounded to exactly zero</td>
+                <td style="padding: 0.75rem;">Numbers exceeding max representable value become infinity</td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(170,170,170,0.15);">
+                <td style="padding: 0.75rem; font-weight: 600;">Trigger</td>
+                <td style="padding: 0.75rem;">$\exp(c)$ where $c$ is very negative (e.g., $c = -1000$)</td>
+                <td style="padding: 0.75rem;">$\exp(c)$ where $c$ is very large (e.g., $c = +1000$)</td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(170,170,170,0.15);">
+                <td style="padding: 0.75rem; font-weight: 600;">Consequence</td>
+                <td style="padding: 0.75rem;">Division by zero; $\log(0)$ yielding $-\infty$; NaN propagation</td>
+                <td style="padding: 0.75rem;">$\infty$ values corrupt subsequent arithmetic into NaN</td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(170,170,170,0.15);">
+                <td style="padding: 0.75rem; font-weight: 600;">Softmax failure</td>
+                <td style="padding: 0.75rem;">Denominator becomes $0$ when all $x_i$ are very negative</td>
+                <td style="padding: 0.75rem;">Numerator and denominator both become $\infty$ (NaN result)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>The Softmax Function: A Case Study in Numerical Fragility</h2>
+        <p>
+          To see underflow and overflow in action, consider one of the most important functions in all of machine learning: the softmax function. Softmax is used throughout deep learning, particularly in classification tasks, to convert a vector of arbitrary real numbers into a vector of probabilities that sum to 1. It is the final layer in nearly every classification neural network, from image recognizers to language models. If softmax breaks, your model's predictions become meaningless.
+        </p>
+
+        <h3>The Standard Definition</h3>
+        <p>
+          The softmax function is defined as follows. Given an input vector $x$ of length $n$, the i-th output of the softmax function is the exponential of the i-th element, divided by the sum of exponentials of all elements:
+        </p>
+        
+        <div class="math-block" style="text-align: center; margin: 1.8rem 0; font-family: var(--font-serif); font-size: 1.15rem; background-color: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; border: 1px solid rgba(170,170,170,0.12);">
+          <strong>Eq. 2 — Standard softmax definition:</strong>
+          $$\text{softmax}(x_i) = \frac{e^{x_i}}{\sum_{j=1}^n e^{x_j}}$$
+        </div>
+
+        <p>
+          Analytically, this is a beautiful, well-behaved function. It maps any real-valued vector to a valid probability distribution: every output is between $0$ and $1$, and the outputs sum to exactly $1$. Numerically, it is a disaster waiting to happen.
+        </p>
+
+        <h3>Where the Standard Form Breaks</h3>
+        <p>
+          Consider what happens when all of the input values are equal to some constant $c$. Analytically, every output should be exactly $1/n$, because the exponential factors cancel:
+        </p>
+
+        <div class="math-block" style="text-align: center; margin: 1.8rem 0; font-family: var(--font-serif); font-size: 1.15rem; background-color: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; border: 1px solid rgba(170,170,170,0.12);">
+          <strong>Eq. 3 — Softmax output when all inputs are equal:</strong>
+          $$\text{softmax}(x_i) = \frac{e^c}{\sum_{j=1}^n e^c} = \frac{e^c}{n \cdot e^c} = \frac{1}{n}$$
+        </div>
+
+        <p>
+          Numerically, this simple result may not materialize. When $c$ is very large and negative (say, $c = -1000$), then $e^c$ underflows to zero. The denominator becomes exactly $0$, and the softmax is undefined. When $c$ is very large and positive (say, $c = +1000$), then $e^c$ overflows to infinity. The numerator and denominator both become infinity, and the result is NaN. In both cases, a perfectly valid mathematical input produces a catastrophic numerical failure.
+        </p>
+
+        <h3>The Fix: Proving Shift Invariance</h3>
+        <p>
+          The elegant solution is based on a key algebraic property of the softmax function. Observe what happens when we multiply both the numerator and the denominator of the softmax by $e^{-c}$, for any constant $c$:
+        </p>
+
+        <div class="math-block" style="text-align: center; margin: 1.8rem 0; font-family: var(--font-serif); font-size: 1.15rem; background-color: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; border: 1px solid rgba(170,170,170,0.12);">
+          <strong>Eq. 4 — Proof of shift invariance:</strong>
+          $$\text{softmax}(x_i - c) = \frac{e^{x_i - c}}{\sum_{j=1}^n e^{x_j - c}} = \frac{e^{x_i} \cdot e^{-c}}{\sum_{j=1}^n e^{x_j} \cdot e^{-c}} = \frac{e^{x_i}}{\sum_{j=1}^n e^{x_j}} = \text{softmax}(x_i)$$
+        </div>
+
+        <p>
+          This derivation shows that adding or subtracting a scalar from every element of the input vector does not change the value of the softmax function. This is a property of the function itself, not an approximation. But it gives us the power to choose $c$ strategically to prevent numerical instability.
+        </p>
+
+        <h3>The Numerically Stable Softmax</h3>
+        <p>
+          The standard stabilization trick is to choose $c = \max(x)$, the maximum element of the input vector. We define a new shifted vector $z$ as:
+        </p>
+
+        <div class="math-block" style="text-align: center; margin: 1.8rem 0; font-family: var(--font-serif); font-size: 1.15rem; background-color: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; border: 1px solid rgba(170,170,170,0.12);">
+          <strong>Eq. 5 — Shifted input vector:</strong>
+          $$z_i = x_i - \max(x)$$
+        </div>
+
+        <p>
+          After this shift, the largest element in $z$ is exactly $0$, so the largest exponential in the denominator is $e^0 = 1$. This means the denominator is at least $1$, which eliminates the possibility of division by zero (solving the underflow problem). And since no element of $z$ exceeds $0$, no exponential can exceed $1$, which means no exponential can overflow. The stabilized softmax is then:
+        </p>
+
+        <div class="math-block" style="text-align: center; margin: 1.8rem 0; font-family: var(--font-serif); font-size: 1.15rem; background-color: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; border: 1px solid rgba(170,170,170,0.12);">
+          <strong>Eq. 6 — Numerically stable softmax:</strong>
+          $$\text{softmax}(x_i) = \frac{e^{x_i - \max(x)}}{\sum_{j=1}^n e^{x_j - \max(x)}}$$
+        </div>
+
+        <p>
+          This is the form used in every production deep learning framework. PyTorch's <code>F.softmax</code>, TensorFlow's <code>tf.nn.softmax</code>, and SciPy's <code>scipy.special.softmax</code> all implement this shift internally. The computational overhead is negligible (a single max-reduction over the input vector), but the numerical benefit is enormous.
+        </p>
+
+        <h3>The Log-Softmax Pitfall</h3>
+        <p>
+          Even with the stabilized softmax, individual numerators can still underflow to zero when their corresponding $z$ values are very negative. This means that if you naively compute the softmax first and then take its logarithm, you can still get $\log(0) = -\infty$. This is a serious problem because the log-softmax appears in the cross-entropy loss function, which is the most widely used loss function in classification tasks.
+        </p>
+        <p>
+          Starting from the algebraic identity for the log of a softmax output, we have the naive form:
+        </p>
+
+        <div class="math-block" style="text-align: center; margin: 1.8rem 0; font-family: var(--font-serif); font-size: 1.15rem; background-color: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; border: 1px solid rgba(170,170,170,0.12);">
+          <strong>Eq. 7 — Naive log-softmax:</strong>
+          $$\log(\text{softmax}(x_i)) = x_i - \log\left(\sum_{j=1}^n e^{x_j}\right)$$
+        </div>
+
+        <p>
+          The problem here is that if the sum in the denominator is very large (causing numerical issues), or if the softmax output itself underflows to zero before the log is applied, the result is $-\infty$. The solution is to combine the $\log\text{-sum-exp}$ trick with the $\max\text{-subtraction}$ trick into a single stable computation. Applying the same shift invariance we proved in Equation 4, we arrive at the numerically stable log-softmax:
+        </p>
+
+        <div class="math-block" style="text-align: center; margin: 1.8rem 0; font-family: var(--font-serif); font-size: 1.15rem; background-color: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; border: 1px solid rgba(170,170,170,0.12);">
+          <strong>Eq. 8 — Numerically stable log-softmax:</strong>
+          $$\log(\text{softmax}(x_i)) = (x_i - \max(x)) - \log\left(\sum_{j=1}^n e^{x_j - \max(x)}\right)$$
+        </div>
+
+        <p>
+          This form is numerically stable because the argument to the log function is always a sum of exponentials where the largest term is $e^0 = 1$, so the sum is always at least $1$, meaning its log is always at least $0$. No underflow in the denominator, no overflow in any individual exponential, and no NaN in the final result. This is exactly what PyTorch computes when you call <code>F.log_softmax</code>, and it is what TensorFlow computes internally.
+        </p>
+
+        <h2>Why This Matters More Than You Think</h2>
+        <p>
+          You might be wondering: if libraries like PyTorch already handle these numerical issues automatically, why should you care? 
+        </p>
+        <p>
+          First, when you encounter a NaN loss or a model that suddenly produces garbage outputs, you will recognize the symptoms immediately and know where to look, rather than spending hours chasing red herrings in your data pipeline. Second, if you ever need to implement a custom loss function, a novel activation function, or any mathematical operation that is not already available in your framework, you will need to ensure it is numerically stable yourself. 
+        </p>
+        <p>
+          Third, numerical considerations directly influence architectural decisions. For example, the choice between using softmax and sigmoid output layers, or between cross-entropy and mean-squared-error loss, is partly a numerical decision. The widespread adoption of mixed-precision training (using 16-bit floats for speed) has made numerical awareness even more critical, because 16-bit floats have a dramatically smaller representable range (approximately $10^{-38}$ to $10^{38}$) than 64-bit floats, making underflow and overflow far more likely. Researchers have had to develop entirely new techniques, such as dynamic loss scaling, to keep numerical errors under control when training at reduced precision.
+        </p>
+        <p>
+          The gap between mathematical theory and computational reality is not an obscure corner of computer science. It is a central tension in every machine learning system ever built. The algorithms described in textbooks assume infinite precision. The hardware they run on provides anything but.
+        </p>
+
+        <h2>C++ Implementation: Seeing It in Code</h2>
+        <p>
+          Theory is one thing. Seeing the numbers crash in front of you is another. Below is a self-contained C++ program that demonstrates both the naive (broken) softmax and the numerically stable version, along with the stable log-softmax.
+        </p>
+
+        <pre><code>#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;cmath&gt;
+#include &lt;algorithm&gt;
+#include &lt;iomanip&gt;
+#include &lt;limits&gt;
+
+using namespace std;
+
+// ─── Naive Softmax (BROKEN for extreme inputs) ───
+vector&lt;double&gt; softmax_naive(const vector&lt;double&gt;&amp; x) {
+    double sum = 0.0;
+    vector&lt;double&gt; result(x.size());
+
+    for (size_t i = 0; i &lt; x.size(); i++)
+        result[i] = exp(x[i]);
+
+    for (size_t i = 0; i &lt; x.size(); i++)
+        sum += result[i];
+
+    for (size_t i = 0; i &lt; x.size(); i++)
+        result[i] /= sum;
+
+    return result;
+}
+
+// ─── Numerically Stable Softmax ───
+vector&lt;double&gt; softmax_stable(const vector&lt;double&gt;&amp; x) {
+    // Step 1: find max(x) to shift all values &lt;= 0
+    double max_x = *max_element(x.begin(), x.end());
+
+    // Step 2: compute exp(x_i - max_x) and accumulate
+    double sum = 0.0;
+    vector&lt;double&gt; result(x.size());
+    for (size_t i = 0; i &lt; x.size(); i++) {
+        result[i] = exp(x[i] - max_x);
+        sum += result[i];
+    }
+
+    // Step 3: normalize
+    for (size_t i = 0; i &lt; x.size(); i++)
+        result[i] /= sum;
+
+    return result;
+}
+
+// ─── Numerically Stable Log-Softmax ───
+vector&lt;double&gt; log_softmax_stable(const vector&lt;double&gt;&amp; x) {
+    double max_x = *max_element(x.begin(), x.end());
+
+    // Compute log-sum-exp: max_x + log(sum(exp(x_i - max_x)))
+    double sum_exp = 0.0;
+    for (size_t i = 0; i &lt; x.size(); i++)
+        sum_exp += exp(x[i] - max_x);
+
+    double log_sum_exp = max_x + log(sum_exp);
+
+    // log_softmax(x_i) = x_i - log_sum_exp
+    vector&lt;double&gt; result(x.size());
+    for (size_t i = 0; i &lt; x.size(); i++)
+        result[i] = x[i] - log_sum_exp;
+
+    return result;
+}
+
+int main() {
+    // Case 1: normal inputs
+    vector&lt;double&gt; normal = {1.0, 2.0, 3.0};
+
+    // Case 2: very negative inputs (naive underflows)
+    vector&lt;double&gt; very_negative = {-1000.0, -999.0, -998.0};
+
+    // Case 3: very large positive inputs (naive overflows)
+    vector&lt;double&gt; very_positive = {1000.0, 1001.0, 1002.0};
+
+    auto test = [](const string&amp; label, const vector&lt;double&gt;&amp; x) {
+        cout &lt;&lt; "=== " &lt;&lt; label &lt;&lt; " ===" &lt;&lt; endl;
+        cout &lt;&lt; "  input: ";
+        for (auto v : x) cout &lt;&lt; v &lt;&lt; " ";
+        cout &lt;&lt; endl;
+
+        auto naive = softmax_naive(x);
+        auto stable = softmax_stable(x);
+
+        cout &lt;&lt; "  naive:  ";
+        for (auto v : naive) {
+            if (isnan(v))      cout &lt;&lt; "NaN ";
+            else if (isinf(v)) cout &lt;&lt; "inf ";
+            else               cout &lt;&lt; fixed &lt;&lt; setprecision(6) &lt;&lt; v &lt;&lt; " ";
+        }
+        cout &lt;&lt; endl;
+
+        cout &lt;&lt; "  stable: ";
+        for (auto v : stable)
+            cout &lt;&lt; fixed &lt;&lt; setprecision(6) &lt;&lt; v &lt;&lt; " ";
+        cout &lt;&lt; endl;
+
+        auto ls = log_softmax_stable(x);
+        cout &lt;&lt; "  log_sf:";
+        for (auto v : ls)
+            cout &lt;&lt; fixed &lt;&lt; setprecision(4) &lt;&lt; v &lt;&lt; " ";
+        cout &"\n\n";
+    };
+
+    test("Normal inputs", normal);
+    test("Very negative (underflow)", very_negative);
+    test("Very positive (overflow)", very_positive);
+
+    return 0;
+}</code></pre>
+
+        <p>
+          When you compile and run this program, the output for the normal case will show both the naive and stable versions producing identical results (approximately $0.0900$, $0.2447$, $0.6652$). But for the very negative case, the naive version will output <code>NaN NaN NaN</code> (because exp(-1000) underflows to $0$, making the denominator $0$), while the stable version will correctly output <code>0.333333</code> for all three elements, exactly as Equation 3 predicts.
+        </p>
+        <p>
+          For the very positive case, the naive version will output <code>NaN</code> (because exp(1000) overflows to infinity), while the stable version will once again produce the correct uniform distribution. This is not a subtle difference. It is the difference between a model that trains successfully and a model that crashes on its first batch of data.
+        </p>
+
+      </div>
+    </article>
+    
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <p class="footer-copy">&copy; 2026 Romeo Mhakayakora. Designed with an editorial aesthetic.</p>
+    </div>
+  </footer>
+
+  <script src="../script.js"></script>
+</body>
+</html>

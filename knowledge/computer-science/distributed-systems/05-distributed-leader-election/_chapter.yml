@@ -1,0 +1,8 @@
+title: Distributed Leader Election
+chapter: 05-distributed-leader-election
+description: 'Coordination in dynamic groups: ring-based election, bully algorithms,
+  and LeLann-Chang-Roberts limits.'
+topics:
+- ring-election
+- bully-algorithm
+- lcr-algorithm
