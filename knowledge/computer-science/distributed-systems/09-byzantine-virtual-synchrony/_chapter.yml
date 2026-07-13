@@ -1,7 +1,0 @@
-title: Byzantine Generals and Virtual Synchrony
-chapter: 09-byzantine-virtual-synchrony
-description: Consensus under malicious faults, group communication membership, and
-  view deliveries.
-topics:
-- byzantine-generals
-- virtual-synchrony

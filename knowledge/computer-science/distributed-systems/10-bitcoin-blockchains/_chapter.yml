@@ -1,7 +1,0 @@
-title: Bitcoin and Blockchains
-chapter: 10-bitcoin-blockchains
-description: Nakamoto consensus, Proof of Work, Merkle trees, UTXO validation, and
-  smart contracts.
-topics:
-- proof-of-work
-- blockchain-mechanics

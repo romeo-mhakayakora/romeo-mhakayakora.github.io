@@ -1,8 +1,0 @@
-title: Amazon Dynamo, Facebook Cassandra, and Google Percolator
-chapter: 11-dynamo-cassandra-percolator
-description: 'Industrial distributed data stores: masterless replication, vector clocks,
-  LSM trees, and 2-phase transactions.'
-topics:
-- amazon-dynamo
-- facebook-cassandra
-- google-percolator
