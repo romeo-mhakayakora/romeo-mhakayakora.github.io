@@ -44,81 +44,18 @@
     <header class="page-header">
       <span class="page-label">Research & Core Focus</span>
       <h1 class="page-title">Inference Systems</h1>
-      <p class="page-subtitle">Designing and benchmarking low-latency inference engines, on-device runtimes, quantization techniques, and hardware-aware serving optimizations.</p>
+      <p class="page-subtitle">Centralized logs tracking my serving optimizations, quantization benchmarks, and on-device runtimes.</p>
     </header>
 
     <!-- Section 1: Edge Deployment -->
     <section class="section-compact">
       <div class="section-header-sub">
-        <h3 class="section-title-sub">Hardware-Aware Runtimes & Quantization</h3>
+        <h3 class="section-title-sub">Hardware-Aware Runtimes & Serving</h3>
       </div>
-      <p style="font-family: var(--font-sans); color: var(--text-muted); line-height: 1.6; margin-bottom: 1.5rem; font-size: 0.98rem;">
-        Scaling deep learning models is only half the battle; serving them efficiently on heterogeneous hardware is where execution details matter. My work targets on-device and edge deployment frameworks. By optimizing memory layouts, kernels, WebGPU runtimes, and mapping execution graphs to edge NPUs and TPUs, we can run high-capability models within tight hardware and power envelopes.
-      </p>
-    </section>
-
-    <!-- Section 2: Projects & Repos -->
-    <section class="section-compact" style="padding-top: 0;">
-      <div class="section-header-sub">
-        <h3 class="section-title-sub">High-Performance Serving Codebases</h3>
-      </div>
-      <div class="papers-list">
-        
-        <!-- Project 1: edge-inference-optimizations -->
-        <div class="paper-item" style="padding-top: 0; border-top: none;">
-          <div class="paper-meta">
-            <span class="paper-category">Hardware Optimization</span>
-            <span class="paper-year">2026</span>
-          </div>
-          <h4 class="paper-title">
-            <a href="https://github.com/romeo-mhakayakora" target="_blank" rel="noopener">
-              edge-inference-kernels: Hardware-aware acceleration
-            </a>
-          </h4>
-          <p class="paper-authors">Romeo Mhakayakora</p>
-          <p class="paper-summary">Codebases exploring custom serving layers, hardware compilation passes, memory-bandwidth optimizations, and quantization benchmarks (FP16/INT8/INT4) for deep learning models served on edge environments.</p>
+      <div class="blogs-list">
+        <div class="paper-item-empty" style="color: var(--text-muted); font-style: italic; padding: 1.5rem 0; font-size: 0.95rem;">
+          Inference systems, quantization benchmarks, and on-device serving write-ups coming soon.
         </div>
-
-      </div>
-    </section>
-
-    <!-- Section 3: Reference Logs -->
-    <section class="section-compact" style="padding-top: 0;">
-      <div class="section-header-sub">
-        <h3 class="section-title-sub">Landmark Literature & Serving References</h3>
-      </div>
-      <div class="papers-list">
-
-        <!-- Reference 1: Cactus Engine -->
-        <div class="paper-item" style="padding-top: 0; border-top: none;">
-          <div class="paper-meta">
-            <span class="paper-category">Serving Engines</span>
-            <span class="paper-year">2026</span>
-          </div>
-          <h4 class="paper-title">
-            <a href="https://cactuscompute.com/" target="_blank" rel="noopener">
-              Cactus Engine: On-device AI for Smartphones, Laptops & Edge
-            </a>
-          </h4>
-          <p class="paper-authors">Cactus Compute Team</p>
-          <p class="paper-summary">Analyzes compiled runtimes designed to run high-performance AI models directly on user devices (smartphones and edge notebooks), minimizing latency by bypassing cloud roundtrips and optimizing local memory access patterns.</p>
-        </div>
-
-        <!-- Reference 2: Needle -->
-        <div class="paper-item">
-          <div class="paper-meta">
-            <span class="paper-category">Model Distillation</span>
-            <span class="paper-year">2026</span>
-          </div>
-          <h4 class="paper-title">
-            <a href="https://cactuscompute.com/blog/needle" target="_blank" rel="noopener">
-              Needle: Distilling Gemini Tool Calling into a 26M Parameter Model
-            </a>
-          </h4>
-          <p class="paper-authors">Cactus Compute Blog</p>
-          <p class="paper-summary">Explores how task-specific distillation can capture complex tool-calling capabilities from massive models (like Gemini) and compress them into an incredibly lightweight 26M parameter local engine suited for instant execution on edge devices.</p>
-        </div>
-
       </div>
     </section>
     
