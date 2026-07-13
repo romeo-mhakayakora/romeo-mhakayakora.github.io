@@ -156,14 +156,16 @@ pre code {
 .nav {
   display: flex;
   align-items: center;
-  gap: 1.4rem;
+  gap: 1rem;
 }
 
 .nav-link {
   text-decoration: none;
   color: var(--text-color);
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
   transition: color 0.2s;
 }
 
@@ -1072,5 +1074,18 @@ pre code {
   .post-body-content h2 {
     font-size: 1.35rem;
     margin: 2rem 0 1rem 0;
+  }
+}
+
+@media (max-width: 992px) {
+  .header-inner {
+    flex-direction: column;
+    gap: 0.8rem;
+    padding: 1rem 1.5rem;
+  }
+  .nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.8rem 1rem;
   }
 }
