@@ -204,6 +204,14 @@
           <li style="margin-bottom: 4px;">matches the real function's <strong>slope</strong> exactly at $x_k$ (term 2)</li>
           <li style="margin-bottom: 4px;">matches the real function's <strong>curvature</strong> exactly at $x_k$ (term 3)</li>
         </ol>
+
+        <div class="figure-container" style="text-align: center; margin: 2rem 0;">
+          <img src="media/paraboloid_approximation.png" alt="Paraboloid Approximation" style="max-width: 420px; width: 100%; height: auto; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+          <p class="figure-caption" style="font-family: var(--font-sans); font-size: 0.88rem; color: var(--text-muted); margin-top: 0.6rem;">
+            <strong>Figure 1:</strong> Visualizing quadratic approximation. The outer orange bowl represents the local Taylor approximation built at the point, while the nested red bowl represents the actual function curve we are approximating.
+          </p>
+        </div>
+
         <p>
           Away from $x_k$, the fake bowl only <em>approximately</em> resembles the real function, and it gets worse the farther you wander — it's ignoring every higher-order twist and bend beyond simple curvature. But right at $x_k$, and in a neighborhood around it, it's the best quadratic stand-in for $f$ you can build from the information you have.
         </p>
