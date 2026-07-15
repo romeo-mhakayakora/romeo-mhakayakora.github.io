@@ -146,6 +146,10 @@
         </div>
 
         <p>
+          What does this mean physically? Consider a simple bowl-shaped function like $f(x,y) = x^2 + y^2$. Its Hessian is a diagonal matrix with entries $\begin{bmatrix} 2 & 0 \\ 0 & 2 \end{bmatrix}$ — no off-diagonal terms, because the bowl is perfectly aligned with your $x$ and $y$ axes. No matter where you stand on this bowl, walking in the $y$-direction does not change how steep the slope feels in the $x$-direction. The two directions are independent. Now imagine taking that same bowl and rotating it 45 degrees in the $xy$-plane. The shape has not changed, but your coordinate axes now cut across it at an angle. Suddenly, moving in $y$ does affect the $x$-slope, because the bowl’s true steepest and flattest directions no longer align with $x$ and $y$. That tilt is exactly what appears as non-zero off-diagonal entries in the Hessian. The off-diagonals are not a property of the function itself — they are a property of your coordinate system being misaligned with the function’s natural shape. This insight is the bridge to eigendecomposition: the eigenvectors of the Hessian point along those natural, untilted directions.
+        </p>
+
+        <p>
           The Hessian has a beautiful structural property. As long as the second partial derivatives are continuous, the order of differentiation does not matter: differentiating first with respect to $x_i$ and then $x_j$ gives the same result as differentiating first with respect to $x_j$ and then $x_i$. This is known as Schwarz's theorem or the equality of mixed partials, and it implies that $H_{i,j} = H_{j,i}$ for all $i, j$. In other words, the Hessian is always symmetric. This is not a trivial fact. Symmetry means the Hessian has exactly the same mathematical structure as a covariance matrix, a moment of inertia tensor, or a stress tensor in physics. It means we can apply the full machinery of linear algebra to it: eigendecomposition, spectral analysis, and the entire theory of real symmetric matrices.
         </p>
 
@@ -178,6 +182,11 @@
         <p>
           The eigenvectors of the Hessian define the natural axes of the loss surface at a given point. They are the directions in which the surface bends independently, without any cross-coupling. If you rotate your coordinate system to align with the eigenvectors, the Hessian becomes a simple diagonal matrix of eigenvalues. Each eigenvalue tells you the steepness of the curvature along its corresponding eigenvector direction. A large positive eigenvalue means the surface curves sharply upward in that direction (like a narrow valley wall). A small positive eigenvalue means the surface is nearly flat (like a wide valley floor). A negative eigenvalue means the surface curves downward (like a hilltop or a saddle).
         </p>
+
+        <p>
+          A common point of confusion: the entries of $V$ (the eigenvector matrix) are not curvatures. Each column of $V$ is a direction vector — it tells you where to point your new coordinate axis. Only the entries of $\Lambda$ (the eigenvalues on the diagonal) are curvatures. Think of it like tilting your head to look at a tilted ellipse straight-on. Once your viewing angle ($V$) lines up with the ellipse’s natural axes, the ellipse looks like a simple axis-aligned oval ($\Lambda$) — no cross-terms needed. The eigenvectors tell you how much to rotate your perspective; the eigenvalues tell you what you see once you’re looking at it head-on.
+        </p>
+
         <p>
           This geometric interpretation is extraordinarily powerful for understanding optimization. The eigenvectors tell you where the valleys and ridges are. The eigenvalues tell you how steep they are. When you understand that the Hessian can be decomposed this way, you realize that the loss surface is not some chaotic, unknowable object. It has a definite structure, and that structure is completely characterized by these eigenvalues and eigenvectors. The maximum eigenvalue determines the steepest curvature direction (the most dangerous direction for your optimizer), and the minimum eigenvalue determines the flattest direction (the direction where progress will be slowest). The spread between them, the condition number, determines how hard your optimizer has to work.
         </p>
@@ -291,6 +300,10 @@
 
         <p>
           The inverse Hessian does something remarkable. In directions where the curvature is high (large eigenvalue), $H^{-1}$ shrinks the gradient component, producing a small, cautious step that avoids overshooting. In directions where the curvature is low (small eigenvalue), $H^{-1}$ amplifies the gradient component, producing a large, confident step that makes rapid progress. It effectively normalizes the landscape so that every direction looks the same, turning an elongated, ill-conditioned valley into a perfectly round bowl. For a positive definite quadratic function, Newton's method converges in a single step. For general smooth functions, it converges quadratically: the number of correct digits roughly doubles with each iteration.
+        </p>
+
+        <p>
+          An important clarification: this does not mean Newton’s method magically knows the true minimum of the real function. At each step, it fits a quadratic bowl to the terrain immediately around its current position (using the local gradient and Hessian) and jumps to the bottom of that approximate bowl. If the real function is perfectly quadratic everywhere, the approximation is exact and one step suffices. For general smooth functions, the terrain has changed by the time you land, so you recompute a new local approximation at the new position and jump again. It is an iterative process that converges very fast near minima — not a single all-knowing leap to the global answer.
         </p>
 
         <div class="figure-container" style="text-align: center; margin: 2rem 0;">
