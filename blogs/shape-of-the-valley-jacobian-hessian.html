@@ -74,6 +74,16 @@
       <!-- Article Body -->
       <div class="post-body-content">
         
+        <!-- Appendix Section Link (Top) -->
+        <div class="math-block" style="margin-bottom: 2.5rem; background-color: var(--secondary-bg); border-left: 4px solid var(--accent-color); padding: 1.2rem; border-radius: 4px;">
+          <p style="margin-bottom: 0.8rem; font-size: 0.95rem; color: var(--text-muted); line-height: 1.5;">
+            <strong>Looking for the math?</strong> For a term-by-term algebraic derivation of Newton's Method from the Taylor Expansion (including matrix dimension matching and curvature checks), see the companion appendix page:
+          </p>
+          <a href="newtons-method-derivation.html" class="nav-link" style="display: inline-block; padding: 0.4rem 0.8rem; background-color: var(--accent-color); color: #fff; border-radius: 4px; text-decoration: none; font-family: var(--font-sans); font-weight: 600; font-size: 0.85rem;">
+            Read Newton's Method Derivation &rarr;
+          </a>
+        </div>
+
         <h2>When Functions Become Maps: The Jacobian</h2>
         <p>
           In the previous blog, we explored gradient descent as a compass pointing downhill. But there is a fundamental limitation we deliberately ignored: the gradient only exists when your function outputs a single number. A loss function returns a scalar, so the gradient is a vector pointing in the direction of steepest ascent. But what happens when your function returns an entire vector of outputs? This is not an exotic scenario. In a neural network, each layer computes a vector of activations. The softmax layer outputs a probability distribution (a vector). The attention mechanism outputs a sequence of vectors. In all of these cases, you need to know how every output component changes with respect to every input component. That is exactly what the Jacobian matrix captures.
@@ -403,6 +413,7 @@ __global__ void newton_update_kernel(float* weights,
         <p>
           The Jacobian and Hessian are not abstract mathematical curiosities. They are the two layers of intelligence that any optimization system can possess. The Jacobian, the first-order information, tells your optimizer which way is downhill. The Hessian, the second-order information, tells it how the downhill slope is changing. A system that uses only the Jacobian is reactive: it responds to the current slope but cannot anticipate what lies ahead. A system that uses the Hessian is predictive: it understands the shape of the terrain and adjusts its stride accordingly. Every practical optimizer in deep learning, from <code>Adam</code> to <code>L-BFGS</code>, is an attempt to capture some fraction of this second-order intelligence while staying within the computational budget that billions of parameters demand.
         </p>
+
 
       </div>
     </article>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Newton's Method Derivation — Romeo Mhakayakora</title>
+  
+  <!-- Google Fonts: Lora (Editorial Serif) & Assistant (Clean Sans-serif) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  
+  <!-- MathJax for rendering scientific/mathematical notation -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  
+  <link rel="stylesheet" href="../style.css?v=2">
+</head>
+<body data-page="blog-post">
+
+  <!-- Header / Navigation (Relative paths) -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="../index.html" class="logo">Romeo Mhakayakora <span class="logo-accent">/></span></a>
+      <nav class="nav">
+        <a href="../index.html" class="nav-link">Home</a>
+        <a href="../projects.html" class="nav-link">Projects</a>
+        <a href="../rl.html" class="nav-link">RL</a>
+        <a href="../lm.html" class="nav-link">Language Models</a>
+        <a href="../agentic-ai.html" class="nav-link">Agentic AI</a>
+        <a href="../inference.html" class="nav-link">Inference</a>
+        <a href="../blogs.html" class="nav-link active">Blogs</a>
+        <a href="../courses.html" class="nav-link">Courses</a>
+        <a href="../papers.html" class="nav-link">Papers</a>
+        <a href="../contact.html" class="nav-link">Contact</a>
+        <button id="theme-toggle" class="theme-btn" aria-label="Toggle dark mode">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+    
+    <!-- Article Layout -->
+    <article class="post-layout">
+      <header class="post-header">
+        <div class="post-meta-details">
+          <span class="post-category-tag">Mathematics</span>
+          <span class="post-separator">&bull;</span>
+          <span class="post-date-tag">July 15, 2026</span>
+        </div>
+        <h1 class="post-full-title">Newton's Method &mdash; Derived From the Taylor Expansion, Term by Term</h1>
+        <p class="post-lead-intro">A rigorous look at the mathematics of curvature-adaptive optimization.</p>
+        <div class="post-author-block">
+          <img src="../profile.png" alt="Romeo Mhakayakora" class="post-author-avatar">
+          <div class="post-author-info">
+            <span class="post-author-name">Romeo Mhakayakora</span>
+            <span class="post-author-meta">Systems & RL Student</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Article Body -->
+      <div class="post-body-content">
+        
+        <h2>0. The question we're actually answering</h2>
+        <p>
+          You're standing at a point $x_k$. You know three things about the function $f$ there: its value, its slope (gradient), and its curvature (Hessian). You don't know what $f$ looks like anywhere else.
+        </p>
+        <p>
+          <strong>Question:</strong> using only that local information, what's the best guess for $f(x)$ at some nearby point $x$ — and can that guess tell you where to move next?
+        </p>
+        <p>
+          That's it. Everything below is just answering this one question, carefully.
+        </p>
+
+        <hr style="margin: 2rem 0; border: 0; border-top: 1px solid rgba(170,170,170,0.15);">
+
+        <h2>1. The formula, stated first</h2>
+        <div class="math-block" style="text-align: center; margin: 1.8rem 0; font-family: var(--font-serif); font-size: 1.15rem; background-color: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; border: 1px solid rgba(170,170,170,0.12);">
+          $$f(x) \approx f(x_k) + \nabla f(x_k)^T(x - x_k) + \frac{1}{2}(x - x_k)^T \nabla^2 f(x_k)(x - x_k)$$
+        </div>
+        <p>
+          This is the <strong>second-order Taylor expansion</strong> of $f$ around $x_k$. It has exactly three pieces, and each one has a specific job. Nothing about it is arbitrary — every symbol earns its place.
+        </p>
+
+        <hr style="margin: 2rem 0; border: 0; border-top: 1px solid rgba(170,170,170,0.15);">
+
+        <h2>2. Term by term</h2>
+
+        <h3>Term 1 — $f(x_k)$</h3>
+        <p>
+          The starting height. Just the actual value of the function at the point you're standing on. No approximation here — this is exact.
+        </p>
+
+        <h3>Term 2 — $\nabla f(x_k)^T(x - x_k)$ (the flat-plane correction)</h3>
+        <p>Two pieces multiplied together:</p>
+        
+        <div style="margin: 1.5rem 0; overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; font-family: var(--font-sans); font-size: 0.95rem;">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--accent-color); text-align: left;">
+                <th style="padding: 0.75rem; width: 25%;">Symbol</th>
+                <th style="padding: 0.75rem;">Meaning</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid rgba(170,170,170,0.15);">
+                <td style="padding: 0.75rem; font-family: monospace;">&nabla;f(x_k)</td>
+                <td style="padding: 0.75rem;">the gradient at your current point — the direction of steepest increase, and how steep it is</td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(170,170,170,0.15);">
+                <td style="padding: 0.75rem; font-family: monospace;">(x - x_k)</td>
+                <td style="padding: 0.75rem;">the displacement vector — the direction <em>and</em> distance you're moving, from $x_k$ toward $x$</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Multiplying them answers: <em>"if I move this far, in this direction, and the slope stayed exactly the same the whole way, how much would $f$ change?"</em>
+        </p>
+        <p>
+          That's a <strong>linear</strong> guess — it's the equation of a flat plane sitting tangent to $f$ at $x_k$. No bending allowed yet.
+        </p>
+
+        <h3>Term 3 — $\frac{1}{2}(x - x_k)^T \nabla^2 f(x_k)(x - x_k)$ (the curvature correction)</h3>
+        <p>This is where it gets interesting, so break it all the way down:</p>
+
+        <div style="margin: 1.5rem 0; overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; font-family: var(--font-sans); font-size: 0.95rem;">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--accent-color); text-align: left;">
+                <th style="padding: 0.75rem; width: 25%;">Symbol</th>
+                <th style="padding: 0.75rem;">Meaning</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid rgba(170,170,170,0.15);">
+                <td style="padding: 0.75rem; font-family: monospace;">&frac12;</td>
+                <td style="padding: 0.75rem;">a constant scaling factor, falling straight out of the Taylor series derivation (each term is divided by a factorial — here $2! = 2$)</td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(170,170,170,0.15);">
+                <td style="padding: 0.75rem; font-family: monospace;">x</td>
+                <td style="padding: 0.75rem;">the new point you're evaluating the approximation at</td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(170,170,170,0.15);">
+                <td style="padding: 0.75rem; font-family: monospace;">x_k</td>
+                <td style="padding: 0.75rem;">your current, fixed, known point — "home base"</td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(170,170,170,0.15);">
+                <td style="padding: 0.75rem; font-family: monospace;">(x - x_k)</td>
+                <td style="padding: 0.75rem;">the same displacement vector as before — direction and distance of the move</td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(170,170,170,0.15);">
+                <td style="padding: 0.75rem; font-family: monospace;">(x - x_k)^T</td>
+                <td style="padding: 0.75rem;">the <em>same</em> vector, transposed into a row vector — pure bookkeeping, needed for the matrix multiplication to produce a single number</td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(170,170,170,0.15);">
+                <td style="padding: 0.75rem; font-family: monospace;">&nabla;&sup2;f(x_k)</td>
+                <td style="padding: 0.75rem;">the Hessian, evaluated at $x_k$ — just another way of writing $H$. A square matrix of all second-order partial derivatives</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p><strong>Why the vector shows up twice.</strong> This is exactly the $d^T H d$ structure — the general formula for "how much does the function curve in direction $d$?" Here $d = (x - x_k)$, so:</p>
+        <p style="text-align: center; font-family: monospace; background-color: var(--secondary-bg); padding: 0.8rem; border-radius: 4px; border: 1px solid rgba(170,170,170,0.1);">
+          (x - x_k)<sup>T</sup> &nabla;<sup>2</sup>f(x_k) (x - x_k) &nbsp;&nbsp;&nbsp;is just&nbsp;&nbsp;&nbsp; d<sup>T</sup>Hd, &nbsp;&nbsp;where&nbsp;&nbsp; d = (x - x_k)
+        </p>
+
+        <p>
+          The term is asking: <em>"using the curvature information in H, how much does $f$ actually bend as I move this specific direction and distance away from $x_k$?"</em>
+        </p>
+        <p>
+          <strong>Why the multiplication order matters.</strong> Matrix multiplication needs matching dimensions. A row vector ($1 \times n$) times a matrix ($n \times n$) times a column vector ($n \times 1$) collapses to a single number ($1 \times 1$) — which makes sense, since "curvature along one direction" should be one number, not a vector. That's why the first copy of $(x - x_k)$ needs the transpose and the second doesn't.
+        </p>
+        <p>
+          <strong>In plain English:</strong> <em>"Take the direction and distance I'm moving away from $x_k$, and using the Hessian's curvature information at $x_k$, work out how much $f$'s height changes due to curvature alone over that specific move — then scale by one-half."</em>
+        </p>
+
+        <hr style="margin: 2rem 0; border: 0; border-top: 1px solid rgba(170,170,170,0.15);">
+
+        <h2>3. Putting all three terms together</h2>
+        <blockquote style="border-left: 4px solid var(--accent-color); padding-left: 12pt; margin: 1.5rem 0; color: var(--text-muted); font-style: italic;">
+          $f(x)$ is: my starting height at $x_k$, <strong>plus</strong> how much height changes if I move a distance $(x - x_k)$ assuming the slope stays constant the whole way (the gradient term), <strong>plus</strong> a correction for the fact that the slope doesn't actually stay constant — it bends — and the amount of bending depends on the curvature specifically along the direction I'm moving (the Hessian term).
+        </blockquote>
+        <p>
+          Picture standing at $x_k$ on the real, possibly complicated landscape. This formula builds a <strong>fake, simplified landscape</strong> — literally a paraboloid, a bowl shape — that:
+        </p>
+        <ol style="margin-bottom: 16pt; padding-left: 20pt;">
+          <li style="margin-bottom: 4px;">matches the real function's <strong>height</strong> exactly at $x_k$ (term 1)</li>
+          <li style="margin-bottom: 4px;">matches the real function's <strong>slope</strong> exactly at $x_k$ (term 2)</li>
+          <li style="margin-bottom: 4px;">matches the real function's <strong>curvature</strong> exactly at $x_k$ (term 3)</li>
+        </ol>
+        <p>
+          Away from $x_k$, the fake bowl only <em>approximately</em> resembles the real function, and it gets worse the farther you wander — it's ignoring every higher-order twist and bend beyond simple curvature. But right at $x_k$, and in a neighborhood around it, it's the best quadratic stand-in for $f$ you can build from the information you have.
+        </p>
+        <p>
+          <strong>Why this beats gradient descent:</strong> gradient descent only ever uses term 2 — it assumes the slope is roughly constant nearby, which is often wrong. This formula uses terms 2 <em>and</em> 3 together, giving a genuinely better local picture of $f$, not just a straight-line guess.
+        </p>
+
+        <hr style="margin: 2rem 0; border: 0; border-top: 1px solid rgba(170,170,170,0.15);">
+
+        <h2>4. From "what f looks like" to "where to go"</h2>
+        <p>
+          Having a formula for $f(x)$ isn't the destination — it's a tool. The next question is: <strong>where is this fake bowl's bottom?</strong>
+        </p>
+        <p>
+          Since it's just a simple quadratic, calculus answers this exactly: take its gradient, set that gradient to zero, and solve. A minimum (or max, or saddle) always sits where the gradient vanishes.
+        </p>
+        
+        <p><strong>Differentiate the approximation with respect to x:</strong></p>
+        <div class="math-block" style="text-align: center; margin: 1.5rem 0; font-family: var(--font-serif); font-size: 1.1rem; background-color: var(--secondary-bg); padding: 1rem; border-radius: 6px; border: 1px solid rgba(170,170,170,0.1);">
+          $$f(x) \approx f(x_k) + \nabla f(x_k)^T(x - x_k) + \frac{1}{2}(x - x_k)^T \nabla^2 f(x_k)(x - x_k)$$
+        </div>
+        <ul style="margin-bottom: 16pt; padding-left: 20pt;">
+          <li style="margin-bottom: 4px;">$f(x_k)$ is a constant (doesn't depend on $x$) &rarr; disappears entirely</li>
+          <li style="margin-bottom: 4px;">the gradient term differentiates down to just $\nabla f(x_k)$</li>
+          <li style="margin-bottom: 4px;">the Hessian term differentiates down to $\nabla^2 f(x_k)(x - x_k)$ (standard rule for differentiating a quadratic form)</li>
+        </ul>
+
+        <p><strong>Result:</strong></p>
+        <div class="math-block" style="text-align: center; margin: 1.5rem 0; font-family: var(--font-serif); font-size: 1.1rem; background-color: var(--secondary-bg); padding: 1rem; border-radius: 6px; border: 1px solid rgba(170,170,170,0.1);">
+          $$\nabla f(x) \approx \nabla f(x_k) + \nabla^2 f(x_k)(x - x_k)$$
+        </div>
+
+        <p><strong>Set it to zero</strong>, since that's what defines the bottom of the bowl:</p>
+        <div class="math-block" style="text-align: center; margin: 1.5rem 0; font-family: var(--font-serif); font-size: 1.1rem; background-color: var(--secondary-bg); padding: 1rem; border-radius: 6px; border: 1px solid rgba(170,170,170,0.1);">
+          $$0 = \nabla f(x_k) + \nabla^2 f(x_k)(x - x_k)$$
+        </div>
+
+        <p><strong>Solve for $(x - x_k)$</strong> — this is exactly the step you should take:</p>
+        <div class="math-block" style="text-align: center; margin: 1.5rem 0; font-family: var(--font-serif); font-size: 1.1rem; background-color: var(--secondary-bg); padding: 1rem; border-radius: 6px; border: 1px solid rgba(170,170,170,0.1);">
+          $$\nabla^2 f(x_k)(x - x_k) = -\nabla f(x_k)$$
+          $$(x - x_k) = -[\nabla^2 f(x_k)]^{-1} \nabla f(x_k)$$
+        </div>
+
+        <p><strong>And there it is — the Newton's method update, derived, not assumed:</strong></p>
+        <div class="math-block" style="text-align: center; margin: 1.8rem 0; font-family: var(--font-serif); font-size: 1.15rem; background-color: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; border: 1px solid rgba(170,170,170,0.12);">
+          $$x = x_k - H^{-1} \nabla f(x_k)$$
+        </div>
+        <p>
+          You built a fake bowl, found its exact bottom with plain calculus, and that bottom <em>is</em> the next point Newton's method moves to.
+        </p>
+
+        <hr style="margin: 2rem 0; border: 0; border-top: 1px solid rgba(170,170,170,0.15);">
+
+        <h2>5. The four steps, in the correct order</h2>
+        <p>
+          It's tempting to describe this as "check the Hessian, and if it looks like a minimum, go there." That's backwards. The actual order is:
+        </p>
+        <ol style="margin-bottom: 16pt; padding-left: 20pt;">
+          <li style="margin-bottom: 8px;"><strong>Build the approximation.</strong> At your current point, construct the bowl above — using the current value, gradient, and Hessian.</li>
+          <li style="margin-bottom: 8px;"><strong>Find where that guess's slope is zero.</strong> Differentiate the <em>approximation</em> (not the real $f$), set it to zero, solve. Easy, because it's just a quadratic.</li>
+          <li style="margin-bottom: 8px;"><strong>Move there.</strong> This new $x$ is the Newton's method step. You move to it — unconditionally, no questions asked yet.</li>
+          <li style="margin-bottom: 8px;"><strong>Check what you landed on.</strong> <em>Now</em>, at the new point, compute the real Hessian fresh and check its eigenvalues:
+            <ul style="margin-top: 4px; padding-left: 15pt;">
+              <li style="margin-bottom: 2px;">all positive &rarr; genuine local minimum</li>
+              <li style="margin-bottom: 2px;">all negative &rarr; local maximum</li>
+              <li style="margin-bottom: 2px;">mixed signs &rarr; saddle point</li>
+            </ul>
+          </li>
+        </ol>
+        <p>
+          <strong>The key correction:</strong> Newton's method does not check first and move only if the destination looks promising. It moves first, unconditionally — the derivation in Section 4 never once referenced the sign of curvature, only where the slope of the approximation is zero. Only <em>afterward</em> do you find out what kind of point you actually reached. It's "go, then check," never "check, then go."
+        </p>
+        <p>
+          The gradient hitting (near) zero is your <strong>stopping signal</strong> — it tells you you've converged to <em>some</em> critical point. The eigenvalue check is a separate, necessary step after that, telling you <em>which</em> kind of critical point it was.
+        </p>
+
+        <hr style="margin: 2rem 0; border: 0; border-top: 1px solid rgba(170,170,170,0.15);">
+
+        <h2>6. One-line summary</h2>
+        <p>
+          Build the best possible quadratic guess of $f$ at your current point &rarr; find that guess's exact minimum with calculus &rarr; move there &rarr; only then check, via the Hessian's eigenvalues, whether you landed on a minimum, a maximum, or a saddle.
+        </p>
+
+        <!-- Back Button / Link back to the main blog -->
+        <div style="margin-top: 3rem; text-align: center;">
+          <a href="shape-of-the-valley-jacobian-hessian.html" class="nav-link" style="display: inline-block; padding: 0.6rem 1.2rem; background-color: var(--accent-color); color: #fff; border-radius: 4px; text-decoration: none; font-family: var(--font-sans); font-weight: 600; font-size: 0.95rem;">&larr; Return to Main Blog</a>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <p class="footer-copy">&copy; 2026 Romeo Mhakayakora. Designed with an editorial aesthetic.</p>
+    </div>
+  </footer>
+
+  <script src="../script.js"></script>
+</body>
+</html>
