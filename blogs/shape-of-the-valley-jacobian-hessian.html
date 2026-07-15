@@ -317,38 +317,6 @@
           However, Newton's method has a critical vulnerability: near saddle points, the Hessian is not positive definite. It has negative eigenvalues, which means $H^{-1}$ will point the update toward the saddle point rather than away from it. Gradient descent, by contrast, is only attracted to saddle points if the gradient happens to point directly at them (which is unlikely). This is a fundamental trade-off: second-order methods are dramatically faster near minima but can be actively harmful near saddle points. In practice, variants like damped Newton's method (which uses a scaled identity added to the Hessian) or trust region methods are used to maintain the benefits while avoiding the pitfalls.
         </p>
 
-        <h2>C++ Implementation: Newton-Style Update</h2>
-        <p>
-          The following CUDA kernel demonstrates how curvature information modifies a gradient step. Each thread processes one weight: if the curvature (second derivative) is significant, it performs a Newton step (dividing the gradient by the curvature). If the curvature is near zero (flat region), it falls back to standard gradient descent. This is the essential logic that separates second-order methods from first-order ones: the curvature acts as a per-parameter adaptive learning rate.
-        </p>
-
-        <pre><code>/**
- * @brief Newton-style update kernel (per-element curvature)
- * @param weights    Model parameters (in-place update)
- * @param gradients  First derivatives (f')
- * @param curvature  Second derivatives (f'')
- * @param n          Total number of parameters
- */
-__global__ void newton_update_kernel(float* weights,
-                                     const float* gradients,
-                                     const float* curvature,
-                                     int n) {
-    int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    if (idx >= n) return;
-    float g = gradients[idx];
-    float h = curvature[idx];
-    // If curvature is near zero, the surface is flat.
-    // Fall back to standard gradient descent.
-    if (fabsf(h) < 1e-6f) {
-        weights[idx] -= 0.01f * g;
-    } else {
-        // Newton step: divide gradient by curvature.
-        // Large curvature => small step (safe).
-        // Small curvature => large step (fast).
-        weights[idx] -= g / h;
-    }
-}</code></pre>
-
         <h2>First-Order vs Second-Order: The Practical Reality</h2>
         <p>
           The distinction between first-order and second-order optimization algorithms is one of the most important practical decisions in deep learning. First-order methods, like <code>SGD</code>, <code>Adam</code>, and <code>RMSProp</code>, use only the gradient. They are simple, cheap to compute, and robust. Each gradient computation costs $O(n)$ for $n$ parameters, and the memory footprint is $O(n)$. Second-order methods, like Newton's method, use the Hessian as well. They are dramatically more efficient per step but dramatically more expensive: computing and storing the full Hessian costs $O(n^2)$, and inverting it costs $O(n^3)$. For a modern language model with billions of parameters, storing the full Hessian is physically impossible.
