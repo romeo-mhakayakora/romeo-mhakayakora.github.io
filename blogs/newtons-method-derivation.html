@@ -117,11 +117,11 @@
             </thead>
             <tbody>
               <tr style="border-bottom: 1px solid rgba(170,170,170,0.15);">
-                <td style="padding: 0.75rem; font-family: monospace;">&nabla;f(x_k)</td>
+                <td style="padding: 0.75rem;">$\nabla f(x_k)$</td>
                 <td style="padding: 0.75rem;">the gradient at your current point — the direction of steepest increase, and how steep it is</td>
               </tr>
               <tr style="border-bottom: 1px solid rgba(170,170,170,0.15);">
-                <td style="padding: 0.75rem; font-family: monospace;">(x - x_k)</td>
+                <td style="padding: 0.75rem;">$(x - x_k)$</td>
                 <td style="padding: 0.75rem;">the displacement vector — the direction <em>and</em> distance you're moving, from $x_k$ toward $x$</td>
               </tr>
             </tbody>
@@ -148,27 +148,27 @@
             </thead>
             <tbody>
               <tr style="border-bottom: 1px solid rgba(170,170,170,0.15);">
-                <td style="padding: 0.75rem; font-family: monospace;">&frac12;</td>
+                <td style="padding: 0.75rem;">$\frac{1}{2}$</td>
                 <td style="padding: 0.75rem;">a constant scaling factor, falling straight out of the Taylor series derivation (each term is divided by a factorial — here $2! = 2$)</td>
               </tr>
               <tr style="border-bottom: 1px solid rgba(170,170,170,0.15);">
-                <td style="padding: 0.75rem; font-family: monospace;">x</td>
+                <td style="padding: 0.75rem;">$x$</td>
                 <td style="padding: 0.75rem;">the new point you're evaluating the approximation at</td>
               </tr>
               <tr style="border-bottom: 1px solid rgba(170,170,170,0.15);">
-                <td style="padding: 0.75rem; font-family: monospace;">x_k</td>
+                <td style="padding: 0.75rem;">$x_k$</td>
                 <td style="padding: 0.75rem;">your current, fixed, known point — "home base"</td>
               </tr>
               <tr style="border-bottom: 1px solid rgba(170,170,170,0.15);">
-                <td style="padding: 0.75rem; font-family: monospace;">(x - x_k)</td>
+                <td style="padding: 0.75rem;">$(x - x_k)$</td>
                 <td style="padding: 0.75rem;">the same displacement vector as before — direction and distance of the move</td>
               </tr>
               <tr style="border-bottom: 1px solid rgba(170,170,170,0.15);">
-                <td style="padding: 0.75rem; font-family: monospace;">(x - x_k)^T</td>
+                <td style="padding: 0.75rem;">$(x - x_k)^T$</td>
                 <td style="padding: 0.75rem;">the <em>same</em> vector, transposed into a row vector — pure bookkeeping, needed for the matrix multiplication to produce a single number</td>
               </tr>
               <tr style="border-bottom: 1px solid rgba(170,170,170,0.15);">
-                <td style="padding: 0.75rem; font-family: monospace;">&nabla;&sup2;f(x_k)</td>
+                <td style="padding: 0.75rem;">$\nabla^2 f(x_k)$</td>
                 <td style="padding: 0.75rem;">the Hessian, evaluated at $x_k$ — just another way of writing $H$. A square matrix of all second-order partial derivatives</td>
               </tr>
             </tbody>
@@ -176,12 +176,12 @@
         </div>
 
         <p><strong>Why the vector shows up twice.</strong> This is exactly the $d^T H d$ structure — the general formula for "how much does the function curve in direction $d$?" Here $d = (x - x_k)$, so:</p>
-        <p style="text-align: center; font-family: monospace; background-color: var(--secondary-bg); padding: 0.8rem; border-radius: 4px; border: 1px solid rgba(170,170,170,0.1);">
-          (x - x_k)<sup>T</sup> &nabla;<sup>2</sup>f(x_k) (x - x_k) &nbsp;&nbsp;&nbsp;is just&nbsp;&nbsp;&nbsp; d<sup>T</sup>Hd, &nbsp;&nbsp;where&nbsp;&nbsp; d = (x - x_k)
-        </p>
+        <div class="math-block" style="text-align: center; margin: 1.5rem 0; font-family: var(--font-serif); font-size: 1.1rem; background-color: var(--secondary-bg); padding: 1rem; border-radius: 6px; border: 1px solid rgba(170,170,170,0.1);">
+          $$(x - x_k)^T \nabla^2 f(x_k)(x - x_k) \quad \text{is just} \quad d^T H d, \quad \text{where} \quad d = (x - x_k)$$
+        </div>
 
         <p>
-          The term is asking: <em>"using the curvature information in H, how much does $f$ actually bend as I move this specific direction and distance away from $x_k$?"</em>
+          The term is asking: <em>"using the curvature information in $H$, how much does $f$ actually bend as I move this specific direction and distance away from $x_k$?"</em>
         </p>
         <p>
           <strong>Why the multiplication order matters.</strong> Matrix multiplication needs matching dimensions. A row vector ($1 \times n$) times a matrix ($n \times n$) times a column vector ($n \times 1$) collapses to a single number ($1 \times 1$) — which makes sense, since "curvature along one direction" should be one number, not a vector. That's why the first copy of $(x - x_k)$ needs the transpose and the second doesn't.
