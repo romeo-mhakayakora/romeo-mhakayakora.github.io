@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Core Learning Stack — Romeo Mhakayakora</title>
+  <meta name="description" content="Core learning stack and active study plans of Romeo Mhakayakora. Tracking Reinforcement Learning, Meta Learning, Optimization, and Deep Learning.">
+  
+  <!-- Google Fonts: Lora (Editorial Serif) & Assistant (Clean Sans-serif) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css?v=2">
+  
+  <style>
+    /* Premium Centered Reading & Dashboard Layout */
+    .learning-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+    }
+    
+    .stack-section {
+      margin-bottom: 3.5rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid rgba(170, 170, 170, 0.15);
+    }
+    
+    .stack-section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    
+    .stack-title-layout {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 1.2rem;
+    }
+    
+    .stack-title {
+      font-family: var(--font-serif);
+      font-size: 1.8rem;
+      margin: 0;
+    }
+    
+    .stack-status {
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--accent-color);
+      letter-spacing: 0.05em;
+    }
+    
+    .stack-meta {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      display: flex;
+      gap: 1.5rem;
+    }
+    
+    .stack-desc {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+    }
+    
+    .stack-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .stack-btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      background-color: var(--secondary-bg);
+      color: var(--text-color);
+      border: 1px solid rgba(170, 170, 170, 0.2);
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    .stack-btn:hover {
+      background-color: var(--accent-color);
+      color: #FFFFFF;
+      border-color: var(--accent-color);
+    }
+    
+    .stack-btn svg {
+      margin-left: 0.4rem;
+      transition: transform 0.2s ease;
+    }
+    
+    .stack-btn:hover svg {
+      transform: translateX(3px);
+    }
+  </style>
+</head>
+<body data-page="learning">
+
+  <!-- Header / Navigation -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">Romeo Mhakayakora <span class="logo-accent">/></span></a>
+      <nav class="nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="projects.html" class="nav-link">Projects</a>
+        <a href="rl.html" class="nav-link">RL</a>
+        <a href="lm.html" class="nav-link">Language Models</a>
+        <a href="agentic-ai.html" class="nav-link">Agentic AI</a>
+        <a href="inference.html" class="nav-link">Inference</a>
+        <a href="blogs.html" class="nav-link">Blogs</a>
+        <a href="courses.html" class="nav-link">Courses</a>
+        <a href="learning.html" class="nav-link active">Learning</a>
+        <a href="papers.html" class="nav-link">Papers</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+        <button id="theme-toggle" class="theme-btn" aria-label="Toggle dark mode">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+    
+    <!-- Centered Learning Area -->
+    <div class="learning-container">
+      
+      <!-- Page Header -->
+      <header class="page-header" style="text-align: center; border-bottom: 1px solid rgba(170, 170, 170, 0.2); padding-bottom: 2rem; margin-bottom: 2.5rem;">
+        <span class="page-label" style="display: block; margin-bottom: 0.5rem;">Core Stack</span>
+        <h1 class="page-title" style="font-size: 2.5rem; line-height: 1.2; margin: 0 0 0.8rem 0; font-family: var(--font-serif);">Core Learning Stack</h1>
+        <p class="page-subtitle" style="font-size: 1.05rem; color: var(--text-muted); margin: 0; line-height: 1.5;">Centralizing my active study tracks, reference textbook research, and optimization notes.</p>
+      </header>
+
+      <!-- Track 1: Reinforcement Learning -->
+      <div class="stack-section">
+        <div class="stack-title-layout">
+          <h2 class="stack-title">Reinforcement Learning</h2>
+          <span class="stack-status">Active Track</span>
+        </div>
+        <div class="stack-meta">
+          <span><strong>Focus:</strong> MDPs, Dynamic Programming, Monte Carlo, TD Learning, Policy Gradients</span>
+        </div>
+        <p class="stack-desc">
+          Building mathematical and neural foundations for decision processes. Progressing from classical tabular algorithms (Bellman optimality, dynamic programming, TD control) to modern deep architectures, policy gradients, and LLM preference alignment systems (RLHF, DPO, GRPO).
+        </p>
+        <div class="stack-links">
+          <a href="rl.html" class="stack-btn">RL Hub <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+          <a href="rl-new.html" class="stack-btn">Deep RL <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+          <a href="rl-old.html" class="stack-btn">Classical RL <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+        </div>
+      </div>
+
+      <!-- Track 2: Meta Learning -->
+      <div class="stack-section">
+        <div class="stack-title-layout">
+          <h2 class="stack-title">Meta Learning</h2>
+          <span class="stack-status">Active Track</span>
+        </div>
+        <div class="stack-meta">
+          <span><strong>Focus:</strong> Model-Agnostic Meta-Learning (MAML), RL², Fast Adaptation</span>
+        </div>
+        <p class="stack-desc">
+          Investigating systems that learn how to learn. Studying few-shot adaptation mechanisms, meta-optimization algorithms that coordinate parameters for quick task transfer, and exploration-exploitation strategies inside meta-reinforcement learning environments.
+        </p>
+        <div class="stack-links">
+          <a href="courses.html" class="stack-btn">Syllabus Overview <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+        </div>
+      </div>
+
+      <!-- Track 3: Optimization Techniques -->
+      <div class="stack-section">
+        <div class="stack-title-layout">
+          <h2 class="stack-title">Optimization Techniques</h2>
+          <span class="stack-status">Active Track</span>
+        </div>
+        <div class="stack-meta">
+          <span><strong>Focus:</strong> Constrained Optimization, Lagrange Multipliers, KKT Conditions, Rayleigh Quotient</span>
+        </div>
+        <p class="stack-desc">
+          Analyzing mathematically rigorous optimization setups. Deep dives into Lagrangian formulations, Karush-Kuhn-Tucker (KKT) conditions for equality/inequality constraints, eigen-decomposition, Singular Value Decomposition (SVD), and Rayleigh Quotient properties.
+        </p>
+        <div class="stack-links">
+          <a href="blogs/invisible-walls-constrained-optimization.html" class="stack-btn">Constrained Optimization Blog <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+          <a href="blogs.html" class="stack-btn font-weight-bold">View Blogs <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+        </div>
+      </div>
+
+      <!-- Track 4: Deep Learning and Optimization Techniques -->
+      <div class="stack-section">
+        <div class="stack-title-layout">
+          <h2 class="stack-title">Deep Learning and Optimization Techniques</h2>
+          <span class="stack-status">Active Track</span>
+        </div>
+        <div class="stack-meta">
+          <span><strong>Focus:</strong> Backpropagation Dynamics, Memory Budgets, FSDP/ZeRO, Inference Optimization</span>
+        </div>
+        <p class="stack-desc">
+          Bridging deep learning architecture with compute-level optimization. Focus areas cover gradient computation graphs, parameter/optimizer state sharding strategies (FSDP, ZeRO-1/2/3), GPU memory footprint allocation, and serving optimizations (KV caching, speculative decoding).
+        </p>
+        <div class="stack-links">
+          <a href="inference.html" class="stack-btn">Inference Serving Syllabus <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+          <a href="lm.html" class="stack-btn">Language Models Hub <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <p class="footer-copy">&copy; 2026 Romeo Mhakayakora. Designed with an editorial aesthetic.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
