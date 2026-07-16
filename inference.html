@@ -47,10 +47,152 @@
       <p class="page-subtitle">Centralized logs tracking my serving optimizations, quantization benchmarks, and on-device runtimes.</p>
     </header>
 
-    <!-- Section 1: Edge Deployment -->
+    <!-- Section: LLM Inference Syllabus -->
     <section class="section-compact">
       <div class="section-header-sub">
-        <h3 class="section-title-sub">Hardware-Aware Runtimes & Serving</h3>
+        <h3 class="section-title-sub">LLM Inference Systems Syllabus</h3>
+      </div>
+      <div class="papers-list" style="margin-top: 1.5rem;">
+        
+        <!-- Module 1 -->
+        <div class="paper-item" style="padding-top: 0; border-top: none;">
+          <div class="paper-meta">
+            <span class="paper-category">Module 01</span>
+          </div>
+          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">Transformer Fundamentals</h4>
+          <p class="paper-summary" style="margin: 0; font-size: 0.95rem; line-height: 1.6;">
+            Attention mechanisms, encoder vs. decoder, tokenization, embeddings, positional encoding, and KV cache basics.
+          </p>
+        </div>
+
+        <!-- Module 2 -->
+        <div class="paper-item">
+          <div class="paper-meta">
+            <span class="paper-category">Module 02</span>
+          </div>
+          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">Autoregressive Decoding</h4>
+          <p class="paper-summary" style="margin: 0; font-size: 0.95rem; line-height: 1.6;">
+            Prefill vs. decode phases, causal attention, greedy/beam search, top-k/top-p sampling, temperature, and speculative decoding.
+          </p>
+        </div>
+
+        <!-- Module 3 -->
+        <div class="paper-item">
+          <div class="paper-meta">
+            <span class="paper-category">Module 03</span>
+          </div>
+          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">GPU &amp; CUDA Basics</h4>
+          <p class="paper-summary" style="margin: 0; font-size: 0.95rem; line-height: 1.6;">
+            GPU architecture, CUDA kernels, memory hierarchy (HBM, SRAM, registers), kernel launches, tensor cores, and memory bandwidth limits.
+          </p>
+        </div>
+
+        <!-- Module 4 -->
+        <div class="paper-item">
+          <div class="paper-meta">
+            <span class="paper-category">Module 04</span>
+          </div>
+          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">PyTorch Execution</h4>
+          <p class="paper-summary" style="margin: 0; font-size: 0.95rem; line-height: 1.6;">
+            Eager mode execution, compilation models (torch.compile), custom operators, dynamic shapes, and memory management inside PyTorch.
+          </p>
+        </div>
+
+        <!-- Module 5 -->
+        <div class="paper-item">
+          <div class="paper-meta">
+            <span class="paper-category">Module 05</span>
+          </div>
+          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">Model Compression</h4>
+          <p class="paper-summary" style="margin: 0; font-size: 0.95rem; line-height: 1.6;">
+            FP16, BF16, INT8, INT4 quantization, weight-only and activation quantization, GPTQ, AWQ, GGUF, and KV cache quantization.
+          </p>
+        </div>
+
+        <!-- Module 6 -->
+        <div class="paper-item">
+          <div class="paper-meta">
+            <span class="paper-category">Module 06</span>
+          </div>
+          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">Serving Architecture</h4>
+          <p class="paper-summary" style="margin: 0; font-size: 0.95rem; line-height: 1.6;">
+            API servers, OpenAI-compatible endpoints, FastAPI request lifecycle, batching mechanisms, and streaming responses.
+          </p>
+        </div>
+
+        <!-- Module 7 -->
+        <div class="paper-item">
+          <div class="paper-meta">
+            <span class="paper-category">Module 07</span>
+          </div>
+          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">LLM Inference Engines</h4>
+          <p class="paper-summary" style="margin: 0; font-size: 0.95rem; line-height: 1.6;">
+            Comparative analysis of engines: vLLM, TensorRT-LLM, SGLang, Hugging Face TGI, LMDeploy, llama.cpp, Ollama, and ONNX Runtime GenAI.
+          </p>
+        </div>
+
+        <!-- Module 8 -->
+        <div class="paper-item">
+          <div class="paper-meta">
+            <span class="paper-category">Module 08</span>
+          </div>
+          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">Scheduling</h4>
+          <p class="paper-summary" style="margin: 0; font-size: 0.95rem; line-height: 1.6;">
+            Continuous/iteration-level batching, request queues, paged attention algorithms, memory fragmentation, and KV cache management.
+          </p>
+        </div>
+
+        <!-- Module 9 -->
+        <div class="paper-item">
+          <div class="paper-meta">
+            <span class="paper-category">Module 09</span>
+          </div>
+          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">KV Cache Optimization</h4>
+          <p class="paper-summary" style="margin: 0; font-size: 0.95rem; line-height: 1.6;">
+            Prefix caching, LMCache, cache reuse across requests, CPU/SSD offloading, disaggregated prefill, and cache eviction strategies.
+          </p>
+        </div>
+
+        <!-- Module 10 -->
+        <div class="paper-item">
+          <div class="paper-meta">
+            <span class="paper-category">Module 10</span>
+          </div>
+          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">Performance Metrics</h4>
+          <p class="paper-summary" style="margin: 0; font-size: 0.95rem; line-height: 1.6;">
+            Time-to-First-Token (TTFT), Time-Per-Output-Token (TPOT), throughput/latency tradeoffs, GPU/memory utilization, concurrency, and tail latency.
+          </p>
+        </div>
+
+        <!-- Module 11 -->
+        <div class="paper-item">
+          <div class="paper-meta">
+            <span class="paper-category">Module 11</span>
+          </div>
+          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">Distributed Inference</h4>
+          <p class="paper-summary" style="margin: 0; font-size: 0.95rem; line-height: 1.6;">
+            Tensor parallelism (TP), pipeline parallelism (PP), multi-GPU/multi-node scaling, and communication collectives (All-Reduce, All-Gather).
+          </p>
+        </div>
+
+        <!-- Module 12 -->
+        <div class="paper-item">
+          <div class="paper-meta">
+            <span class="paper-category">Module 12</span>
+          </div>
+          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">Production Deployment</h4>
+          <p class="paper-summary" style="margin: 0; font-size: 0.95rem; line-height: 1.6;">
+            Autoscaling, load balancing, observability, Prometheus metrics, Grafana dashboards, tracing, fault tolerance, and cost optimization.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Section: Edge Deployment -->
+    <section class="section-compact">
+      <div class="section-header-sub">
+        <h3 class="section-title-sub">Hardware-Aware Runtimes &amp; Serving</h3>
       </div>
       <div class="blogs-list">
         <div class="paper-item-empty" style="color: var(--text-muted); font-style: italic; padding: 1.5rem 0; font-size: 0.95rem;">
