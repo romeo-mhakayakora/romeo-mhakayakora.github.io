@@ -44,142 +44,76 @@
     <header class="page-header">
       <span class="page-label">05 // Curated Learning</span>
       <h1 class="page-title">"Old" Reinforcement Learning (Classical Foundations)</h1>
-      <p class="page-subtitle">A comprehensive 12-week study plan detailing the exact mathematical and algorithmic mechanics of classical reinforcement learning, from bandits and MDPs to fitted models and partial observability.</p>
+      <p class="page-subtitle">A structured 6-module curriculum detailing the mathematical foundations of sequential decision making, covering tabular models, dynamic programming, and model-free exact solutions.</p>
     </header>
 
     <!-- Syllabus List -->
     <section class="section-compact">
       <div class="papers-list" style="margin-top: 1.5rem;">
 
-        <!-- Week 1 -->
+        <!-- Module 1 -->
         <div class="paper-item" style="padding-top: 0; border-top: none;">
           <div class="paper-meta">
-            <span class="paper-category">Week 01</span>
+            <span class="paper-category">Module 01</span>
           </div>
-          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">Introduction</h4>
+          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">Introduction to RL &amp; MDPs</h4>
           <p class="paper-summary" style="margin: 0; font-size: 0.95rem; line-height: 1.6;">
-            Core concepts of agent-environment interaction loop, rewards hypothesis, states, actions, history, and sequential decision making objectives.
+            Agent-environment interaction loop, states, actions, rewards, transition dynamics, Markov property, and return/discounting formulations.
           </p>
         </div>
 
-        <!-- Week 2 -->
+        <!-- Module 2 -->
         <div class="paper-item">
           <div class="paper-meta">
-            <span class="paper-category">Week 02</span>
+            <span class="paper-category">Module 02</span>
           </div>
-          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">Bandit Algorithms &mdash; UCB, PAC</h4>
+          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">Bellman Equations &amp; Optimality</h4>
           <p class="paper-summary" style="margin: 0; font-size: 0.95rem; line-height: 1.6;">
-            Exploration vs. exploitation tradeoffs in multi-armed bandits, Upper Confidence Bound (UCB) algorithms, and Probably Approximately Correct (PAC) sample complexity bounds.
+            Value functions, action-value functions, Bellman expectation equations, and Bellman optimality equations.
           </p>
         </div>
 
-        <!-- Week 3 -->
+        <!-- Module 3 -->
         <div class="paper-item">
           <div class="paper-meta">
-            <span class="paper-category">Week 03</span>
+            <span class="paper-category">Module 03</span>
           </div>
-          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">Bandit Algorithms &mdash; Median Elimination, Policy Gradient</h4>
+          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">Dynamic Programming (GPI)</h4>
           <p class="paper-summary" style="margin: 0; font-size: 0.95rem; line-height: 1.6;">
-            Median Elimination algorithm for finding the best arm in PAC bounds, and basic Policy Gradient methods applied to multi-armed bandit settings.
+            Policy evaluation, policy iteration, value iteration, contraction mapping theorem, and generalized policy iteration (GPI).
           </p>
         </div>
 
-        <!-- Week 4 -->
+        <!-- Module 4 -->
         <div class="paper-item">
           <div class="paper-meta">
-            <span class="paper-category">Week 04</span>
+            <span class="paper-category">Module 04</span>
           </div>
-          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">Full RL &amp; MDPs</h4>
+          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">Model-Free Prediction (MC &amp; TD)</h4>
           <p class="paper-summary" style="margin: 0; font-size: 0.95rem; line-height: 1.6;">
-            Transitioning from stateless bandits to multi-state reinforcement learning, Markov Decision Processes (MDPs) formal framework, Markov properties, and return/discounting formulations.
+            Monte Carlo learning, Temporal Difference learning, TD(0) prediction, and TD(&lambda;) bootstrapping.
           </p>
         </div>
 
-        <!-- Week 5 -->
+        <!-- Module 5 -->
         <div class="paper-item">
           <div class="paper-meta">
-            <span class="paper-category">Week 05</span>
+            <span class="paper-category">Module 05</span>
           </div>
-          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">Bellman Optimality</h4>
+          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">Model-Free Control (Sarsa &amp; Q-Learning)</h4>
           <p class="paper-summary" style="margin: 0; font-size: 0.95rem; line-height: 1.6;">
-            State-value functions, action-value functions, Bellman expectation equations, and Bellman optimality equations.
+            On-policy tabular control (Sarsa), off-policy tabular control (Q-learning), and exploration/exploitation tradeoffs.
           </p>
         </div>
 
-        <!-- Week 6 -->
+        <!-- Module 6 -->
         <div class="paper-item">
           <div class="paper-meta">
-            <span class="paper-category">Week 06</span>
+            <span class="paper-category">Module 06</span>
           </div>
-          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">Dynamic Programming &amp; TD Methods</h4>
+          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">Exploration Bandits &amp; Linear Approximation</h4>
           <p class="paper-summary" style="margin: 0; font-size: 0.95rem; line-height: 1.6;">
-            Policy iteration, value iteration, Temporal Difference (TD) learning, TD(0) prediction, and bootstrapping mechanics.
-          </p>
-        </div>
-
-        <!-- Week 7 -->
-        <div class="paper-item">
-          <div class="paper-meta">
-            <span class="paper-category">Week 07</span>
-          </div>
-          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">Eligibility Traces</h4>
-          <p class="paper-summary" style="margin: 0; font-size: 0.95rem; line-height: 1.6;">
-            n-step Temporal Difference learning, TD(&lambda;) algorithm, accumulating and replacing eligibility traces, and forward vs. backward views.
-          </p>
-        </div>
-
-        <!-- Week 8 -->
-        <div class="paper-item">
-          <div class="paper-meta">
-            <span class="paper-category">Week 08</span>
-          </div>
-          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">Function Approximation</h4>
-          <p class="paper-summary" style="margin: 0; font-size: 0.95rem; line-height: 1.6;">
-            Generalization in large/continuous state spaces, value function approximation, linear models, and stochastic gradient descent (SGD) updates.
-          </p>
-        </div>
-
-        <!-- Week 9 -->
-        <div class="paper-item">
-          <div class="paper-meta">
-            <span class="paper-category">Week 09</span>
-          </div>
-          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">Least Squares Methods</h4>
-          <p class="paper-summary" style="margin: 0; font-size: 0.95rem; line-height: 1.6;">
-            Least Squares Temporal Difference (LSTD) learning, Least Squares Policy Iteration (LSPI), and linear representation methods.
-          </p>
-        </div>
-
-        <!-- Week 10 -->
-        <div class="paper-item">
-          <div class="paper-meta">
-            <span class="paper-category">Week 10</span>
-          </div>
-          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">Fitted Q, DQN &amp; Policy Gradient for Full RL</h4>
-          <p class="paper-summary" style="margin: 0; font-size: 0.95rem; line-height: 1.6;">
-            Fitted Q-Iteration, Deep Q-Networks (DQN) architecture, experience replay buffers, target network freezing, and policy gradients in full RL settings (REINFORCE).
-          </p>
-        </div>
-
-        <!-- Week 11 -->
-        <div class="paper-item">
-          <div class="paper-meta">
-            <span class="paper-category">Week 11</span>
-          </div>
-          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">Hierarchical RL</h4>
-          <p class="paper-summary" style="margin: 0; font-size: 0.95rem; line-height: 1.6;">
-            Temporal abstractions, the Options framework, multi-level planning, and hierarchical policy architectures for scaling RL.
-          </p>
-        </div>
-
-        <!-- Week 12 -->
-        <div class="paper-item">
-          <div class="paper-meta">
-            <span class="paper-category">Week 12</span>
-          </div>
-          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">POMDPs</h4>
-          <p class="paper-summary" style="margin: 0; font-size: 0.95rem; line-height: 1.6;">
-            Partially Observable Markov Decision Processes, belief states, belief MDPs, policy solutions under partial observability, and history-based state representations.
+            Multi-armed bandits, Upper Confidence Bound (UCB) algorithms, Thompson sampling, and linear value function approximation.
           </p>
         </div>
 
