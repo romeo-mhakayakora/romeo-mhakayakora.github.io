@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trajectory-Based Policy Gradient Theorem Proof — Romeo Mhakayakora</title>
+  
+  <!-- Google Fonts: Lora (Editorial Serif) & Assistant (Clean Sans-serif) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css?v=2">
+
+  <!-- MathJax Configuration & Loader -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true,
+        processEnvironments: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    /* Premium Centered Reading Layout */
+    .notes-reader-container {
+      max-width: 740px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+      font-family: var(--font-sans);
+      font-size: 18px;
+      line-height: 1.75;
+      color: var(--text-color);
+    }
+    
+    .notes-reader-container h1, 
+    .notes-reader-container h2, 
+    .notes-reader-container h3, 
+    .notes-reader-container h4 {
+      font-family: var(--font-serif);
+      margin-top: 2.2rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    .notes-reader-container p {
+      margin-bottom: 1.5rem;
+    }
+    
+    .notes-reader-container blockquote {
+      border-left: 4px solid var(--accent-color);
+      padding: 0.8rem 1.5rem;
+      background-color: var(--secondary-bg);
+      margin: 1.8rem 0;
+      border-radius: 0 6px 6px 0;
+    }
+    
+    .notes-reader-container blockquote p {
+      margin: 0;
+      font-style: italic;
+      font-size: 0.95rem;
+    }
+
+    .notes-reader-container hr {
+      border: 0;
+      border-top: 1px solid rgba(170, 170, 170, 0.2);
+      margin: 3rem 0;
+    }
+
+    .notes-reader-container ul, 
+    .notes-reader-container ol {
+      margin-bottom: 1.5rem;
+      padding-left: 1.5rem;
+    }
+
+    .notes-reader-container li {
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body data-page="courses">
+
+  <!-- Header / Navigation -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">Romeo Mhakayakora <span class="logo-accent">/></span></a>
+      <nav class="nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="projects.html" class="nav-link">Projects</a>
+        <a href="rl.html" class="nav-link">RL</a>
+        <a href="lm.html" class="nav-link">Language Models</a>
+        <a href="agentic-ai.html" class="nav-link">Agentic AI</a>
+        <a href="inference.html" class="nav-link">Inference</a>
+        <a href="blogs.html" class="nav-link">Blogs</a>
+        <a href="courses.html" class="nav-link active">Courses</a>
+        <a href="papers.html" class="nav-link">Papers</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+        <button id="theme-toggle" class="theme-btn" aria-label="Toggle dark mode">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+    
+    <!-- Centered Content Wrapper -->
+    <div class="notes-reader-container">
+      
+      <!-- Page Header inside centered area -->
+      <header class="page-header" style="text-align: center; border-bottom: 1px solid rgba(170, 170, 170, 0.2); padding-bottom: 2rem; margin-bottom: 2.5rem;">
+        <span class="page-label" style="display: block; margin-bottom: 0.5rem;">Module 02 // Course Notes</span>
+        <h1 class="page-title" style="font-size: 2.3rem; line-height: 1.2; margin: 0 0 0.8rem 0; font-family: var(--font-serif);">Trajectory-Based Proof of the Policy Gradient Theorem</h1>
+        <p class="page-subtitle" style="font-size: 1.05rem; color: var(--text-muted); margin: 0; line-height: 1.5;">Direct derivation of expected return gradients over full episodic trajectories without environment transition derivatives.</p>
+      </header>
+
+      <h3 style="color: var(--accent-color); font-size: 1.5rem; margin-top: 0;">What This Proof Establishes</h3>
+      <p>
+        <strong>Theorem (Policy Gradient Theorem &mdash; trajectory form).</strong> For an episodic MDP with parameterized policy $\pi_\theta$, the gradient of the expected return $J(\theta)$ with respect to the policy parameters is:
+      </p>
+
+      <div style="text-align: center; margin: 1.8rem 0;">
+        $$\boxed{\nabla_\theta J(\theta) = \mathbb{E}_{\tau\sim p_\theta(\tau)}\left[\left(\sum_{t=1}^T \nabla_\theta \log\pi_\theta(a_t|s_t)\right)\left(\sum_{t=1}^T r(s_t,a_t)\right)\right]}$$
+      </div>
+
+      <p>
+        In words: <em>the gradient of expected return equals the expected product of (a) the sum of log-policy gradients along the trajectory and (b) the total reward collected along that trajectory.</em> This is an exact equality &mdash; no proportionality constants, no approximations in the theorem itself.
+      </p>
+
+      <p>
+        <strong>Why this matters:</strong> it gives us a formula for $\nabla_\theta J(\theta)$ that depends only on quantities the agent can obtain from experience &mdash; the policy's own log-gradient and the observed rewards &mdash; without ever needing to differentiate through the environment's dynamics. This is the foundation REINFORCE and all Monte Carlo policy gradient methods are built on.
+      </p>
+
+      <hr />
+
+      <h3>Step 1 &mdash; Define $J(\theta)$ Over Whole Trajectories</h3>
+      <p>
+        Define the objective directly as the expected total reward over full trajectories:
+      </p>
+
+      <div style="text-align: center; margin: 1.8rem 0;">
+        $$J(\theta) \doteq \mathbb{E}_{\tau\sim p_\theta(\tau)}[r(\tau)] = \int p_\theta(\tau)\,r(\tau)\,d\tau$$
+      </div>
+
+      <p>where:</p>
+      <ul>
+        <li>A <strong>trajectory</strong> is $\tau = (s_1, a_1, s_2, a_2, \ldots, s_T, a_T)$ &mdash; a complete episode of state-action pairs.</li>
+        <li>The <strong>total reward</strong> of a trajectory is $r(\tau) \doteq \sum_{t=1}^T r(s_t, a_t)$.</li>
+        <li>The <strong>trajectory probability</strong> under policy $\pi_\theta$ is:</li>
+      </ul>
+
+      <div style="text-align: center; margin: 1.8rem 0;">
+        $$p_\theta(\tau) = p(s_1)\prod_{t=1}^T \pi_\theta(a_t|s_t)\,p(s_{t+1}|s_t,a_t)$$
+      </div>
+
+      <blockquote>
+        <p>
+          This is the same quantity as $v_{\pi_\theta}(s_0)$ &mdash; "value of the start state" and "expected return over trajectories starting there" are the same number. The difference is bookkeeping: instead of recursing state-by-state through the Bellman equation, we treat the entire trajectory as one object.
+        </p>
+      </blockquote>
+
+      <hr />
+
+      <h3>Step 2 &mdash; The Log-Derivative Identity</h3>
+      <p>
+        The key algebraic fact that does most of the work:
+      </p>
+
+      <div style="text-align: center; margin: 1.8rem 0;">
+        $$p_\theta(\tau)\,\nabla_\theta \log p_\theta(\tau) = p_\theta(\tau)\,\frac{\nabla_\theta p_\theta(\tau)}{p_\theta(\tau)} = \nabla_\theta p_\theta(\tau)$$
+      </div>
+
+      <p>
+        This is the log-derivative trick applied to the <em>entire trajectory probability</em> (rather than to a single action probability). It lets us rewrite $\nabla p_\theta(\tau)$ &mdash; which we can't easily work with &mdash; in terms of $p_\theta(\tau)\,\nabla\log p_\theta(\tau)$ &mdash; which we can, because $p_\theta(\tau)$ will cancel into an expectation.
+      </p>
+
+      <hr />
+
+      <h3>Step 3 &mdash; Differentiate $J(\theta)$ Directly</h3>
+      <div style="text-align: center; margin: 1.8rem 0;">
+        $$\nabla_\theta J(\theta) = \nabla_\theta \int p_\theta(\tau)\,r(\tau)\,d\tau = \int \nabla_\theta p_\theta(\tau)\,r(\tau)\,d\tau$$
+      </div>
+
+      <p>
+        Swap in the identity from Step 2 to replace $\nabla_\theta p_\theta(\tau)$ with $p_\theta(\tau)\,\nabla_\theta\log p_\theta(\tau)$:
+      </p>
+
+      <div style="text-align: center; margin: 1.8rem 0;">
+        $$\nabla_\theta J(\theta) = \int p_\theta(\tau)\,\nabla_\theta \log p_\theta(\tau)\, r(\tau)\,d\tau = \mathbb{E}_{\tau\sim p_\theta(\tau)}\Big[\nabla_\theta \log p_\theta(\tau)\, r(\tau)\Big]$$
+      </div>
+
+      <p>
+        No recursion, no unrolling, no auxiliary quantities. We've converted an intractable integral into an expectation &mdash; something estimable by sampling trajectories.
+      </p>
+
+      <hr />
+
+      <h3>Step 4 &mdash; Expand $\log p_\theta(\tau)$ and Let Environment Terms Vanish</h3>
+      <p>
+        Take the log of the trajectory probability from Step 1:
+      </p>
+
+      <div style="text-align: center; margin: 1.8rem 0;">
+        $$\log p_\theta(\tau) = \log p(s_1) + \sum_{t=1}^T \log \pi_\theta(a_t|s_t) + \sum_{t=1}^T \log p(s_{t+1}|s_t,a_t)$$
+      </div>
+
+      <p>
+        Differentiate w.r.t. $\theta$. Two of the three terms <strong>do not depend on $\theta$</strong>:
+      </p>
+      <ul>
+        <li><strong>$\log p(s_1)$</strong> &mdash; the initial state distribution is a property of the environment, not the policy. $\nabla_\theta \log p(s_1) = 0$.</li>
+        <li><strong>$\log p(s_{t+1}|s_t,a_t)$</strong> &mdash; the transition dynamics are a property of the environment, not the policy. $\nabla_\theta \log p(s_{t+1}|s_t,a_t) = 0$.</li>
+      </ul>
+
+      <p>Only the policy term survives:</p>
+
+      <div style="text-align: center; margin: 1.8rem 0;">
+        $$\nabla_\theta \log p_\theta(\tau) = \sum_{t=1}^T \nabla_\theta \log \pi_\theta(a_t|s_t)$$
+      </div>
+
+      <blockquote>
+        <p>
+          This is the critical insight of the trajectory route. The environment terms ($p(s_1)$ and $p(s_{t+1}|s_t,a_t)$) are <em>additively separate</em> from the policy term inside $\log p_\theta(\tau)$, so differentiating simply deletes them. The environment's influence on which states get visited never needs to be differentiated &mdash; it disappears for free.
+        </p>
+      </blockquote>
+
+      <hr />
+
+      <h3>Step 5 &mdash; The Final Form</h3>
+      <p>
+        Substitute Step 4 back into Step 3:
+      </p>
+
+      <div style="text-align: center; margin: 1.8rem 0;">
+        $$\boxed{\nabla_\theta J(\theta) = \mathbb{E}_{\tau\sim p_\theta(\tau)}\left[\left(\sum_{t=1}^T \nabla_\theta \log\pi_\theta(a_t|s_t)\right)\left(\sum_{t=1}^T r(s_t,a_t)\right)\right]}$$
+      </div>
+
+      <p>
+        This is an <strong>exact equality</strong> &mdash; no proportionality constants, nothing absorbed into a step size. The trajectory-level approach never introduces a stray constant in the first place.
+      </p>
+
+      <p>
+        <strong>Making it computable.</strong> We can't evaluate the expectation analytically (the true distribution over all trajectories is intractable). Instead, sample $N$ trajectories by running the current policy, and use a Monte Carlo estimate:
+      </p>
+
+      <div style="text-align: center; margin: 1.8rem 0;">
+        $$\nabla_\theta J(\theta) \approx \frac{1}{N}\sum_{i=1}^N \left(\sum_{t=1}^T \nabla_\theta \log\pi_\theta(a_{i,t}|s_{i,t})\right)\left(\sum_{t=1}^T r(s_{i,t},a_{i,t})\right)$$
+      </div>
+
+      <p>
+        Each sampled trajectory contributes a score (the sum of log-policy gradients) multiplied by its total return. Average over enough trajectories, and the estimate converges to the true gradient &mdash; this is <strong>REINFORCE</strong>.
+      </p>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <p class="footer-copy">&copy; 2026 Romeo Mhakayakora. Designed with an editorial aesthetic.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
