@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Policy Gradient Methods &amp; REINFORCE — Romeo Mhakayakora</title>
+  
+  <!-- Google Fonts: Lora (Editorial Serif) & Assistant (Clean Sans-serif) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css?v=2">
+
+  <!-- MathJax Configuration & Loader -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true,
+        processEnvironments: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body data-page="courses">
+
+  <!-- Header / Navigation -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">Romeo Mhakayakora <span class="logo-accent">/></span></a>
+      <nav class="nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="projects.html" class="nav-link">Projects</a>
+        <a href="rl.html" class="nav-link">RL</a>
+        <a href="lm.html" class="nav-link">Language Models</a>
+        <a href="agentic-ai.html" class="nav-link">Agentic AI</a>
+        <a href="inference.html" class="nav-link">Inference</a>
+        <a href="blogs.html" class="nav-link">Blogs</a>
+        <a href="courses.html" class="nav-link active">Courses</a>
+        <a href="papers.html" class="nav-link">Papers</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+        <button id="theme-toggle" class="theme-btn" aria-label="Toggle dark mode">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+    
+    <!-- Page Header -->
+    <header class="page-header">
+      <span class="page-label">Module 02 // Course Notes</span>
+      <h1 class="page-title">Policy Gradient Methods</h1>
+      <p class="page-subtitle">Comparing action-value and policy parameterizations, deriving the log-derivative trick, and stabilizing Monte Carlo estimators with state-value baselines.</p>
+    </header>
+
+    <!-- Notes Content -->
+    <section class="section-compact" style="font-family: var(--font-sans); font-size: 18px; line-height: 1.7; max-width: 740px;">
+      
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">Setting the Stage: Two Families of RL Methods</h3>
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        Before diving into REINFORCE, it's worth placing policy gradient methods in context &mdash; because they represent a fundamental shift in <em>what</em> we're trying to learn.
+      </p>
+      
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>1. Action-value methods</strong> (what you've likely seen so far &mdash; Q-learning, SARSA, DQN): here, the policy doesn't really exist on its own. We learn $Q(s,a)$ &mdash; how good each action is &mdash; and the policy is <em>derived</em> from it, usually as $\pi(s) = \arg\max_a Q(s,a)$. Remove the Q-values, and the agent has nothing to act on. The policy is a side effect of value estimation.
+      </p>
+      
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>2. Policy gradient methods</strong> (what we're covering now): here we skip the middleman. Instead of learning values and deriving a policy, we parameterize the policy itself &mdash; $\pi_\theta(a|s)$ &mdash; and adjust $\theta$ directly, via gradient ascent, to make it perform better:
+      </p>
+      
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\theta_{t+1} = \theta_t + \alpha \nabla_\theta J(\theta)$$
+      </div>
+      
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        A value function might still show up (as we'll see with baselines and actor-critic), but only as a <em>helper</em> to make learning more stable &mdash; it's optional, not a prerequisite for choosing actions.
+      </p>
+      
+      <p style="margin-bottom: 0.5rem; font-weight: 600; color: var(--text-color);">Why this shift matters:</p>
+      <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem; color: var(--text-color);">
+        <li style="margin-bottom: 0.5rem;">Action-value methods ask <em>"what is this state/action worth?"</em> and derive behavior from that.</li>
+        <li style="margin-bottom: 0.5rem;">Policy gradient methods ask <em>"what should I do?"</em> directly &mdash; the policy is the primary object being optimized, not a byproduct.</li>
+      </ul>
+      
+      <p style="margin-bottom: 2rem; color: var(--text-color);">
+        This is what lets policy gradient methods learn <strong>stochastic</strong> optimal policies (like a 33/33/33 mix in rock-paper-scissors, which value-based greedy selection can never represent), and lets the policy be <em>any</em> differentiable function &mdash; linear, neural network, Gaussian &mdash; as long as $\nabla_\theta \pi(a|s,\theta)$ exists.
+      </p>
+      
+      <hr style="border: 0; border-top: 1px solid rgba(170, 170, 170, 0.2); margin: 2.5rem 0;" />
+      
+      <h2 style="font-family: var(--font-serif); font-size: 2.2rem; margin-bottom: 1rem; font-weight: 600;">REINFORCE &mdash; Monte Carlo Policy Gradient</h2>
+      <p style="font-style: italic; color: var(--text-muted); margin-bottom: 2rem; font-size: 1.05rem;">
+        From the Policy Gradient Theorem to an algorithm you can actually run, using only the returns the agent experiences.
+      </p>
+      
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">00 &mdash; The Core Strategy: Sample, Don't Compute</h3>
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        We want to climb the performance surface $J(\theta)$ via gradient ascent:
+      </p>
+      
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\theta_{t+1} = \theta_t + \alpha \nabla J(\theta)$$
+      </div>
+      
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        The problem: we can't compute $\nabla J(\theta)$ exactly &mdash; it depends on the environment's dynamics, which we don't know.
+      </p>
+      
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>The critical insight:</strong> we don't need the <em>exact</em> gradient. We only need samples whose <em>expectation</em> equals the true gradient. Any proportionality constant just gets absorbed into $\alpha$.
+      </p>
+      
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        The Policy Gradient Theorem gives us the exact (but uncomputable) form:
+      </p>
+      
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\nabla J(\theta) \propto \sum_s \mu(s) \sum_a q_\pi(s,a)\, \nabla_\theta \pi(a|s,\theta)$$
+      </div>
+      
+      <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem; color: var(--text-color);">
+        <li style="margin-bottom: 0.5rem;">$\mu(s)$ &mdash; how often we visit state $s$ under $\pi$ (unknown)</li>
+        <li style="margin-bottom: 0.5rem;">$q_\pi(s,a)$ &mdash; true action-value (unknown)</li>
+        <li style="margin-bottom: 0.5rem;">$\nabla_\theta \pi(a|s,\theta)$ &mdash; the direction that increases the probability of $a$</li>
+      </ul>
+      
+      <p style="margin-bottom: 2rem; color: var(--text-color);">
+        We can't sum over all states, we don't know $\mu(s)$, and we don't know $q_\pi$. So we need to turn this into something we can <em>sample</em> by just playing episodes.
+      </p>
+      
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">01 &mdash; First Transformation: Sum &rarr; Expectation</h3>
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        If we follow $\pi$, we naturally visit states in proportion to $\mu(s)$. So the outer sum is just an expectation in disguise:
+      </p>
+      
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\sum_s \mu(s)[\ldots] \;\longrightarrow\; \mathbb{E}_\pi\left[\sum_a q_\pi(S_t,a)\,\nabla_\theta \pi(a|S_t,\theta)\right]$$
+      </div>
+      
+      <blockquote style="border-left: 4px solid var(--accent-color); padding: 0.8rem 1.5rem; background-color: var(--secondary-bg); margin: 1.5rem 0; border-radius: 0 6px 6px 0;">
+        <p style="margin: 0; font-style: italic; font-size: 0.95rem; line-height: 1.6;">
+          <strong>What just happened:</strong> we traded an impossible sum over <em>all</em> states for an expectation we can sample &mdash; drop the agent in the environment, let it act, and the states it visits show up with exactly the right frequency automatically. The inner sum over actions is our next target.
+        </p>
+      </blockquote>
+      
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">02 &mdash; The Fork: All-Actions vs. REINFORCE</h3>
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        At this point there are two ways forward:
+      </p>
+      
+      <div style="overflow-x: auto; margin: 1.5rem 0;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--accent-color);">
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;"></th>
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">All-Actions Method</th>
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">REINFORCE</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Mechanism</td>
+              <td style="padding: 0.75rem;">Sum over <em>all</em> actions using a learned $\hat q(s,a,w)$</td>
+              <td style="padding: 0.75rem;">Use only $A_t$, the one action actually taken</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Information</td>
+              <td style="padding: 0.75rem;">Dense &mdash; every action's estimated value</td>
+              <td style="padding: 0.75rem;">Sparse &mdash; one sample, but exact</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Bias</td>
+              <td style="padding: 0.75rem;">Biased if $\hat q \neq q_\pi$</td>
+              <td style="padding: 0.75rem;">Unbiased &mdash; uses the true observed return $G_t$</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Cost</td>
+              <td style="padding: 0.75rem;">Heavy &mdash; gradient for every action</td>
+              <td style="padding: 0.75rem;">Light &mdash; one gradient per step</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <p style="margin-bottom: 2rem; color: var(--text-color);">
+        REINFORCE avoids learning a separate value function entirely. It uses the actual return $G_t$ as an unbiased stand-in for $q_\pi(S_t,A_t)$. To get there, we need to eliminate the $\sum_a$ &mdash; that's the log-derivative trick.
+      </p>
+      
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">03 &mdash; The Trick: Collapsing the Sum to One Sample</h3>
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        We want: $\sum_a q_\pi(S_t,a)\nabla_\theta \pi(a|S_t,\theta) \;\rightarrow\;$ a single-sample expectation.
+      </p>
+      
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Step 1 &mdash; Multiply and divide by $\pi(a|S_t,\theta)$</strong> (multiplying by 1, legal at any time):
+      </p>
+      
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\sum_a q_\pi(S_t,a)\nabla_\theta\pi(a|S_t,\theta) = \sum_a \pi(a|S_t,\theta)\left[q_\pi(S_t,a)\,\frac{\nabla_\theta\pi(a|S_t,\theta)}{\pi(a|S_t,\theta)}\right]$$
+      </div>
+      
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        Now $\pi(a|S_t,\theta)$ sits where a probability weight belongs &mdash; exactly the shape of an expectation.
+      </p>
+      
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Step 2 &mdash; Apply the log-derivative identity.</strong> Since $\nabla_\theta \ln x = \frac{\nabla_\theta x}{x}$:
+      </p>
+      
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\frac{\nabla_\theta \pi(a|S_t,\theta)}{\pi(a|S_t,\theta)} = \nabla_\theta \ln \pi(a|S_t,\theta)$$
+      </div>
+      
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Step 3 &mdash; Recognize the expectation.</strong> The sum is now $\sum_a \pi(a|S_t,\theta)\big[q_\pi(S_t,a)\nabla_\theta \ln\pi(a|S_t,\theta)\big]$, which is exactly $\sum P(x)f(x) = \mathbb{E}[f(x)]$:
+      </p>
+      
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\mathbb{E}_{A_t\sim\pi}\Big[q_\pi(S_t,A_t)\,\nabla_\theta \ln \pi(A_t|S_t,\theta)\Big]$$
+      </div>
+      
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Step 4 &mdash; Swap $q_\pi$ for the sampled return $G_t$.</strong> Since $\mathbb{E}_\pi[G_t \mid S_t,A_t] = q_\pi(S_t,A_t)$:
+      </p>
+      
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\nabla J(\theta) \propto \mathbb{E}_\pi\Big[G_t\,\nabla_\theta \ln \pi(A_t|S_t,\theta)\Big]$$
+      </div>
+      
+      <blockquote style="border-left: 4px solid var(--accent-color); padding: 0.8rem 1.5rem; background-color: var(--secondary-bg); margin: 1.5rem 0; border-radius: 0 6px 6px 0;">
+        <p style="margin: 0; font-style: italic; font-size: 0.95rem; line-height: 1.6;">
+          <strong>The pattern to remember:</strong> every "$\sum P(x)[\ldots]$" became "$\mathbb{E}[\ldots]$". We manufactured a probability weight out of thin air ($\times\pi/\pi$), pattern-matched to the expectation definition, and finally replaced the unknown $q_\pi$ with the one number we can actually observe &mdash; the return.
+        </p>
+      </blockquote>
+      
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">04 &mdash; The Algorithm</h3>
+      
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\theta_{t+1} = \theta_t + \alpha\, G_t\, \nabla_\theta \ln \pi(A_t|S_t,\theta_t)$$
+      </div>
+      
+      <pre><code>REINFORCE: Monte-Carlo Policy-Gradient (episodic)
+
+Input: differentiable policy π(a|s,θ)
+Parameter: step size α > 0
+Initialize θ (e.g. to 0)
+
+Loop forever (each episode):
+    Generate an episode S0,A0,R1,...,S_{T-1},A_{T-1},R_T following π(·|·,θ)
+    Loop for t = 0, 1, ..., T-1:
+        G ← Σ_{k=t+1}^{T} γ^{k-t-1} R_k        # return from t onward
+        θ ← θ + α γ^t G ∇ln π(A_t|S_t, θ)</code></pre>
+      
+      <p style="margin-bottom: 2rem; color: var(--text-color); margin-top: 1.2rem;">
+        The $\gamma^t$ factor appears in the boxed algorithm for the general discounted case (the derivation above assumed $\gamma=1$ for clarity) &mdash; it down-weights updates for steps further from the episode's start.
+      </p>
+      
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">05 &mdash; Deconstructing the Update</h3>
+      
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\theta_{t+1} = \theta_t + \underbrace{\alpha}_{\text{step size}} \cdot \underbrace{G_t}_{\text{"gas pedal"}} \cdot \underbrace{\nabla_\theta \ln \pi(A_t|S_t,\theta)}_{\text{"steering wheel"}}$$
+      </div>
+      
+      <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem; color: var(--text-color);">
+        <li style="margin-bottom: 0.8rem;">
+          <strong>$\nabla_\theta \ln \pi(A_t|S_t,\theta)$ &mdash; the steering wheel.</strong> Points in parameter space toward <em>higher probability of repeating $A_t$</em>. It doesn't know or care whether $A_t$ was good &mdash; only how to make it more likely.
+        </li>
+        <li style="margin-bottom: 0.8rem;">
+          <strong>$G_t$ &mdash; the gas pedal.</strong> Scales how hard we turn the wheel. Big positive return &rarr; floor it. Small or negative return &rarr; ease off, or reverse.
+        </li>
+      </ul>
+      
+      <p style="margin-bottom: 2rem; color: var(--text-color);">
+        This is the whole mechanism: try something, see the return, steer probability mass toward it in proportion to how good it was.
+      </p>
+      
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">06 &mdash; The Problem: Variance</h3>
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        $G_t$ is a full Monte Carlo sum of <em>every</em> reward from $t$ to the end of the episode. Two issues:
+      </p>
+      
+      <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem; color: var(--text-color);">
+        <li style="margin-bottom: 0.5rem;">It's noisy &mdash; a single lucky or unlucky episode swings $G_t$ wildly, even for the exact same state-action pair.</li>
+        <li style="margin-bottom: 0.5rem;">In many environments it's <strong>always positive</strong> (or always negative), which means the gas pedal is <em>always pushed forward</em> &mdash; every action gets reinforced to some degree, just by different amounts. The algorithm can't cleanly distinguish "great" from "just okay."</li>
+      </ul>
+      
+      <p style="margin-bottom: 2rem; color: var(--text-color);">
+        This motivates the fix below.
+      </p>
+      
+      <hr style="border: 0; border-top: 1px solid rgba(170, 170, 170, 0.2); margin: 2.5rem 0;" />
+      
+      <h2 style="font-family: var(--font-serif); font-size: 2.2rem; margin-bottom: 1rem; font-weight: 600;">REINFORCE with Baseline</h2>
+      <p style="font-style: italic; color: var(--text-muted); margin-bottom: 2rem; font-size: 1.05rem;">
+        Fixing the variance problem without changing the expectation &mdash; subtracting a learned baseline makes Monte Carlo policy gradient learn dramatically faster.
+      </p>
+      
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">00 &mdash; The Motivation</h3>
+      
+      <blockquote style="border-left: 4px solid var(--accent-color); padding: 0.8rem 1.5rem; background-color: var(--secondary-bg); margin: 1.5rem 0; border-radius: 0 6px 6px 0;">
+        <p style="margin: 0; font-style: italic; font-size: 0.95rem; line-height: 1.6;">
+          🎰 <strong>The Slot-Machine Problem</strong><br>
+          Imagine an agent whose rewards are always between +90 and +100. Every return is positive, so <em>every</em> action looks "good," and the agent keeps reinforcing whatever it happened to try &mdash; it can't tell "great" (+100) from "mediocre" (+90). The resulting gradient is noisy: the same state-action pair can get wildly different updates purely from randomness in the episode.
+        </p>
+      </blockquote>
+      
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>The core insight:</strong> we don't care about the <em>absolute</em> return &mdash; we care about the <em>relative</em> return. Was this action better or worse than what we'd normally expect from this state? We need to center the learning signal around zero, not let it float at an arbitrary positive (or negative) baseline.
+      </p>
+      
+      <p style="margin-bottom: 2rem; color: var(--text-color);">
+        <strong>The fix:</strong> use $G_t - b(S_t)$ instead of $G_t$, where $b(S_t)$ is some function of the state only.
+      </p>
+      
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">01 &mdash; The Generalized Theorem</h3>
+      
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\nabla J(\theta) \propto \sum_s \mu(s) \sum_a \big[q_\pi(s,a) - b(s)\big]\, \nabla_\theta \pi(a|s,\theta)$$
+      </div>
+      
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        where $b(s)$ can be <em>anything</em> &mdash; random, learned, even zero &mdash; with one constraint: it must depend only on $s$, never on $a$.
+      </p>
+      
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Proof that subtracting $b(s)$ changes nothing in expectation:</strong>
+      </p>
+      
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\sum_a b(s)\,\nabla_\theta \pi(a|s,\theta) = b(s)\underbrace{\sum_a \nabla_\theta \pi(a|s,\theta)}_{=\;\nabla_\theta \sum_a \pi(a|s,\theta) \;=\; \nabla_\theta 1 \;=\; 0} = 0$$
+      </div>
+      
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        Since probabilities over actions always sum to 1, their gradients sum to zero &mdash; so we're subtracting exactly nothing. The expected update direction is unchanged; only the <em>variance</em> of our sample changes.
+      </p>
+      
+      <blockquote style="border-left: 4px solid var(--accent-color); padding: 0.8rem 1.5rem; background-color: var(--secondary-bg); margin: 1.5rem 0; border-radius: 0 6px 6px 0;">
+        <p style="margin: 0; font-style: italic; font-size: 0.95rem; line-height: 1.6;">
+          <strong>Why does it have to be $b(s)$ and not $b(s,a)$?</strong> If the baseline depended on the action, we couldn't pull it out front of the $\sum_a$ &mdash; and the cancellation above wouldn't hold. That's exactly why we use a <em>state</em>-value function $v(s)$ as the baseline, never an action-value function $q(s,a)$.
+        </p>
+      </blockquote>
+      
+      <p style="margin-bottom: 2rem; color: var(--text-color);">
+        <strong>Intuition for the zero-sum:</strong> $\nabla_\theta \pi(a|s,\theta)$ is "how to raise the probability of $a$." Because probabilities must sum to 1, raising one action's probability necessarily lowers another's &mdash; the increases and decreases already balance. Shifting every $q$-value by the same constant $b(s)$ preserves that balance; only the <em>relative</em> differences between actions (which is what actually drives learning) survive.
+      </p>
+      
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">02 &mdash; What Should the Baseline Be?</h3>
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        The natural choice that minimizes variance is the true state-value function:
+      </p>
+      
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$b(s) = v_\pi(s) = \mathbb{E}_\pi[G_t \mid S_t = s]$$
+      </div>
+      
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        This turns $G_t - v_\pi(s)$ into something meaningful &mdash; an estimate of <strong>advantage</strong>: how much better this particular trajectory did compared to what's typical from this state.
+      </p>
+      
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        Since we don't know $v_\pi(s)$, we learn it with a function approximator $\hat v(s,w)$, trained alongside the policy. This creates two parallel learners:
+      </p>
+      
+      <div style="overflow-x: auto; margin: 1.5rem 0;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--accent-color);">
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;"></th>
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">Actor (policy)</th>
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">Critic (baseline)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Parameters</td>
+              <td style="padding: 0.75rem;">$\theta$</td>
+              <td style="padding: 0.75rem;">$w$</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Goal</td>
+              <td style="padding: 0.75rem;">Maximize expected return</td>
+              <td style="padding: 0.75rem;">Predict expected return from each state</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Update</td>
+              <td style="padding: 0.75rem;">$\theta \leftarrow \theta + \alpha_\theta\,\delta\,\nabla\ln\pi(A_t\vert S_t,\theta)$</td>
+              <td style="padding: 0.75rem;">$w \leftarrow w + \alpha_w\,\delta\,\nabla \hat v(S_t,w)$</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Role of $\delta$</td>
+              <td style="padding: 0.75rem;">Scales the policy gradient</td>
+              <td style="padding: 0.75rem;">Supervised regression error</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <blockquote style="border-left: 4px solid var(--accent-color); padding: 0.8rem 1.5rem; background-color: var(--secondary-bg); margin: 1.5rem 0; border-radius: 0 6px 6px 0;">
+        <p style="margin: 0; font-style: italic; font-size: 0.95rem; line-height: 1.6;">
+          <strong>Not Actor-Critic yet.</strong> True Actor-Critic bootstraps &mdash; the critic's target is $R_{t+1} + \gamma \hat v(S_{t+1},w)$. Here we still use the <em>full</em> Monte Carlo return $G_t$ as the target. This is supervised regression on complete episodes, not TD learning &mdash; the critic never guides the policy mid-episode, it only reduces variance after the fact.
+        </p>
+      </blockquote>
+      
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">03 &mdash; Learning the Baseline: Plain Supervised Regression</h3>
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        We treat this as ordinary regression: "labels" are the observed returns $G_t$, "predictions" are $\hat v(S_t,w)$.
+      </p>
+      
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Loss:</strong>
+        $$L(w) = \tfrac{1}{2}\big(G_t - \hat v(S_t,w)\big)^2 = \tfrac{1}{2}\delta^2$$
+      </p>
+      
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Gradient:</strong>
+        $$L(w) = -\big(G_t - \hat v(S_t,w)\big)\nabla_w \hat v(S_t,w) = -\delta\,\nabla_w \hat v(S_t,w)$$
+      </p>
+      
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Descent step</strong> (move opposite the gradient):
+        $$w \leftarrow w - \alpha_w(-\delta\,\nabla_w\hat v) = w + \alpha_w\,\delta\,\nabla_w \hat v(S_t,w)$$
+      </p>
+      
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>The shared $\delta$:</strong> the same error term drives both updates, but for two different purposes:
+      </p>
+      <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem; color: var(--text-color);">
+        <li style="margin-bottom: 0.5rem;">for $w$ &rarr; "pull my prediction closer to $G_t$"</li>
+        <li style="margin-bottom: 0.5rem;">for $\theta$ &rarr; "scale my policy update by how <em>surprising</em> $G_t$ was"</li>
+      </ul>
+      
+      <blockquote style="border-left: 4px solid var(--accent-color); padding: 0.8rem 1.5rem; background-color: var(--secondary-bg); margin: 1.5rem 0; border-radius: 0 6px 6px 0;">
+        <p style="margin: 0; font-style: italic; font-size: 0.95rem; line-height: 1.6;">
+          Even a trivial baseline helps: in Sutton &amp; Barto's short-corridor example, all states look identical, so $\hat v(s,w)=w$ is just a single scalar &mdash; yet it's enough to separate "less bad" from "more bad" when every return is negative, which raw REINFORCE can't do at all.
+        </p>
+      </blockquote>
+      
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">04 &mdash; The Algorithm</h3>
+      
+      <pre><code>REINFORCE with Baseline (episodic)
+
+Input: differentiable policy π(a|s,θ)
+Input: differentiable state-value function v̂(s,w)
+Parameters: step sizes α_θ > 0, α_w > 0
+Initialize θ, w (e.g. to 0)
+
+Loop forever (each episode):
+    Generate an episode S0,A0,R1,...,S_{T-1},A_{T-1},R_T following π(·|·,θ)
+    Loop for t = 0, 1, ..., T-1:
+        G ← Σ_{k=t+1}^{T} γ^{k-t-1} R_k        # actual return from t
+        δ ← G − v̂(S_t, w)                       # advantage estimate
+        w ← w + α_w · δ · ∇v̂(S_t, w)             # critic: regression step
+        θ ← θ + α_θ · γ^t · δ · ∇ln π(A_t|S_t,θ)  # actor: policy step</code></pre>
+      
+      <p style="margin-bottom: 2rem; color: var(--text-color); margin-top: 1.2rem;">
+        Note $\delta$ replaces $G_t$ everywhere in the policy update &mdash; that's the entire change from vanilla REINFORCE.
+      </p>
+      
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">05 &mdash; Vanilla REINFORCE vs. REINFORCE with Baseline</h3>
+      
+      <div style="overflow-x: auto; margin: 1.5rem 0;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--accent-color);">
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;"></th>
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">REINFORCE</th>
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">REINFORCE + Baseline</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Signal used</td>
+              <td style="padding: 0.75rem;">$G_t$ (raw return)</td>
+              <td style="padding: 0.75rem;">$G_t - \hat v(S_t,w)$ (advantage)</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Question asked</td>
+              <td style="padding: 0.75rem;">"Was the return big?"</td>
+              <td style="padding: 0.75rem;">"Was the return bigger than expected?"</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Bias</td>
+              <td style="padding: 0.75rem;">Unbiased</td>
+              <td style="padding: 0.75rem;">Still unbiased (proven above)</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Variance</td>
+              <td style="padding: 0.75rem;">High</td>
+              <td style="padding: 0.75rem;">Substantially lower</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Extra machinery</td>
+              <td style="padding: 0.75rem;">None</td>
+              <td style="padding: 0.75rem;">A learned $\hat v(s,w)$, trained by regression</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Still Monte Carlo?</td>
+              <td style="padding: 0.75rem;">Yes</td>
+              <td style="padding: 0.75rem;">Yes &mdash; no bootstrapping, full episode needed</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <p class="footer-copy">&copy; 2026 Romeo Mhakayakora. Designed with an editorial aesthetic.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
