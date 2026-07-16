@@ -11,6 +11,46 @@
   <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="style.css?v=2">
+  <style>
+    .dropdown-container {
+      position: relative;
+      display: inline-block;
+    }
+    .dropdown-menu {
+      visibility: hidden;
+      opacity: 0;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background-color: var(--secondary-bg);
+      border: 1px solid rgba(170, 170, 170, 0.3);
+      border-radius: 6px;
+      padding: 0.6rem 1rem;
+      z-index: 100;
+      min-width: 280px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      margin-top: 0.5rem;
+      transform: translateY(10px);
+      transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+    }
+    .dropdown-container:hover .dropdown-menu {
+      visibility: visible;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .dropdown-link {
+      display: block;
+      font-size: 0.95rem;
+      text-decoration: none;
+      color: var(--text-color);
+      padding: 0.3rem 0;
+      transition: color 0.2s;
+      border-bottom: none !important;
+    }
+    .dropdown-link:hover {
+      color: var(--accent-color) !important;
+    }
+  </style>
 </head>
 <body data-page="courses">
 
@@ -67,8 +107,12 @@
           <div class="paper-meta">
             <span class="paper-category">Module 02</span>
           </div>
-          <h4 class="paper-title" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">
-            <a href="policy-gradient-methods.html">Policy Gradient Methods</a>
+          <h4 class="paper-title dropdown-container" style="font-size: 1.3rem; margin: 0.2rem 0 0.5rem 0;">
+            <span style="border-bottom: 1px dashed var(--accent-color); cursor: pointer;">Policy Gradient Methods</span>
+            <div class="dropdown-menu">
+              <a href="policy-gradient-methods.html" class="dropdown-link">Part 1: REINFORCE &amp; Baseline</a>
+              <a href="policy-gradient-methods-part2.html" class="dropdown-link">Part 2: Policy Gradient Theorem &amp; Proofs</a>
+            </div>
           </h4>
           <p class="paper-summary" style="margin: 0; font-size: 0.95rem; line-height: 1.6;">
             Policy objective functions, Likelihood Ratio estimators, REINFORCE algorithm, policy gradient theorem, and baseline variance reduction techniques.
