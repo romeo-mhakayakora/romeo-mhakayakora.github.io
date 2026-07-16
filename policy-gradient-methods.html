@@ -27,6 +27,64 @@
     };
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  
+  <style>
+    /* Premium Centered Reading Layout */
+    .notes-reader-container {
+      max-width: 740px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+      font-family: var(--font-sans);
+      font-size: 18px;
+      line-height: 1.75;
+      color: var(--text-color);
+    }
+    
+    .notes-reader-container h1, 
+    .notes-reader-container h2, 
+    .notes-reader-container h3, 
+    .notes-reader-container h4 {
+      font-family: var(--font-serif);
+      margin-top: 2.2rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    .notes-reader-container p {
+      margin-bottom: 1.5rem;
+    }
+    
+    .notes-reader-container blockquote {
+      border-left: 4px solid var(--accent-color);
+      padding: 0.8rem 1.5rem;
+      background-color: var(--secondary-bg);
+      margin: 1.8rem 0;
+      border-radius: 0 6px 6px 0;
+    }
+    
+    .notes-reader-container blockquote p {
+      margin: 0;
+      font-style: italic;
+      font-size: 0.95rem;
+    }
+
+    .notes-reader-container hr {
+      border: 0;
+      border-top: 1px solid rgba(170, 170, 170, 0.2);
+      margin: 3rem 0;
+    }
+
+    .notes-reader-container ul, 
+    .notes-reader-container ol {
+      margin-bottom: 1.5rem;
+      padding-left: 1.5rem;
+    }
+
+    .notes-reader-container li {
+      margin-bottom: 0.5rem;
+    }
+  </style>
 </head>
 <body data-page="courses">
 
@@ -56,15 +114,18 @@
   <!-- Main Container -->
   <main class="container">
     
-    <!-- Page Header -->
-    <header class="page-header">
-      <span class="page-label">Module 02 // Course Notes</span>
-      <h1 class="page-title">Policy Gradient Methods</h1>
-      <p class="page-subtitle">Comparing action-value and policy parameterizations, deriving the log-derivative trick, and stabilizing Monte Carlo estimators with state-value baselines.</p>
-    </header>
+    <!-- Centered Content Wrapper -->
+    <div class="notes-reader-container">
+      
+      <!-- Page Header inside centered area -->
+      <header class="page-header" style="text-align: center; border-bottom: 1px solid rgba(170, 170, 170, 0.2); padding-bottom: 2rem; margin-bottom: 2.5rem;">
+        <span class="page-label" style="display: block; margin-bottom: 0.5rem;">Module 02 // Course Notes</span>
+        <h1 class="page-title" style="font-size: 2.3rem; line-height: 1.2; margin: 0 0 0.8rem 0; font-family: var(--font-serif);">Policy Gradient Methods</h1>
+        <p class="page-subtitle" style="font-size: 1.05rem; color: var(--text-muted); margin: 0; line-height: 1.5;">Comparing action-value and policy parameterizations, deriving the log-derivative trick, and stabilizing Monte Carlo estimators with state-value baselines.</p>
+      </header>
 
-    <!-- Notes Content -->
-    <section class="section-compact" style="font-family: var(--font-sans); font-size: 18px; line-height: 1.7; max-width: 740px;">
+      <!-- Notes Content -->
+      <div style="font-family: var(--font-sans); font-size: 18px; line-height: 1.7;">
       
       <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">Setting the Stage: Two Families of RL Methods</h3>
       <p style="margin-bottom: 1.2rem; color: var(--text-color);">
@@ -513,8 +574,9 @@ Loop forever (each episode):
         </table>
       </div>
       
-    </section>
-
+      </div>
+      
+    </div>
   </main>
 
   <!-- Footer -->
