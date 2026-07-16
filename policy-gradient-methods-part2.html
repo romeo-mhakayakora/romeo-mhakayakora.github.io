@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Policy Gradients for Continuing &amp; Continuous Problems — Romeo Mhakayakora</title>
+  
+  <!-- Google Fonts: Lora (Editorial Serif) & Assistant (Clean Sans-serif) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css?v=2">
+
+  <!-- MathJax Configuration & Loader -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true,
+        processEnvironments: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body data-page="courses">
+
+  <!-- Header / Navigation -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">Romeo Mhakayakora <span class="logo-accent">/></span></a>
+      <nav class="nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="projects.html" class="nav-link">Projects</a>
+        <a href="rl.html" class="nav-link">RL</a>
+        <a href="lm.html" class="nav-link">Language Models</a>
+        <a href="agentic-ai.html" class="nav-link">Agentic AI</a>
+        <a href="inference.html" class="nav-link">Inference</a>
+        <a href="blogs.html" class="nav-link">Blogs</a>
+        <a href="courses.html" class="nav-link active">Courses</a>
+        <a href="papers.html" class="nav-link">Papers</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+        <button id="theme-toggle" class="theme-btn" aria-label="Toggle dark mode">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+    
+    <!-- Page Header -->
+    <header class="page-header">
+      <span class="page-label">Module 02 // Course Notes (Part 2)</span>
+      <h1 class="page-title" style="font-size: 2.5rem; line-height: 1.2; margin-bottom: 0.5rem;">Continuing Problems &amp; Gaussian Policies</h1>
+      <p class="page-subtitle">Never-ending tasks with average reward formulation vs. real-valued actions utilizing parameteric Gaussian distributions.</p>
+    </header>
+
+    <!-- Notes Content -->
+    <section class="section-compact" style="font-family: var(--font-sans); font-size: 18px; line-height: 1.7; max-width: 740px;">
+      
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">Two Kinds of "Infinite" &mdash; Don't Confuse Them</h3>
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        Everything covered so far (REINFORCE, REINFORCE with Baseline) assumes two things: the episode eventually ends, and the action space is small enough to enumerate (a handful of discrete choices, softmax over them). Both assumptions break down separately, in two completely different ways:
+      </p>
+
+      <div style="overflow-x: auto; margin: 1.5rem 0;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--accent-color);">
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;"></th>
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">Continuing Problems</th>
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">Continuous Action/State Spaces</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">What's infinite</td>
+              <td style="padding: 0.75rem;"><strong>Time</strong> &mdash; the task never ends</td>
+              <td style="padding: 0.75rem;"><strong>Space</strong> &mdash; actions/states are real-valued</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Symptom</td>
+              <td style="padding: 0.75rem;">$G_t$ sums to infinity</td>
+              <td style="padding: 0.75rem;">Can't enumerate, sum, or argmax over actions</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Fix</td>
+              <td style="padding: 0.75rem;">Average reward $r(\pi)$, differential returns</td>
+              <td style="padding: 0.75rem;">Gaussian policy &mdash; output $\mu(s,\theta), \sigma(s,\theta)$, sample the action</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Example</td>
+              <td style="padding: 0.75rem;">Server-room thermostat (runs forever)</td>
+              <td style="padding: 0.75rem;">Robot arm torque (needs a precise real number)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p style="margin-bottom: 2rem; color: var(--text-color);">
+        A task can be <em>episodic with continuous actions</em>, or <em>continuing with discrete actions</em> &mdash; these are orthogonal axes. Mixing them up is one of the most common confusions in this material, so we'll treat them as two fully separate problems.
+      </p>
+
+      <hr style="border: 0; border-top: 1px solid rgba(170, 170, 170, 0.2); margin: 2.5rem 0;" />
+
+      <h2 style="font-family: var(--font-serif); font-size: 2.2rem; margin-bottom: 1rem; font-weight: 600;">Part 1 &mdash; Policy Gradient for Continuing Problems</h2>
+      <p style="font-style: italic; color: var(--text-muted); margin-bottom: 2rem; font-size: 1.05rem;">
+        When tasks never end, total reward sums to infinity. Average Reward replaces discounted return, enabling Actor-Critic to run forever using a differential signal that measures surplus over the mean.
+      </p>
+
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">00 &mdash; Why Episodic Methods Break</h3>
+      <blockquote style="border-left: 4px solid var(--accent-color); padding: 0.8rem 1.5rem; background-color: var(--secondary-bg); margin: 1.5rem 0; border-radius: 0 6px 6px 0;">
+        <p style="margin: 0; font-style: italic; font-size: 0.95rem; line-height: 1.6;">
+          🌡️ <strong>The Server Room Example</strong><br>
+          A climate-control agent manages a server room's temperature. There's no "end" &mdash; it runs 24/7, forever. Try the episodic return $G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots$ and the sum runs forever. Even with $\gamma = 0.99$ it takes thousands of steps to decay meaningfully, and $\hat v(s)$ never stabilizes &mdash; it just keeps growing.
+        </p>
+      </blockquote>
+      
+      <p style="margin-bottom: 2rem; color: var(--text-color);">
+        We can no longer say "the value of this state is the total reward from here to infinity," because that total might genuinely be infinite. We need a different definition of "good."
+      </p>
+
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">01 &mdash; The New Performance Measure: Average Reward</h3>
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        Instead of the value of a start state, performance becomes the <strong>average rate of reward per time step</strong>, in the long run:
+      </p>
+
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$J(\theta) \doteq r(\pi) = \lim_{h\to\infty}\frac{1}{h}\sum_{t=1}^{h}\mathbb{E}[R_t] = \lim_{t\to\infty}\mathbb{E}[R_t] = \sum_s \mu(s)\sum_a \pi(a|s)\sum_{s',r} p(s',r|s,a)\,r$$
+      </div>
+
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        Three equivalent readings of the same quantity:
+      </p>
+      <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem; color: var(--text-color);">
+        <li style="margin-bottom: 0.5rem;"><strong>Running average:</strong> sum rewards over $h$ steps, divide by $h$ &mdash; the arithmetic mean, which converges as $h\to\infty$ instead of blowing up.</li>
+        <li style="margin-bottom: 0.5rem;"><strong>Long-run limit:</strong> after running long enough, the expected reward at each step converges to a stable number &mdash; the starting state no longer matters (the <strong>ergodicity assumption</strong>).</li>
+        <li style="margin-bottom: 0.5rem;"><strong>Explicit sum</strong> (most useful form): expected immediate reward for $(s,a)$, weighted by how likely $\pi$ is to pick $a$, weighted by how much time the agent actually spends in $s$ &mdash; i.e. $\mu(s)$.</li>
+      </ul>
+
+      <blockquote style="border-left: 4px solid var(--accent-color); padding: 0.8rem 1.5rem; background-color: var(--secondary-bg); margin: 1.5rem 0; border-radius: 0 6px 6px 0;">
+        <p style="margin: 0; font-style: italic; font-size: 0.95rem; line-height: 1.6;">
+          <strong>The salary analogy:</strong> think of $J(\theta)$ as the agent's hourly wage. In a one-off project (episodic), total earnings matter. In a permanent job (continuing) that never ends, the only sensible question is "how much do I earn <em>per hour</em>, on average?" &mdash; that's $r(\pi)$.
+        </p>
+      </blockquote>
+
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">02 &mdash; Where the Agent Spends Its Time: the Stationary Distribution $\mu(s)$</h3>
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        Computing $r(\pi)$ requires knowing how much time the agent spends in each state &mdash; captured by the steady-state distribution:
+      </p>
+
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\mu(s) = \lim_{t\to\infty}\Pr\{S_t = s\}$$
+      </div>
+
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        Its defining property is self-consistency &mdash; flow probability through the policy and environment once, and you get the same distribution back:
+      </p>
+
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\sum_s \mu(s)\sum_a \pi(a|s,\theta)\,p(s'|s,a) = \mu(s'), \quad \forall s'$$
+      </div>
+
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        Three factors determine $\mu$: <strong>current position</strong> $\mu(s)$, <strong>the agent's choice</strong> $\pi(a|s,\theta)$ (the only one it controls), and <strong>the world's response</strong> $p(s'|s,a)$ (fixed physics). Because changing $\theta$ changes $\pi$, which changes the flow of probability, which changes $\mu$ itself &mdash; $\mu$ depends on $\theta$ in a way that's brutally hard to differentiate directly.
+      </p>
+
+      <blockquote style="border-left: 4px solid var(--accent-color); padding: 0.8rem 1.5rem; background-color: var(--secondary-bg); margin: 1.5rem 0; border-radius: 0 6px 6px 0;">
+        <p style="margin: 0; font-style: italic; font-size: 0.95rem; line-height: 1.6;">
+          🪣 <strong>The Fountain Analogy:</strong> states are basins at different heights, policy+transitions are the pipes connecting them, $\mu(s)$ is the water level in each basin. Individual water molecules (trajectories) constantly move between basins, but the <em>level</em> in each basin stays constant at equilibrium. Change the pipes (change $\pi$) and the levels shift to a new equilibrium &mdash; but wherever you drop the first molecule (start state), it settles to the same equilibrium (ergodicity).
+        </p>
+      </blockquote>
+
+      <p style="margin-bottom: 2rem; color: var(--text-color);">
+        This is exactly why the Policy Gradient Theorem matters: it gives a formula for $\nabla J(\theta)$ that completely avoids computing $\partial\mu/\partial\theta$.
+      </p>
+
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">03 &mdash; Redefining Return: The Differential Return</h3>
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        Standard return sums to infinity for a continuing task. Fix: subtract the average reward from <em>every single reward</em> before summing.
+      </p>
+
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$G_t \doteq (R_{t+1} - r(\pi)) + (R_{t+2} - r(\pi)) + (R_{t+3} - r(\pi)) + \cdots$$
+      </div>
+
+      <blockquote style="border-left: 4px solid var(--accent-color); padding: 0.8rem 1.5rem; background-color: var(--secondary-bg); margin: 1.5rem 0; border-radius: 0 6px 6px 0;">
+        <p style="margin: 0; font-style: italic; font-size: 0.95rem; line-height: 1.6;">
+          💰 <strong>Salary Surplus Example:</strong> Agent's average is $r(\pi)=\$10$/step. Next three rewards: +\$12, +\$15, +\$10. Standard return: $12+15+10+\cdots = \infty$ &mdash; useless. Differential return: $(+2)+(+5)+(0)+\cdots$ &mdash; these surpluses shrink toward zero as the agent returns to its typical performance, so the sum <strong>converges</strong>.
+        </p>
+      </blockquote>
+
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        With differential return, value functions become <strong>differential value functions</strong>: $v_\pi(s) > 0$ means this state is better-than-average going forward, $< 0$ worse-than-average, $0$ exactly typical.
+      </p>
+
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>The single algebraic trick that makes everything else work:</strong>
+      </p>
+
+      <div style="overflow-x: auto; margin: 1.5rem 0;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--accent-color);">
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">Setting</th>
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">Bellman equation for $q_\pi(s,a)$</th>
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">What changed</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Episodic</td>
+              <td style="padding: 0.75rem;">$\sum_{s',r} p(s',r\vert s,a)[r + \gamma v_\pi(s')]$</td>
+              <td style="padding: 0.75rem;">raw reward $r$, discount $\gamma$</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Continuing</td>
+              <td style="padding: 0.75rem;">$\sum_{s',r} p(s',r\vert s,a)[r - r(\pi) + v_\pi(s')]$</td>
+              <td style="padding: 0.75rem;">differential reward $r-r(\pi)$, <strong>no</strong> $\gamma$</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p style="margin-bottom: 2rem; color: var(--text-color);">
+        Replace $r$ with $r - r(\pi)$ and drop $\gamma$ &mdash; that's the entire modification. Every downstream structure (Bellman equations, TD errors, the Policy Gradient Theorem proof) survives the jump from episodic to continuing completely intact.
+      </p>
+
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">04 &mdash; The New Learning Signal: Differential TD Error</h3>
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        Episodic Actor-Critic used $\delta = R + \gamma\hat v(S') - \hat v(S)$. In the continuing case, $\gamma$ disappears and we subtract the running average reward $\bar R$ instead:
+      </p>
+
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\delta_t = R_{t+1} - \bar R + \hat v(S_{t+1},\mathbf w) - \hat v(S_t,\mathbf w)$$
+      </div>
+
+      <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem; color: var(--text-color);">
+        <li style="margin-bottom: 0.5rem;">$R_{t+1} - \bar R$ &mdash; <strong>immediate surplus</strong>: did this exact transition pay better than usual?</li>
+        <li style="margin-bottom: 0.5rem;">$\hat v(S_{t+1})$ &mdash; <strong>future potential</strong>: how good does the new state look, going forward?</li>
+        <li style="margin-bottom: 0.5rem;">$-\hat v(S_t)$ &mdash; <strong>old expectation</strong>: what did we think the old state was worth? (Subtracted to measure surprise.)</li>
+      </ul>
+
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        Together: "was this step a good deal?" &mdash; immediate pay plus change in outlook, both measured relative to average expectations.
+      </p>
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        $\bar R$ is itself learned, updated by the same TD error:
+      </p>
+
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\bar R \leftarrow \bar R + \alpha_{\bar R}\,\delta$$
+      </div>
+
+      <blockquote style="border-left: 4px solid var(--accent-color); padding: 0.8rem 1.5rem; background-color: var(--secondary-bg); margin: 1.5rem 0; border-radius: 0 6px 6px 0;">
+        <p style="margin: 0; font-style: italic; font-size: 0.95rem; line-height: 1.6;">
+          <strong>The thermostat analogy:</strong> $\bar R$ is a thermostat for the learning signal. As the agent improves and earns more per step, $\bar R$ rises automatically to keep $\delta$ centered near zero &mdash; preventing $\delta$ from drifting positive forever and pushing the policy in the same direction indefinitely. Only genuinely <em>surprising</em> improvements produce signal.
+        </p>
+      </blockquote>
+
+      <div style="overflow-x: auto; margin: 1.5rem 0;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--accent-color);">
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">$\delta$</th>
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">Meaning</th>
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">Actor response</th>
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">$\bar R$ update</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Positive</td>
+              <td style="padding: 0.75rem;">Better than average / better state</td>
+              <td style="padding: 0.75rem;">↑ prob. of $A_t$</td>
+              <td style="padding: 0.75rem;">rises</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Negative</td>
+              <td style="padding: 0.75rem;">Worse than average / worse state</td>
+              <td style="padding: 0.75rem;">↓ prob. of $A_t$</td>
+              <td style="padding: 0.75rem;">falls</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Zero</td>
+              <td style="padding: 0.75rem;">Exactly as expected</td>
+              <td style="padding: 0.75rem;">no update</td>
+              <td style="padding: 0.75rem;">unchanged</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">05 &mdash; Proof: The Policy Gradient Theorem (Continuing Case)</h3>
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Goal:</strong> show $\nabla J(\theta)$ reduces to a form using only $\nabla\pi$ and $q_\pi$ &mdash; without ever needing $\nabla\mu$.
+      </p>
+      
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Step 1 &mdash; expand $\nabla v_\pi(s)$</strong> via the product rule, since $v_\pi(s) = \sum_a \pi(a|s)q_\pi(s,a)$:
+      </p>
+
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\nabla v_\pi(s) = \sum_a\Big[\nabla\pi(a|s)\,q_\pi(s,a) + \pi(a|s)\,\nabla q_\pi(s,a)\Big]$$
+      </div>
+
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Step 2 &mdash; expand $\nabla q_\pi$</strong> using the differential Bellman equation $q_\pi(s,a) = \sum_{s',r}p(s',r|s,a)[r - r(\theta) + v_\pi(s')]$. Since $p(s',r|s,a)$ doesn't depend on $\theta$, $\nabla$ passes through freely.
+      </p>
+      
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Step 3 &mdash; differentiate the three inner terms:</strong>
+      </p>
+      <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem; color: var(--text-color);">
+        <li style="margin-bottom: 0.5rem;">$\nabla r = 0$ (a raw environment number, no $\theta$-dependence)</li>
+        <li style="margin-bottom: 0.5rem;">$\nabla(-r(\theta)) = -\nabla r(\theta)$ &mdash; the unknown we're solving for; <strong>keep it</strong></li>
+        <li style="margin-bottom: 0.5rem;">$\nabla v_\pi(s')$ &mdash; depends on $\theta$ through the policy from $s'$ onward; <strong>keep it</strong></li>
+      </ul>
+
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        Since $-\nabla r(\theta)$ doesn't depend on $s'$ or $r$, and $\sum_{s',r}p(s',r|s,a)=1$:
+      </p>
+
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\nabla q_\pi(s,a) = -\nabla r(\theta) + \sum_{s'}p(s'|s,a)\,\nabla v_\pi(s')$$
+      </div>
+
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Step 4 &mdash; substitute back into Step 1</strong> and rearrange to isolate $\nabla r(\theta)$ (using $\sum_a\pi(a|s)=1$ to pull the constant term out cleanly):
+      </p>
+
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\nabla r(\theta) = \sum_a\Big[\nabla\pi(a|s)q_\pi(s,a) + \pi(a|s)\sum_{s'}p(s'|s,a)\nabla v_\pi(s')\Big] - \nabla v_\pi(s)$$
+      </div>
+
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Step 5 &mdash; the key observation:</strong> the left side $\nabla r(\theta) = \nabla J(\theta)$ is a <em>global</em> quantity, independent of $s$. So the right side must evaluate to the same number for <em>any</em> $s$ &mdash; which gives us license to sum both sides over all states weighted by $\mu(s)$ (since $\sum_s\mu(s)=1$, the left side is unaffected):
+      </p>
+
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\nabla J(\theta) = \sum_s \mu(s)\left[\sum_a\Big[\nabla\pi(a|s)q_\pi(s,a) + \pi(a|s)\sum_{s'}p(s'|s,a)\nabla v_\pi(s')\Big] - \nabla v_\pi(s)\right]$$
+      </div>
+
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Step 6 &mdash; split into three pieces:</strong>
+      </p>
+      <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem; color: var(--text-color);">
+        <li style="margin-bottom: 0.5rem;"><strong>Piece A</strong> (what we want): $\sum_s\mu(s)\sum_a\nabla\pi(a|s)q_\pi(s,a)$</li>
+        <li style="margin-bottom: 0.5rem;"><strong>Piece B:</strong> $\sum_s\mu(s)\sum_a\pi(a|s)\sum_{s'}p(s'|s,a)\nabla v_\pi(s')$</li>
+        <li style="margin-bottom: 0.5rem;"><strong>Piece C:</strong> $-\sum_s\mu(s)\nabla v_\pi(s)$</li>
+      </ul>
+
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        In Piece B, reorder the sums to bring $\sum_{s'}$ to front. The inner part $\sum_s\mu(s)\sum_a\pi(a|s)p(s'|s,a)$ is <em>exactly</em> the stationarity equation from §02 &mdash; it equals $\mu(s')$. So Piece B collapses to $\sum_{s'}\mu(s')\nabla v_\pi(s')$.
+      </p>
+
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Step 7 &mdash; the great cancellation.</strong> Piece B and Piece C are the same sum (dummy variables $s$ and $s'$ both range over the full state space) with opposite signs:
+      </p>
+
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\text{Piece B} + \text{Piece C} = \sum_{s'}\mu(s')\nabla v_\pi(s') - \sum_s\mu(s)\nabla v_\pi(s) = 0$$
+      </div>
+
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        The impossible-to-compute $\nabla v_\pi$ terms destroy each other completely, leaving:
+      </p>
+
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\boxed{\nabla J(\theta) = \sum_s \mu(s)\sum_a \nabla\pi(a|s,\theta)\,q_\pi(s,a)}$$
+      </div>
+
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        Identical in form to the episodic Policy Gradient Theorem &mdash; just with $\mu(s)$ as the <em>stationary</em> distribution instead of on-policy visitation. It requires only quantities the agent can estimate by sampling: states it visits, its own policy's gradient, and action values.
+      </p>
+
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Converting to a usable update.</strong> Turn the sum into an expectation (states arrive naturally at frequency $\mu(s)$), then apply the log-derivative trick ($\nabla\pi = \pi\nabla\ln\pi$) exactly as in vanilla REINFORCE:
+      </p>
+
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\nabla J(\theta) = \mathbb{E}_\pi\Big[\nabla\ln\pi(A|S,\theta)\,q_\pi(S,A)\Big] \;\;\Rightarrow\;\; \theta \leftarrow \theta + \alpha^\theta\,\delta\,\nabla\ln\pi(A|S,\theta)$$
+      </div>
+
+      <p style="margin-bottom: 2rem; color: var(--text-color);">
+        where $\delta$ (the differential TD error from §04) stands in for the unknown $q_\pi(S,A)$.
+      </p>
+
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">06 &mdash; Algorithm 1: One-Step Actor-Critic (Continuing)</h3>
+      <pre><code>Input: differentiable π(a|s,θ), differentiable v̂(s,w)
+Parameters: step sizes α^θ, α^w, α^R̄ > 0
+Initialize: θ, w, R̄ ← 0.  S ← s0
+
+Loop forever (each time step):
+    A ~ π(·|S,θ)
+    Take A, observe S', R
+    δ ← R − R̄ + v̂(S′,w) − v̂(S,w)        # differential TD error, no γ
+    R̄ ← R̄ + α^R̄ · δ                     # update average reward estimate
+    w ← w + α^w · δ · ∇v̂(S,w)             # Critic update
+    θ ← θ + α^θ · δ · ∇ln π(A|S,θ)        # Actor update
+    S ← S′</code></pre>
+
+      <p style="margin-bottom: 2rem; color: var(--text-color); margin-top: 1.2rem;">
+        <strong>Differences from episodic one-step AC:</strong><br>
+        - <strong>Gone:</strong> $\gamma$ and the discount accumulator $I=\gamma^t$ &mdash; no episode means no notion that step 0 matters more than step 100.<br>
+        - <strong>Gone:</strong> the "while S is not terminal" inner loop &mdash; a single flat loop, forever.<br>
+        - <strong>New:</strong> $\bar R$, a third learnable quantity tracking average performance. Updated <em>before</em> Critic and Actor, since it shapes the $\delta$ they both use.
+      </p>
+
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">07 &mdash; Algorithm 2: Actor-Critic with Eligibility Traces (Continuing)</h3>
+      <pre><code>Input: differentiable π(a|s,θ), differentiable v̂(s,w)
+Parameters: λ^w, λ^θ ∈ [0,1], α^w, α^θ, α^R̄ > 0
+Initialize: R̄, w, θ ← 0.  S ← s0.  z^w ← 0.  z^θ ← 0
+
+Loop forever (each time step):
+    A ~ π(·|S,θ)
+    Take A, observe S', R
+    δ ← R − R̄ + v̂(S′,w) − v̂(S,w)
+    R̄ ← R̄ + α^R̄ · δ
+    z^w ← λ^w · z^w + ∇v̂(S,w)             # fade + stamp Critic trace
+    z^θ ← λ^θ · z^θ + ∇ln π(A|S,θ)        # fade + stamp Actor trace
+    w ← w + α^w · δ · z^w
+    θ ← θ + α^θ · δ · z^θ
+    S ← S′</code></pre>
+
+      <p style="margin-bottom: 2rem; color: var(--text-color); margin-top: 1.2rem;">
+        <strong>Only changes vs. Algorithm 1:</strong> initialize $z^w=z^\theta=0$ once, before the loop (never reset &mdash; no episode boundaries exist); update both traces each step; replace $\nabla\hat v$ and $\nabla\ln\pi$ in the weight updates with the traces. Also note: unlike the episodic traces version, there's <strong>no</strong> $I=\gamma^t$ factor in the Actor trace, since nothing is discounted.
+      </p>
+      
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>One-sentence difference between the two algorithms:</strong> one-step credits only the current gradient (one state, one action, one update); traces credit <em>all</em> recently active gradients &mdash; a whole recent history, each fading by $\lambda$ per step. The computation per step is almost identical; only what gets multiplied by $\delta$ changes.
+      </p>
+      <ul style="margin-bottom: 2rem; padding-left: 1.5rem; color: var(--text-color);">
+        <li style="margin-bottom: 0.5rem;"><strong>Critic trace</strong> &mdash; fade old trace by $\lambda^w$, stamp in the fresh gradient. A state visited 5 steps ago contributes $(\lambda^w)^5$ of its original weight.</li>
+        <li style="margin-bottom: 0.5rem;"><strong>Actor trace</strong> &mdash; same idea for $\nabla\ln\pi$. A single positive $\delta$ boosts the probability of the current action <em>and</em> recent actions, with decaying weight &mdash; multi-step credit assignment, instead of waiting for the value function to slowly back-propagate credit.</li>
+      </ul>
+
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">08 &mdash; Episodic vs. Continuing: Full Comparison</h3>
+      <div style="overflow-x: auto; margin: 1.5rem 0;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--accent-color);">
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;"></th>
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">Episodic</th>
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">Continuing</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Objective $J(\theta)$</td>
+              <td style="padding: 0.75rem;">Value of start state $v_\pi(s_0)$</td>
+              <td style="padding: 0.75rem;">Average reward rate $r(\pi)$</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Return $G_t$</td>
+              <td style="padding: 0.75rem;">Discounted: $\sum_k\gamma^k R_{t+k+1}$</td>
+              <td style="padding: 0.75rem;">Differential: $\sum_k(R_{t+k+1}-r(\pi))$</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">TD error $\delta$</td>
+              <td style="padding: 0.75rem;">$R+\gamma\hat v(S')-\hat v(S)$</td>
+              <td style="padding: 0.75rem;">$R-\bar R+\hat v(S')-\hat v(S)$</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Discount $\gamma$</td>
+              <td style="padding: 0.75rem;">Present everywhere</td>
+              <td style="padding: 0.75rem;">Absent entirely</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Extra learnable quantity</td>
+              <td style="padding: 0.75rem;">None</td>
+              <td style="padding: 0.75rem;">$\bar R$</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">$I=\gamma^t$ factor in Actor</td>
+              <td style="padding: 0.75rem;">Yes</td>
+              <td style="padding: 0.75rem;">No</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Trace initialization</td>
+              <td style="padding: 0.75rem;">Reset at start of every episode</td>
+              <td style="padding: 0.75rem;">Initialize once, never reset</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Loop structure</td>
+              <td style="padding: 0.75rem;">Outer: episodes. Inner: steps to terminal</td>
+              <td style="padding: 0.75rem;">Single flat loop, forever</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">State distribution</td>
+              <td style="padding: 0.75rem;">On-policy visitation (depends on $S_0$)</td>
+              <td style="padding: 0.75rem;">Stationary distribution (independent of $S_0$)</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Policy Gradient Theorem</td>
+              <td style="padding: 0.75rem;">$\sum_s\mu(s)\sum_a\nabla\pi\cdot q_\pi$</td>
+              <td style="padding: 0.75rem;">Same form &mdash; proof uses stationarity for cancellation</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <blockquote style="border-left: 4px solid var(--accent-color); padding: 0.8rem 1.5rem; background-color: var(--secondary-bg); margin: 1.5rem 0; border-radius: 0 6px 6px 0;">
+        <p style="margin: 0; font-style: italic; font-size: 0.95rem; line-height: 1.6;">
+          <strong>Keep these separate forever:</strong> the continuing/episodic distinction is about <strong>time horizon</strong> &mdash; does the task end? If not: use average reward, drop $\gamma$, add $\bar R$, never reset traces. This is a completely different axis from the continuous/discrete distinction, which is about <strong>representation</strong> &mdash; can you build a lookup table? That's the subject of Part 2.
+        </p>
+      </blockquote>
+
+      <hr style="border: 0; border-top: 1px solid rgba(170, 170, 170, 0.2); margin: 2.5rem 0;" />
+
+      <h2 style="font-family: var(--font-serif); font-size: 2.2rem; margin-bottom: 1rem; font-weight: 600;">Part 2 &mdash; Policy Parameterization for Continuous Actions</h2>
+      <p style="font-style: italic; color: var(--text-muted); margin-bottom: 2rem; font-size: 1.05rem;">
+        When the action space is infinite, you cannot enumerate probabilities. Instead, the network learns the parameters of a probability distribution &mdash; mean and standard deviation &mdash; and the agent samples its action from that distribution at every step.
+      </p>
+      
+      <blockquote style="border-left: 4px solid var(--accent-color); padding: 0.8rem 1.5rem; background-color: var(--secondary-bg); margin: 1.5rem 0; border-radius: 0 6px 6px 0;">
+        <p style="margin: 0; font-style: italic; font-size: 0.95rem; line-height: 1.6;">
+          ⚠️ <strong>This is about action space, not time horizon.</strong> Part 1 used Average Reward to handle tasks that never terminate (infinite <em>time</em>). This part handles tasks where actions are real-valued (infinite <em>space</em>). A task can be episodic with continuous actions, or continuing with discrete actions &mdash; these axes are fully independent.
+        </p>
+      </blockquote>
+
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">00 &mdash; Why Every Previous Method Breaks</h3>
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Failure 1 &mdash; The Argmax Problem (Q-learning, DQN).</strong> Value-based action selection is $a^* = \arg\max_a Q(s,a)$. With actions $\{$Left, Right, Jump$\}$, that's three computations, done. With a continuous steering angle in $[-180°,+180°]$, there are infinitely many candidate values &mdash; argmax over an infinite set never terminates. Discretizing (e.g. every 1°) trades away precision: the true optimum might be 14.573°, and rounding to 14° or 15° produces jerky motor control or lost money in high-frequency trading.
+      </p>
+
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Failure 2 &mdash; The Infinite Summation Problem (softmax REINFORCE).</strong> Discrete softmax is $\pi(a|s,\theta) = e^{h(s,a,\theta)}/\sum_b e^{h(s,b,\theta)}$. With 4 discrete actions the denominator has 4 terms. With continuous actions it becomes $\int_{-\infty}^\infty e^{h(s,a,\theta)}\,da$ &mdash; generally no closed form, uncomputable on every forward pass. Worse, softmax treats each action as an unrelated category (like "Dog" vs "Cat") &mdash; it has no notion that 10.1° and 10.2° are related, so it would need infinite neurons and infinite data.
+      </p>
+
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Failure 3 &mdash; Curse of Dimensionality (tabular RL).</strong> A table needs one entry per state. Ten continuous state variables discretized to 100 bins each gives $100^{10}=10^{20}$ entries &mdash; more than the atoms in a human body.
+      </p>
+
+      <p style="margin-bottom: 2rem; color: var(--text-color);">
+        <strong>Root cause, all three:</strong> these methods are built around <em>enumeration</em> &mdash; listing, summing, or maximizing over every possible action or state. Continuous spaces make enumeration impossible. The fix isn't to patch enumeration &mdash; it's to abandon it and go generative: instead of picking from a list, <strong>generate</strong> an action by sampling from a learned distribution.
+      </p>
+
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">01 &mdash; The Key Idea: Learn Statistics, Not Probabilities</h3>
+      <div style="overflow-x: auto; margin: 1.5rem 0;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--accent-color);">
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;"></th>
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">Old (softmax)</th>
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">New (Gaussian)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Network outputs</td>
+              <td style="padding: 0.75rem;">One probability per action: $P(\text{Left}), P(\text{Right}), \ldots$</td>
+              <td style="padding: 0.75rem;">Two numbers: $\mu$ (best guess), $\sigma$ (uncertainty)</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Scales with</td>
+              <td style="padding: 0.75rem;">Number of discrete actions $N$</td>
+              <td style="padding: 0.75rem;">Number of <em>action dimensions</em> (not action count)</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Breaks when</td>
+              <td style="padding: 0.75rem;">$N=\infty$</td>
+              <td style="padding: 0.75rem;">Never &mdash; a 6-DoF robot arm needs 12 outputs total, not millions</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <blockquote style="border-left: 4px solid var(--accent-color); padding: 0.8rem 1.5rem; background-color: var(--secondary-bg); margin: 1.5rem 0; border-radius: 0 6px 6px 0;">
+        <p style="margin: 0; font-style: italic; font-size: 0.95rem; line-height: 1.6;">
+          <strong>Multiple-choice vs. fill-in-the-blank:</strong> Softmax is a 4-button exam &mdash; assign a probability to each button. Gaussian is fill-in-the-blank: "write the exact steering angle." Instead of a probability per possible number, the policy says "my best guess is 12.5°, and I'm 2° uncertain" &mdash; the agent then samples from that bell curve. Two numbers, regardless of required precision.
+        </p>
+      </blockquote>
+
+      <p style="margin-bottom: 2rem; color: var(--text-color);">
+        <strong>One distribution per state, not one global distribution.</strong> The notation $\pi(a|s,\theta)$ is conditioned on $s$ &mdash; every state gets its own bell curve, generated by the <em>same</em> weights processing <em>different</em> inputs.
+      </p>
+
+      <blockquote style="border-left: 4px solid var(--accent-color); padding: 0.8rem 1.5rem; background-color: var(--secondary-bg); margin: 1.5rem 0; border-radius: 0 6px 6px 0;">
+        <p style="margin: 0; font-style: italic; font-size: 0.95rem; line-height: 1.6;">
+          🚗 <strong>Self-driving car example:</strong> Straight road &rarr; $\mu=0°,\sigma=1°$ (confident, go straight). Sharp curve &rarr; $\mu=+30°,\sigma=3°$ (shifted, slightly less certain). Icy road &rarr; $\mu=5°,\sigma=8°$ (wide spread &mdash; high uncertainty, more exploratory sampling).
+        </p>
+      </blockquote>
+
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">02 &mdash; The Gaussian PDF</h3>
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$p(x) \doteq \frac{1}{\sigma\sqrt{2\pi}}\exp\!\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)$$
+      </div>
+
+      <p style="margin-bottom: 1.2rem; color: var(--text-color); font-style: italic;">
+        *(the $\pi$ here is the constant 3.14159..., not the policy &mdash; the textbook explicitly flags this collision of symbols)*
+      </p>
+
+      <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem; color: var(--text-color);">
+        <li style="margin-bottom: 0.5rem;">$\frac{1}{\sigma\sqrt{2\pi}}$ &mdash; <strong>normalization constant</strong>, ensures total area = 1. Wider bell (large $\sigma$) &rarr; shorter peak; narrower bell &rarr; taller peak.</li>
+        <li style="margin-bottom: 0.5rem;">$\exp(\cdot)$ &mdash; <strong>the bell shape</strong>, always positive, maximal (=1) at $x=\mu$, decaying as you move away.</li>
+        <li style="margin-bottom: 0.5rem;">$\frac{(x-\mu)^2}{2\sigma^2}$ &mdash; <strong>distance term</strong>: how far $x$ is from $\mu$, in variance-normalized units, squared so both directions are penalized equally.</li>
+      </ul>
+
+      <blockquote style="border-left: 4px solid var(--accent-color); padding: 0.8rem 1.5rem; background-color: var(--secondary-bg); margin: 1.5rem 0; border-radius: 0 6px 6px 0;">
+        <p style="margin: 0; font-style: italic; font-size: 0.95rem; line-height: 1.6;">
+          ⚠️ <strong>Density &ne; probability:</strong> $p(x)$ is density at a point, not the probability of exactly $x$ &mdash; in a continuous space, any single exact value has probability zero. Density <em>can</em> exceed 1: with $\sigma=0.1$, the peak is $\approx 3.99$ &mdash; valid, it just means probability mass is tightly concentrated. Actual probability requires an interval: $P(a\le x\le b) = \int_a^b p(x)\,dx$.
+        </p>
+      </blockquote>
+
+      <div style="overflow-x: auto; margin: 1.5rem 0;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--accent-color);">
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">Parameter change</th>
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">Effect on curve</th>
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">Meaning for the agent</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">↑ $\mu$</td>
+              <td style="padding: 0.75rem;">slides right</td>
+              <td style="padding: 0.75rem;">larger action looks better</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">↓ $\mu$</td>
+              <td style="padding: 0.75rem;">slides left</td>
+              <td style="padding: 0.75rem;">smaller action looks better</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">large $\sigma$</td>
+              <td style="padding: 0.75rem;">wide, flat</td>
+              <td style="padding: 0.75rem;">high uncertainty &rarr; more exploration</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">small $\sigma$</td>
+              <td style="padding: 0.75rem;">narrow, tall</td>
+              <td style="padding: 0.75rem;">high confidence &rarr; less exploration</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">03 &mdash; The Gaussian Policy</h3>
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        $\mu$ and $\sigma$ are no longer fixed constants &mdash; they're <em>functions</em> of state and network weights, which is what makes the whole thing learnable:
+      </p>
+
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\pi(a|s,\theta) \doteq \frac{1}{\sigma(s,\theta)\sqrt{2\pi}}\exp\!\left(-\frac{(a-\mu(s,\theta))^2}{2\sigma(s,\theta)^2}\right)$$
+      </div>
+
+      <p style="margin-bottom: 2rem; color: var(--text-color);">
+        where $\mu: \mathcal S\times\mathbb R^{d'}\to\mathbb R$ (any real number &mdash; no restriction) and $\sigma:\mathcal S\times\mathbb R^{d'}\to\mathbb R^+$ (must stay strictly positive &mdash; an architectural constraint we handle next). This whole expression is differentiable w.r.t. $\theta$, which is the entire foundation that lets policy gradient methods backpropagate through it.
+      </p>
+
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">04 &mdash; Two-Stage Pipeline: State &rarr; Action</h3>
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Stage ① &mdash; the neural network (deterministic).</strong> State &rarr; hidden features &rarr; two output heads:
+      </p>
+      <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem; color: var(--text-color);">
+        <li style="margin-bottom: 0.5rem;">$\mu$-head: $\theta_\mu^\top x_\mu(s)$ &rarr; any real number</li>
+        <li style="margin-bottom: 0.5rem;">$\sigma$-head: $\exp(\theta_\sigma^\top x_\sigma(s))$ &rarr; a strictly positive number</li>
+      </ul>
+
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        Same state + same weights &rarr; same $\mu,\sigma$, every time.
+      </p>
+      
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Stage ② &mdash; stochastic sampling.</strong> Sample $a \sim \mathcal N(\mu,\sigma^2)$. In practice via the <strong>reparameterization trick</strong>:
+      </p>
+
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\varepsilon \sim \mathcal N(0,1), \qquad a = \mu + \sigma\cdot\varepsilon$$
+      </div>
+
+      <blockquote style="border-left: 4px solid var(--accent-color); padding: 0.8rem 1.5rem; background-color: var(--secondary-bg); margin: 1.5rem 0; border-radius: 0 6px 6px 0;">
+        <p style="margin: 0; font-style: italic; font-size: 0.95rem; line-height: 1.6;">
+          <strong>Why reparameterize?</strong> You can't differentiate through a raw "sample" operation &mdash; randomness itself isn't differentiable. Splitting the randomness ($\varepsilon$, treated as a fixed constant during backprop) from the learnable parameters ($\mu,\sigma$) lets gradients flow through $\mu$ and $\sigma$ even though the realized action was random.
+        </p>
+      </blockquote>
+
+      <div style="overflow-x: auto; margin: 1.5rem 0;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--accent-color);">
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">$\sigma$ level</th>
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">Behavior</th>
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">Typically occurs</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">High (e.g. 5.0)</td>
+              <td style="padding: 0.75rem;">wide bell, frequent far-from-mean samples</td>
+              <td style="padding: 0.75rem;">early training &mdash; agent knows nothing, discovers reward regions</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Medium (e.g. 1.0)</td>
+              <td style="padding: 0.75rem;">moderate spread</td>
+              <td style="padding: 0.75rem;">mid-training &mdash; refining while still exploring nearby</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Low (e.g. 0.05)</td>
+              <td style="padding: 0.75rem;">narrow, almost always samples $\mu$</td>
+              <td style="padding: 0.75rem;">late training &mdash; converged, precise</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">05 &mdash; Concrete Implementation</h3>
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        $$\theta = [\theta_\mu,\theta_\sigma]^\top,\qquad \mu(s,\theta)\doteq\theta_\mu^\top x_\mu(s),\qquad \sigma(s,\theta)\doteq\exp\big(\theta_\sigma^\top x_\sigma(s)\big)$$
+      </p>
+
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Why $\mu$ is linear:</strong> it needs to cover all of $(-\infty,+\infty)$ with no constraint &mdash; a linear function does exactly that, and its gradient is trivially the feature vector $x_\mu(s)$.
+      </p>
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Why $\sigma$ needs the exponential:</strong> $\sigma$ must always be strictly positive. A raw linear output could get pushed negative by gradient updates, which is meaningless for a standard deviation. $\exp(\text{anything}) > 0$ always &mdash; the network learns $\log\sigma$ (any real number) internally, and $\exp$ maps it into the valid positive domain at the last step.
+      </p>
+
+      <pre><code>mu = W_mu @ features(s)              # linear, no activation
+log_sigma = W_sigma @ features(s)    # linear, no activation
+sigma = torch.exp(log_sigma)         # force positive</code></pre>
+
+      <p style="margin-bottom: 2rem; color: var(--text-color); margin-top: 1.2rem;">
+        <strong>The payoff:</strong> <em>"with these definitions, all the algorithms in this chapter can be applied to learn real-valued actions."</em> Every previous algorithm &mdash; REINFORCE, one-step Actor-Critic, Actor-Critic with traces, episodic or continuing &mdash; plugs in unchanged. Only the <em>error signal</em> multiplying the gradient changes; the policy's shape doesn't.
+      </p>
+
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">06 &mdash; The Eligibility Vector</h3>
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        Every policy gradient update has the same structure:
+      </p>
+
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\Delta\theta = \underbrace{\alpha}_{\text{learning rate}} \times \underbrace{E}_{\text{error signal (algorithm-specific)}} \times \underbrace{\nabla\ln\pi(a|s,\theta)}_{\text{eligibility vector (Gaussian-specific)}}$$
+      </div>
+
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        The eligibility vector splits across $\theta_\mu$ and $\theta_\sigma$:
+      </p>
+
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\nabla_{\theta_\mu}\ln\pi(a|s,\theta_\mu) = \frac{a-\mu(s,\theta)}{\sigma(s,\theta)^2}\,x_\mu(s)$$
+      </div>
+
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <em>Plain English: "move the mean toward the action just taken, in proportion to how far it was, normalized by how uncertain we are."</em> If uncertainty ($\sigma$) is high, deviations are expected and weighted less; if low, deviations are surprising and weighted more.
+      </p>
+
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\nabla_{\theta_\sigma}\ln\pi(a|s,\theta_\sigma) = \left[\frac{(a-\mu(s,\theta))^2}{\sigma(s,\theta)^2} - 1\right]x_\sigma(s)$$
+      </div>
+
+      <p style="margin-bottom: 2rem; color: var(--text-color);">
+        The $-1$ <strong>centers</strong> the signal: if the action landed exactly one standard deviation away (typical), the gradient is zero. Only <em>atypical</em> actions move $\sigma$: a paid-off outlier ($\gg 1$ std devs) widens $\sigma$ (explore more around it); a paid-off central action ($\ll 1$ std devs) narrows $\sigma$ (commit, become more precise).
+      </p>
+
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">07 &mdash; Deriving $\nabla_{\theta_\mu}\ln\pi$ (Exercise 13.4, Part 1)</h3>
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        We differentiate the <em>log</em> of $\pi$, not $\pi$ itself, because the policy gradient theorem needs $\nabla\pi/\pi = \nabla\ln\pi$ (log-derivative identity), and the log collapses the messy normalization constant and exponential into simple additive terms.
+      </p>
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Step 1 &mdash; take the log:</strong>
+      </p>
+
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\ln\pi(a|s,\theta) = -\ln\sigma - \ln\sqrt{2\pi} - \frac{(a-\mu)^2}{2\sigma^2}$$
+      </div>
+
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Step 2 &mdash; identify which terms contain $\theta_\mu$.</strong> $-\ln\sigma$ and $-\ln\sqrt{2\pi}$ don't depend on $\mu$ &rarr; vanish. Only $-\frac{(a-\mu)^2}{2\sigma^2}$ survives.
+      </p>
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Step 3 &mdash; chain rule through $\mu(s,\theta)$.</strong> Let $u=a-\mu$, so $\partial u/\partial\mu = -1$:
+      </p>
+
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\frac{\partial}{\partial\mu}\left[-\frac{u^2}{2\sigma^2}\right] = -\frac{2u}{2\sigma^2}\cdot(-1) = \frac{a-\mu}{\sigma^2}$$
+      </div>
+
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        and since $\mu(s,\theta) = \theta_\mu^\top x_\mu(s)$ is linear, $\nabla_{\theta_\mu}\mu = x_\mu(s)$. Multiplying the two pieces of the chain rule together:
+      </p>
+
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\boxed{\nabla_{\theta_\mu}\ln\pi(a|s,\theta_\mu) = \frac{a-\mu(s,\theta)}{\sigma(s,\theta)^2}\,x_\mu(s)}$$
+      </div>
+
+      <p style="margin-bottom: 2rem; color: var(--text-color);">
+        <strong>Reading the sign:</strong> if $a>\mu$, gradient is positive &mdash; multiplied by a positive error signal, $\theta_\mu$ increases, mean shifts <em>toward</em> the action taken. If $a<\mu$, the opposite. If the error signal is negative (bad outcome), all signs flip and the mean shifts <em>away</em> from that action.
+      </p>
+
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">08 &mdash; Deriving $\nabla_{\theta_\sigma}\ln\pi$ (Exercise 13.4, Part 2)</h3>
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        Same starting log-expression, now differentiating w.r.t. $\theta_\sigma$ (the weights producing $\log\sigma$, since $\sigma=\exp(\theta_\sigma^\top x_\sigma(s))$).
+      </p>
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Term 1: $-\ln\sigma$.</strong> Since $\sigma=e^z$ with $z=\theta_\sigma^\top x_\sigma(s)$, we get $\ln\sigma = z$ directly &mdash; a huge simplification from the exponential parameterization:
+      </p>
+
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\nabla_{\theta_\sigma}(-\ln\sigma) = -x_\sigma(s)$$
+      </div>
+
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Term 2: $-\frac{(a-\mu)^2}{2\sigma^2}$.</strong> Chain rule through $\sigma$ first:
+      </p>
+
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\frac{\partial}{\partial\sigma}\left[-\frac{(a-\mu)^2}{2}\sigma^{-2}\right] = \frac{(a-\mu)^2}{\sigma^3}, \qquad \nabla_{\theta_\sigma}\sigma = \sigma\,x_\sigma(s)$$
+      </div>
+
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        Combining: $\frac{(a-\mu)^2}{\sigma^3}\cdot\sigma\,x_\sigma(s) = \frac{(a-\mu)^2}{\sigma^2}\,x_\sigma(s)$
+      </p>
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Adding both terms:</strong>
+      </p>
+
+      <div style="text-align: center; margin: 1.5rem 0;">
+        $$\boxed{\nabla_{\theta_\sigma}\ln\pi(a|s,\theta_\sigma) = \left[\frac{(a-\mu(s,\theta))^2}{\sigma(s,\theta)^2} - 1\right]x_\sigma(s)}$$
+      </div>
+
+      <p style="margin-bottom: 2rem; color: var(--text-color);">
+        matching §06 exactly.
+      </p>
+
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">09 &mdash; The Complete Picture</h3>
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        $$\Delta\theta_\mu = \alpha\cdot E\cdot \frac{a-\mu(s,\theta)}{\sigma(s,\theta)^2}\,x_\mu(s), \qquad \Delta\theta_\sigma = \alpha\cdot E\cdot\left[\frac{(a-\mu(s,\theta))^2}{\sigma(s,\theta)^2}-1\right]x_\sigma(s)$$
+      </p>
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        The eligibility vectors are properties of the <em>Gaussian policy shape</em> &mdash; fixed, regardless of algorithm. Only $E$ changes:
+      </p>
+
+      <div style="overflow-x: auto; margin: 1.5rem 0;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--accent-color);">
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">Algorithm</th>
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">Error signal $E$</th>
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">Setting</th>
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">What it measures</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">REINFORCE</td>
+              <td style="padding: 0.75rem;">$G_t$</td>
+              <td style="padding: 0.75rem;">Episodic</td>
+              <td style="padding: 0.75rem;">Was the whole episode good overall?</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">REINFORCE + Baseline</td>
+              <td style="padding: 0.75rem;">$G_t - \hat v(s,w)$</td>
+              <td style="padding: 0.75rem;">Episodic</td>
+              <td style="padding: 0.75rem;">Better than usual from this state?</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">One-Step AC (episodic)</td>
+              <td style="padding: 0.75rem;">$R+\gamma\hat v(S')-\hat v(S)$</td>
+              <td style="padding: 0.75rem;">Episodic</td>
+              <td style="padding: 0.75rem;">Was this one step better than expected?</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">One-Step AC (continuing)</td>
+              <td style="padding: 0.75rem;">$R-\bar R+\hat v(S')-\hat v(S)$</td>
+              <td style="padding: 0.75rem;">Continuing</td>
+              <td style="padding: 0.75rem;">Better than average, and a better next state?</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">AC with traces</td>
+              <td style="padding: 0.75rem;">same $\delta$, via traces</td>
+              <td style="padding: 0.75rem;">Either</td>
+              <td style="padding: 0.75rem;">Same, credited to recent history too</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        This is the "plug-and-play" property: once you have a Gaussian policy, <em>any</em> policy gradient algorithm can drive it &mdash; you just swap in a different $E$.
+      </p>
+      <p style="margin-bottom: 1.2rem; color: var(--text-color);">
+        <strong>Sign logic:</strong>
+      </p>
+
+      <div style="overflow-x: auto; margin: 1.5rem 0;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--accent-color);">
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">Scenario</th>
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">$E$</th>
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">$(a-\mu)$</th>
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">$\Delta\theta_\mu$</th>
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">Result</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem;">Good reward, action above mean</td>
+              <td style="padding: 0.75rem;">+</td>
+              <td style="padding: 0.75rem;">+</td>
+              <td style="padding: 0.75rem;">increase</td>
+              <td style="padding: 0.75rem;">mean shifts up toward the successful action</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem;">Good reward, action below mean</td>
+              <td style="padding: 0.75rem;">+</td>
+              <td style="padding: 0.75rem;">−</td>
+              <td style="padding: 0.75rem;">decrease</td>
+              <td style="padding: 0.75rem;">mean shifts down toward the successful action</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem;">Bad reward, action above mean</td>
+              <td style="padding: 0.75rem;">−</td>
+              <td style="padding: 0.75rem;">+</td>
+              <td style="padding: 0.75rem;">decrease</td>
+              <td style="padding: 0.75rem;">mean shifts away from the failed action</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem;">Bad reward, action below mean</td>
+              <td style="padding: 0.75rem;">−</td>
+              <td style="padding: 0.75rem;">−</td>
+              <td style="padding: 0.75rem;">increase</td>
+              <td style="padding: 0.75rem;">mean shifts away from the failed action</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">10 &mdash; Softmax vs. Gaussian, Side by Side</h3>
+      <div style="overflow-x: auto; margin: 1.5rem 0;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--accent-color);">
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;"></th>
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">Softmax (discrete)</th>
+              <th style="padding: 0.75rem; text-align: left; font-weight: 600;">Gaussian (continuous)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Network output</td>
+              <td style="padding: 0.75rem;">one preference $h(s,a,\theta)$ per action</td>
+              <td style="padding: 0.75rem;">$\mu(s,\theta)$ and $\sigma(s,\theta)$ &mdash; always 2 per action dimension</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Eligibility vector</td>
+              <td style="padding: 0.75rem;">$x(s,a) - \sum_b\pi(b\vert s)x(s,b)$</td>
+              <td style="padding: 0.75rem;">$\frac{a-\mu}{\sigma^2}x_\mu(s)$ and $\left[\frac{(a-\mu)^2}{\sigma^2}-1\right]x_\sigma(s)$</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Log-probability</td>
+              <td style="padding: 0.75rem;">$h(s,a,\theta) - \ln\sum_b e^{h(s,b,\theta)}$ &mdash; needs a sum over actions</td>
+              <td style="padding: 0.75rem;">$-\ln\sigma-\ln\sqrt{2\pi}-\frac{(a-\mu)^2}{2\sigma^2}$ &mdash; no sum needed</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(170,170,170,0.2);">
+              <td style="padding: 0.75rem; font-weight: 600;">Breaks when</td>
+              <td style="padding: 0.75rem;">$N=\infty$</td>
+              <td style="padding: 0.75rem;">Never &mdash; scales to any real-valued precision</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-color);">11 &mdash; Three Independent Axes, Keep Them Separate</h3>
+      <ol style="margin-bottom: 2rem; padding-left: 1.5rem; color: var(--text-color);">
+        <li style="margin-bottom: 0.8rem;"><strong>Why Gaussian policy?</strong> Because the <em>action space</em> is continuous &mdash; can't enumerate/sum over infinite actions. Fix: parameterize a distribution, output $\mu,\sigma$, sample.</li>
+        <li style="margin-bottom: 0.8rem;"><strong>Why average reward?</strong> Because the <em>task</em> is continuing &mdash; no terminal state, standard returns diverge. Fix: subtract the average reward so differential returns stay finite.</li>
+        <li style="margin-bottom: 0.8rem;"><strong>Which algorithm?</strong> REINFORCE / Actor-Critic / PPO / SAC &mdash; determines how the error signal $E$ is computed. The Gaussian policy plugs into all of them unchanged.</li>
+      </ol>
+
+      <p style="margin-bottom: 2rem; color: var(--text-color);">
+        These are three independent decisions: policy parameterization (Gaussian vs. softmax) is chosen based on the action space; the objective (average reward vs. discounted return) is chosen based on time horizon; the algorithm is chosen based on sample efficiency and stability needs. Any combination of the four &mdash; {discrete, continuous} &times; {episodic, continuing} &mdash; is valid, and each needs its own toolset.
+      </p>
+
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <p class="footer-copy">&copy; 2026 Romeo Mhakayakora. Designed with an editorial aesthetic.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
