@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ML Concepts — Romeo Mhakayakora — Portfolio Portal</title>
+<meta name="description" content="Explaining core machine learning concepts: feature scaling (normalization vs. standardization), formulas, usage guidance, and a quick comparison table."/>
+  
+  <!-- Google Fonts: Lora (Editorial Serif) & Assistant (Clean Sans-serif) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css?v=2">
+</head>
+<body data-page="ml-concepts">
+
+  <!-- Header / Navigation -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">Romeo Mhakayakora <span class="logo-accent">/></span></a>
+      <nav class="nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="projects.html" class="nav-link">Projects</a>
+        <a href="rl.html" class="nav-link">RL</a>
+        <a href="lm.html" class="nav-link">Language Models</a>
+        <a href="agentic-ai.html" class="nav-link">Agentic AI</a>
+        <a href="inference.html" class="nav-link">Inference</a>
+        <a href="blogs.html" class="nav-link">Blogs</a>
+        <a href="courses.html" class="nav-link">Courses</a>
+        <a href="learning.html" class="nav-link">Learning</a>
+        <a href="ml-concepts.html" class="nav-link active">ML Concepts</a>
+        <a href="papers.html" class="nav-link">Papers</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+        <button id="theme-toggle" class="theme-btn" aria-label="Toggle dark mode">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+    <!-- Hero / About Section (optional) -->
+    <section class="section">
+      <div class="section-header">
+        <h1>Machine Learning Concepts</h1>
+      </div>
+      <div class="section-body">
+        <p>This page explains essential machine learning concepts, focusing on feature scaling techniques.</p>
+      </div>
+    </section>
+
+    <!-- Normalization section (provided snippet) -->
+    <section class="section">
+      <div class="section-header">
+        <h3 class="section-title">1. Normalization (Min‑Max Scaling)</h3>
+      </div>
+      <div class="section-body">
+        <p><strong>Formula:</strong></p>
+        <pre><code>x_scaled = (x - min(x)) / (max(x) - min(x))</code></pre>
+        <p>Normalization scales features to a range of [0, 1]. It is useful when you need bounded intervals, such as in image processing where pixel values are 0‑255, or when using algorithms that assume input features are on a similar scale (e.g., neural networks with sigmoid activation).</p>
+        <p><strong>When to use:</strong></p>
+        <ul>
+          <li>When the data does not follow a Gaussian distribution.</li>
+          <li>When algorithms are sensitive to the scale of features (e.g., k‑nearest neighbors, support vector machines with RBF kernel).</li>
+          <li>When you need to preserve zero entries in sparse data? Actually normalization does not preserve zero; standardization does better with sparsity.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Standardization section -->
+    <section class="section">
+      <div class="section-header">
+        <h3 class="section-title">2. Standardization (Z‑Score Normalization)</h3>
+      </div>
+      <div class="section-body">
+        <p><strong>Formula:</strong></p>
+        <pre><code>x_scaled = (x - μ) / σ</code></pre>
+        <p>where μ is the mean and σ is the standard deviation.</p>
+        <p>Standardization transforms data to have zero mean and unit variance. It is appropriate when the data follows a normal distribution or when algorithms assume normality (e.g., linear regression, logistic regression, linear discriminant analysis).</p>
+        <p><strong>When to use:</strong></p>
+        <ul>
+          <li>When features have varying scales and you want to give each equal importance.</li>
+          <li>When using algorithms that assume normally distributed inputs (e.g., PCA, LDA).</li>
+          <li>When dealing with outliers, as standardization is less affected by extreme values than normalization (though still impacted).</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Comparison table -->
+    <section class="section">
+      <div class="section-header">
+        <h3 class="section-title">3. Comparison</h3>
+      </div>
+      <div class="section-body">
+        <table>
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Normalization (Min‑Max)</th>
+              <th>Standardization (Z‑Score)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Range</td>
+              <td>[0, 1]</td>
+              <td>(-∞, ∞)</td>
+            </tr>
+            <tr>
+              <td>Mean</td>
+              <td>Not zero (depends on distribution)</td>
+              <td>0</td>
+            </tr>
+            <tr>
+              <td>Standard deviation</td>
+              <td>Not 1</td>
+              <td>1</td>
+            </tr>
+            <tr>
+              <td>Outlier sensitivity</td>
+              <td>High</td>
+              <td>Less sensitive</td>
+            </tr>
+            <tr>
+              <td>Preserves zero entries</td>
+              <td>No</td>
+              <td>No (unless mean is zero)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- References -->
+    <section class="section">
+      <div class="section-header">
+        <h3 class="section-title">References & Further Reading</h3>
+      </div>
+      <div class="section-body">
+        <ul>
+          <li>Goodfellow, I., Bengio, Y., & Courville, A. (2016). <em>Deep Learning</em>. MIT Press. Chapter 2: Numerical Computation.</li>
+          <li>Hastie, T., Tibshirani, R., & Friedman, J. (2009). <em>The Elements of Statistical Learning</em>. Springer. Sections on preprocessing.</li>
+          <li>Scikit-learn documentation: <a href="https://scikit-learn.org/stable/modules/preprocessing.html">Preprocessing</a></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <p class="footer-copy">&copy; 2026 Romeo Mhakayakora. Designed with an editorial aesthetic.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
