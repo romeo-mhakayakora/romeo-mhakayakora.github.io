@@ -13,11 +13,23 @@
   
   <link rel="stylesheet" href="style.css?v=2">
   
-  <!-- KaTeX for scientific notation -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-    onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}]});"></script>
+  <!-- MathJax for professional scientific notation -->
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['$$', '$$']],
+        processEscapes: true
+      },
+      svg: {
+        fontCache: 'global'
+      },
+      options: {
+        ignoreHtmlClass: 'no-mathjax'
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" crossorigin="anonymous"></script>
 
   <style>
     /* ==========================================================================
@@ -111,14 +123,6 @@
       overflow-x: auto;
       color: var(--text-color);
       text-align: center;
-    }
-
-    .concept-formula .katex-display {
-      margin: 0.25rem 0;
-    }
-
-    .concept-formula .katex {
-      font-size: 1.1rem;
     }
 
     [data-theme="dark"] .concept-formula {
@@ -368,7 +372,11 @@
     <header class="page-header">
       <span class="page-label">07 // Reference</span>
       <h1 class="page-title">Machine Learning Concepts</h1>
-      <p class="page-subtitle">A structured reference of core ML concepts, organized by category — from preprocessing to evaluation. Each concept includes the mathematical formulation, intuition, and guidance on when to apply it.</p>
+      <p class="page-subtitle">
+        A structured reference of core ML concepts, organized by category — from preprocessing to evaluation. Each concept includes the mathematical formulation, intuition, and guidance on when to apply it.
+        <br><br>
+        <em style="font-size: 0.9rem; color: var(--text-muted);">I update this page regularly as I explore and learn new concepts.</em>
+      </p>
     </header>
 
     <!-- Two-column layout: TOC sidebar + content -->
@@ -421,7 +429,7 @@
           <div class="category-header">
             <span class="category-icon">⚙️</span>
             <h2 class="category-title">Preprocessing & Feature Engineering</h2>
-            <span class="category-subtitle">6 concepts</span>
+            <span class="category-subtitle">4 concepts</span>
           </div>
 
           <!-- 1.1 Feature Scaling -->
@@ -527,7 +535,7 @@
               </ul>
             </div>
             <div class="use-tags">
-              <span class="use-tag when">Diagnose: High training error → high bias; large gap between train & test → high variance</span>
+              <span class="use-tag when">Diagnose: High training error &rarr; high bias; large gap between train & test &rarr; high variance</span>
             </div>
           </div>
 
@@ -536,7 +544,7 @@
             <span class="concept-number">06 — Model Selection</span>
             <h3 class="concept-name">Cross-Validation</h3>
             <div class="concept-body">
-              <p><strong>K-Fold Cross-Validation:</strong> Split data into K folds. Train on K−1 folds, evaluate on the held-out fold. Repeat K times. Report average metric.</p>
+              <p><strong>K-Fold Cross-Validation:</strong> Split data into K folds. Train on K-1 folds, evaluate on the held-out fold. Repeat K times. Report average metric.</p>
               <div class="concept-formula">$$\text{CV Score} = \frac{1}{K}\sum_{i=1}^{K} \text{Score}_i$$</div>
               <ul>
                 <li><strong>k=5 or k=10</strong> are standard choices — balance between bias and computational cost.</li>
@@ -556,13 +564,13 @@
             <span class="concept-number">07 — Model Selection</span>
             <h3 class="concept-name">Overfitting & Underfitting</h3>
             <div class="concept-body">
-              <p><strong>Underfitting:</strong> Model is too simple to capture the underlying pattern → high bias, high training error, high test error.</p>
-              <p><strong>Overfitting:</strong> Model memorizes training data including noise → low training error, high test error, large generalization gap.</p>
+              <p><strong>Underfitting:</strong> Model is too simple to capture the underlying pattern &rarr; high bias, high training error, high test error.</p>
+              <p><strong>Overfitting:</strong> Model memorizes training data including noise &rarr; low training error, high test error, large generalization gap.</p>
               <p><strong>Detection:</strong> Monitor the gap between training and validation performance. A widening gap signals overfitting.</p>
               <p><strong>Remedies:</strong></p>
               <ul>
-                <li><strong>Overfitting →</strong> More data, regularization (L1/L2), reduce model complexity, dropout, early stopping.</li>
-                <li><strong>Underfitting →</strong> Increase model complexity, add features, reduce regularization, train longer.</li>
+                <li><strong>Overfitting &rarr;</strong> More data, regularization (L1/L2), reduce model complexity, dropout, early stopping.</li>
+                <li><strong>Underfitting &rarr;</strong> Increase model complexity, add features, reduce regularization, train longer.</li>
               </ul>
             </div>
           </div>
@@ -680,11 +688,11 @@
                 <li><strong>Accuracy:</strong> (TP + TN) / (TP + TN + FP + FN) — misleading for imbalanced classes.</li>
                 <li><strong>Precision:</strong> TP / (TP + FP) — of predicted positives, how many are actually positive? Important when false positives are costly.</li>
                 <li><strong>Recall (Sensitivity):</strong> TP / (TP + FN) — of actual positives, how many were found? Important when false negatives are costly.</li>
-                <li><strong>F1 Score:</strong> 2 · (Precision · Recall) / (Precision + Recall) — harmonic mean; balances precision and recall.</li>
+                <li><strong>F1 Score:</strong> 2 &middot; (Precision &middot; Recall) / (Precision + Recall) — harmonic mean; balances precision and recall.</li>
                 <li><strong>AUC-ROC:</strong> Area under the ROC curve (TPR vs FPR at various thresholds). Threshold-independent. AUC = 0.5 is random, 1.0 is perfect.</li>
               </ul>
               <div class="tldr-box">
-                <strong>TL;DR:</strong> For <em>balanced</em> data → Accuracy. For <em>imbalanced</em> data → Precision, Recall, F1. For <em>ranking</em> → AUC-ROC.
+                <strong>TL;DR:</strong> For <em>balanced</em> data &rarr; Accuracy. For <em>imbalanced</em> data &rarr; Precision, Recall, F1. For <em>ranking</em> &rarr; AUC-ROC.
               </div>
             </div>
           </div>
@@ -698,7 +706,7 @@
                 <li><strong>Mean Squared Error (MSE):</strong> \(\frac{1}{n}\sum (y - \hat{y})^2\) — penalizes large errors. In same units as \(y^2\).</li>
                 <li><strong>Root Mean Squared Error (RMSE):</strong> \(\sqrt{\text{MSE}}\) — interpretable in original units. Standard metric for regression.</li>
                 <li><strong>Mean Absolute Error (MAE):</strong> \(\frac{1}{n}\sum |y - \hat{y}|\) — robust to outliers.</li>
-                <li><strong>R² (Coefficient of Determination):</strong> \(1 - \frac{SS_{\text{res}}}{SS_{\text{tot}}}\) — proportion of variance explained by the model. Can be negative for poorly fitting models.</li>
+                <li><strong>R&sup2; (Coefficient of Determination):</strong> \(1 - \frac{SS_{\text{res}}}{SS_{\text{tot}}}\) — proportion of variance explained by the model. Can be negative for poorly fitting models.</li>
                 <li><strong>MAPE:</strong> \(\frac{100}{n}\sum \left|\frac{y - \hat{y}}{y}\right|\) — relative error in percentage. Undefined when \(y = 0\).</li>
               </ul>
             </div>
@@ -709,7 +717,7 @@
             <span class="concept-number">14 — Evaluation</span>
             <h3 class="concept-name">Confusion Matrix</h3>
             <div class="concept-body">
-              <p>A K×K table comparing actual labels against predicted labels for a classification problem.</p>
+              <p>A K&times;K table comparing actual labels against predicted labels for a classification problem.</p>
               <div class="concept-table-wrap">
                 <table>
                   <thead>
@@ -763,7 +771,7 @@
               <p>A non-linear, probabilistic technique primarily used for <strong>visualization</strong> of high-dimensional data in 2D or 3D.</p>
               <ul>
                 <li>Models pairwise similarities in high-dimensional space using a Gaussian distribution.</li>
-                <li>Models pairwise similarities in low-dimensional space using a Student-t distribution (heavier tails → avoids crowding).</li>
+                <li>Models pairwise similarities in low-dimensional space using a Student-t distribution (heavier tails &rarr; avoids crowding).</li>
                 <li>Minimizes the KL divergence between the two distributions via gradient descent.</li>
                 <li><strong>Key hyperparameter:</strong> <code>perplexity</code> (typically 5–50) — balances local vs. global structure.</li>
               </ul>
@@ -857,7 +865,7 @@
               <li>Hastie, T., Tibshirani, R., & Friedman, J. (2009). <em>The Elements of Statistical Learning</em>. Springer.</li>
               <li>Bishop, C. (2006). <em>Pattern Recognition and Machine Learning</em>. Springer.</li>
               <li>Murphy, K. (2022). <em>Probabilistic Machine Learning: An Introduction</em>. MIT Press.</li>
-              <li>Scikit-learn documentation: <a href="https://scikit-learn.org/stable/modules/preprocessing.html" target="_blank" rel="noopener">Preprocessing</a> · <a href="https://scikit-learn.org/stable/modules/model_evaluation.html" target="_blank" rel="noopener">Model Evaluation</a> · <a href="https://scikit-learn.org/stable/modules/ensemble.html" target="_blank" rel="noopener">Ensembles</a></li>
+              <li>Scikit-learn documentation: <a href="https://scikit-learn.org/stable/modules/preprocessing.html" target="_blank" rel="noopener">Preprocessing</a> &middot; <a href="https://scikit-learn.org/stable/modules/model_evaluation.html" target="_blank" rel="noopener">Model Evaluation</a> &middot; <a href="https://scikit-learn.org/stable/modules/ensemble.html" target="_blank" rel="noopener">Ensembles</a></li>
             </ul>
           </div>
         </section>
