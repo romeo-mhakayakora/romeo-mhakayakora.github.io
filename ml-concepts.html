@@ -4,348 +4,175 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ML Concepts — Romeo Mhakayakora</title>
-  <meta name="description" content="Comprehensive machine learning concepts reference organized by category: preprocessing, model selection, regularization, evaluation, dimensionality reduction, and ensemble methods."/>
+  <meta name="description" content="Machine learning concepts organized by category: preprocessing, model selection, regularization, evaluation, dimensionality reduction, and ensemble methods."/>
   
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="style.css?v=2">
   
-  <!-- MathJax 3 for professional scientific notation (LaTeX rendering as SVG) -->
   <script>
     MathJax = {
-      tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']],
-        displayMath: [['$$', '$$'], ['\\[', '\\]']],
-        processEscapes: true
-      },
-      svg: {
-        fontCache: 'global',
-        scale: 1.05
-      },
-      options: {
-        ignoreHtmlClass: 'no-mathjax',
-        processHtmlClass: 'tex'
-      },
-      startup: {
-        pageReady: function() {
-          return MathJax.startup.defaultPageReady();
-        }
-      }
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$']], processEscapes: true },
+      svg: { fontCache: 'global', scale: 1.0 },
+      options: { ignoreHtmlClass: 'no-mathjax', processHtmlClass: 'tex' }
     };
   </script>
-  <script type="text/javascript" id="MathJax-script" async
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
-  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" crossorigin="anonymous"></script>
 
   <style>
-    /* ==========================================================================
-       ML Concepts Page — Enhanced Styles
-       ========================================================================== */
+    /* Override: narrow content width for reading */
+    .container.ml-container { max-width: 720px; }
 
-    .concept-category {
-      margin-bottom: 4rem;
-      scroll-margin-top: 6rem;
-    }
+    .ml-concepts { font-size: 0.95rem; line-height: 1.75; }
 
-    .concept-category:last-child {
-      margin-bottom: 0;
-    }
-
-    .category-header {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 2rem;
-      padding-bottom: 0.75rem;
-      border-bottom: 1.5px solid var(--accent-color);
-    }
-
-    .category-icon {
-      font-size: 1.5rem;
-      line-height: 1;
-    }
-
-    .category-title {
+    .ml-concepts h2 {
       font-family: var(--font-serif);
-      font-size: 1.65rem;
+      font-size: 1.4rem;
       font-weight: 600;
+      margin: 2.5rem 0 0.2rem 0;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid rgba(170,170,170,0.2);
       color: var(--text-color);
     }
 
-    .category-subtitle {
-      font-size: 0.85rem;
+    .ml-concepts h3 {
+      font-family: var(--font-sans);
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin: 1.6rem 0 0.4rem 0;
+      color: var(--text-color);
+    }
+
+    .ml-concepts .concept-meta {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
       color: var(--text-muted);
-      font-weight: 400;
-      font-family: var(--font-sans);
-      margin-left: auto;
-    }
-
-    .concept-card {
-      background-color: var(--card-bg);
-      border: var(--card-border);
-      border-radius: 8px;
-      padding: 1.75rem 2rem;
-      margin-bottom: 1.25rem;
-      box-shadow: var(--card-shadow);
-      transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s, transform 0.2s;
-    }
-
-    .concept-card:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 18px rgba(10, 10, 10, 0.04);
-      border-color: rgba(226, 92, 92, 0.3);
-    }
-
-    [data-theme="dark"] .concept-card:hover {
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    .concept-number {
-      font-family: var(--font-sans);
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--accent-color);
-      letter-spacing: 0.05em;
-      display: block;
-      margin-bottom: 0.3rem;
-    }
-
-    .concept-name {
-      font-family: var(--font-serif);
-      font-size: 1.35rem;
       font-weight: 600;
-      color: var(--text-color);
+      display: block;
+      margin-bottom: 0.15rem;
+    }
+
+    .ml-concepts p { margin-bottom: 0.75rem; color: var(--text-color); }
+    .ml-concepts ul { margin: 0.4rem 0 0.8rem 1.4rem; padding: 0; }
+    .ml-concepts li { margin-bottom: 0.25rem; }
+
+    .ml-concepts .formula-box {
+      background: var(--secondary-bg);
+      border-radius: 4px;
+      padding: 0.65rem 1rem;
+      margin: 0.6rem 0 0.8rem 0;
+      text-align: center;
+      overflow-x: auto;
+      font-size: 0.92rem;
+    }
+
+    .ml-concepts .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem 0.6rem;
+      margin: 0.5rem 0 1rem 0;
+    }
+
+    .ml-concepts .tag {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .ml-concepts .tag.green { color: #2A9D8F; }
+    .ml-concepts .tag.red { color: #E76F51; }
+    [data-theme="dark"] .ml-concepts .tag.green { color: #52C9BA; }
+    [data-theme="dark"] .ml-concepts .tag.red { color: #F48C7C; }
+
+    .ml-concepts .tldr {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      padding: 0.6rem 1rem;
+      margin: 0.6rem 0 1rem 0;
+      border-left: 2px solid var(--accent-color);
+      background: var(--secondary-bg);
+      border-radius: 0 4px 4px 0;
+    }
+
+    .ml-concepts .tldr strong { color: var(--text-color); }
+
+    .ml-concepts table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin: 0.6rem 0 1rem 0;
+    }
+
+    .ml-concepts th, .ml-concepts td {
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(170,170,170,0.12);
+    }
+
+    .ml-concepts th {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: var(--secondary-bg);
+    }
+
+    [data-theme="dark"] .ml-concepts th, [data-theme="dark"] .ml-concepts td {
+      border-bottom-color: rgba(255,255,255,0.06);
+    }
+
+    /* Minimal TOC */
+    .toc-mini {
+      margin-bottom: 2rem;
+      padding: 1rem 1.25rem;
+      background: var(--secondary-bg);
+      border-radius: 4px;
+      font-size: 0.85rem;
+    }
+
+    .toc-mini p {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      color: var(--text-muted);
       margin-bottom: 0.6rem;
     }
 
-    .concept-formula {
-      background-color: var(--secondary-bg);
-      border: 1px solid rgba(170, 170, 170, 0.12);
-      border-radius: 6px;
-      padding: 0.8rem 1.25rem;
-      margin: 0.8rem 0 1rem 0;
-      overflow-x: auto;
-      text-align: center;
-    }
-
-    .concept-formula mjx-container {
-      margin: 0.15rem 0;
-    }
-
-    [data-theme="dark"] .concept-formula {
-      border-color: rgba(255, 255, 255, 0.06);
-    }
-
-    .concept-body {
-      font-size: 0.98rem;
-      line-height: 1.7;
-      color: var(--text-color);
-    }
-
-    .concept-body p {
-      margin-bottom: 0.8rem;
-    }
-
-    .concept-body p:last-child {
-      margin-bottom: 0;
-    }
-
-    .concept-body ul {
-      margin: 0.5rem 0 0.8rem 1.5rem;
+    .toc-mini ol {
+      margin: 0;
       padding: 0;
-    }
-
-    .concept-body li {
-      margin-bottom: 0.35rem;
-    }
-
-    .concept-body strong {
-      font-weight: 700;
-    }
-
-    .concept-body em {
-      font-family: var(--font-serif);
-      font-style: italic;
-    }
-
-    .use-tags {
+      list-style: none;
       display: flex;
       flex-wrap: wrap;
-      gap: 0.4rem;
-      margin-top: 0.8rem;
+      gap: 0.25rem 1rem;
     }
 
-    .use-tag {
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      padding: 0.2rem 0.55rem;
-      border-radius: 3px;
-      border: 1px solid var(--accent-color);
-      color: var(--accent-color);
-      background-color: transparent;
-    }
+    .toc-mini li { margin: 0; font-size: 0.82rem; }
+    .toc-mini a { color: var(--text-muted); text-decoration: none; transition: color 0.15s; }
+    .toc-mini a:hover { color: var(--accent-color); }
 
-    .use-tag.when {
-      border-color: #2A9D8F;
-      color: #2A9D8F;
-    }
-
-    .use-tag.avoid {
-      border-color: #E76F51;
-      color: #E76F51;
-    }
-
-    [data-theme="dark"] .use-tag.when {
-      border-color: #52C9BA;
-      color: #52C9BA;
-    }
-
-    [data-theme="dark"] .use-tag.avoid {
-      border-color: #F48C7C;
-      color: #F48C7C;
-    }
-
-    .concept-table-wrap {
-      overflow-x: auto;
-      margin: 1rem 0 0.5rem 0;
-    }
-
-    .concept-table-wrap table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.92rem;
-    }
-
-    .concept-table-wrap th,
-    .concept-table-wrap td {
-      padding: 0.7rem 1rem;
-      text-align: left;
-      border-bottom: 0.8px solid rgba(170, 170, 170, 0.15);
-    }
-
-    .concept-table-wrap th {
-      font-family: var(--font-sans);
-      font-size: 0.78rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-muted);
-      background-color: var(--secondary-bg);
-    }
-
-    .concept-table-wrap tr:last-child td {
-      border-bottom: none;
-    }
-
-    [data-theme="dark"] .concept-table-wrap th,
-    [data-theme="dark"] .concept-table-wrap td {
-      border-bottom-color: rgba(255, 255, 255, 0.06);
-    }
-
-    .tldr-box {
-      background-color: var(--secondary-bg);
-      border-left: 3px solid var(--accent-color);
-      padding: 1rem 1.25rem;
-      margin: 1rem 0 0.5rem 0;
-      border-radius: 0 6px 6px 0;
-      font-size: 0.92rem;
-      color: var(--text-muted);
-    }
-
-    .tldr-box strong {
-      color: var(--text-color);
-    }
-
-    .toc-wrapper {
-      position: sticky;
-      top: 5.5rem;
-      max-height: calc(100vh - 8rem);
-      overflow-y: auto;
-    }
-
-    .toc-label {
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: var(--accent-color);
-      margin-bottom: 0.8rem;
-    }
-
-    .toc-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .toc-list li {
-      margin-bottom: 0.4rem;
-    }
-
-    .toc-list a {
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.2s, padding-left 0.2s;
-      display: block;
-      padding: 0.2rem 0;
-    }
-
-    .toc-list a:hover {
-      color: var(--accent-color);
-      padding-left: 0.3rem;
-    }
-
-    .toc-list .toc-sub {
-      padding-left: 0.8rem;
-      font-size: 0.8rem;
-    }
-
-    .concepts-layout {
-      display: grid;
-      grid-template-columns: 220px 1fr;
-      gap: 2.5rem;
-      align-items: start;
-    }
-
-    @media (max-width: 900px) {
-      .concepts-layout {
-        grid-template-columns: 1fr;
-      }
-      .toc-wrapper {
-        position: relative;
-        top: 0;
-        max-height: none;
-        margin-bottom: 2rem;
-      }
+    .section-break {
+      border: none;
+      border-top: 1px solid rgba(170,170,170,0.12);
+      margin: 2.5rem 0;
     }
 
     @media (max-width: 600px) {
-      .concept-card {
-        padding: 1.25rem 1.25rem;
-      }
-      .concept-name {
-        font-size: 1.15rem;
-      }
-      .category-header {
-        flex-wrap: wrap;
-      }
-      .category-subtitle {
-        margin-left: 0;
-        width: 100%;
-      }
+      .ml-concepts h2 { font-size: 1.2rem; }
+      .ml-concepts h3 { font-size: 0.95rem; }
+      .ml-concepts { font-size: 0.9rem; }
     }
   </style>
 </head>
 <body data-page="ml-concepts">
 
-  <!-- Header / Navigation -->
   <header class="header">
     <div class="header-inner">
       <a href="index.html" class="logo">Romeo Mhakayakora <span class="logo-accent">/></span></a>
@@ -370,518 +197,307 @@
     </div>
   </header>
 
-  <!-- Main Container -->
-  <main class="container">
-
-    <!-- Page Header -->
-    <header class="page-header">
+  <main class="container ml-container">
+    <header class="page-header" style="padding-bottom: 2rem;">
       <span class="page-label">07 // Reference</span>
       <h1 class="page-title">Machine Learning Concepts</h1>
       <p class="page-subtitle">
-        A structured reference of core ML concepts, organized by category &mdash; from preprocessing to evaluation. Each concept includes the mathematical formulation, intuition, and guidance on when to apply it.
-        <br><br>
-        <em style="font-size: 0.9rem; color: var(--accent-color);">I update this page regularly as I learn new concepts.</em>
+        A structured reference of core ML concepts, organized by category&mdash;from preprocessing to evaluation. Each entry includes the mathematical formulation, intuition, and guidance on when to apply it.
+      </p>
+      <p style="font-size: 0.85rem; color: var(--accent-color); margin-top: 1rem; font-style: italic;">
+        I update this page as I learn new concepts.
       </p>
     </header>
 
-    <!-- Two-column layout: TOC sidebar + content -->
-    <div class="concepts-layout">
+    <div class="ml-concepts">
 
-      <!-- Sidebar: Table of Contents -->
-      <aside class="toc-wrapper">
-        <div class="toc-label">On this page</div>
-        <ul class="toc-list">
-          <li><a href="#preprocessing">Preprocessing & Feature Engineering</a></li>
-          <li class="toc-sub"><a href="#feature-scaling">Feature Scaling</a></li>
-          <li class="toc-sub"><a href="#data-splitting">Data Splitting</a></li>
-          <li class="toc-sub"><a href="#encoding">Encoding Categorical Variables</a></li>
-          <li class="toc-sub"><a href="#imputation">Handling Missing Data</a></li>
-
-          <li><a href="#model-selection">Model Selection & Validation</a></li>
-          <li class="toc-sub"><a href="#bias-variance">Bias-Variance Tradeoff</a></li>
-          <li class="toc-sub"><a href="#cross-validation">Cross-Validation</a></li>
-          <li class="toc-sub"><a href="#overfitting">Overfitting & Underfitting</a></li>
-          <li class="toc-sub"><a href="#hyperparameter-tuning">Hyperparameter Tuning</a></li>
-
-          <li><a href="#regularization-optimization">Regularization & Optimization</a></li>
-          <li class="toc-sub"><a href="#regularization">Regularization (L1, L2, Elastic Net)</a></li>
-          <li class="toc-sub"><a href="#gradient-descent">Gradient Descent Variants</a></li>
-          <li class="toc-sub"><a href="#loss-functions">Loss Functions</a></li>
-
+      <!-- TOC -->
+      <div class="toc-mini">
+        <p>Contents</p>
+        <ol>
+          <li><a href="#preprocessing">Preprocessing</a></li>
+          <li><a href="#model-selection">Model Selection</a></li>
+          <li><a href="#regularization">Regularization & Optimization</a></li>
           <li><a href="#evaluation">Evaluation & Metrics</a></li>
-          <li class="toc-sub"><a href="#classification-metrics">Classification Metrics</a></li>
-          <li class="toc-sub"><a href="#regression-metrics">Regression Metrics</a></li>
-          <li class="toc-sub"><a href="#confusion-matrix">Confusion Matrix</a></li>
-
           <li><a href="#dimensionality">Dimensionality Reduction</a></li>
-          <li class="toc-sub"><a href="#pca">PCA</a></li>
-          <li class="toc-sub"><a href="#tsne">t-SNE</a></li>
-
           <li><a href="#ensemble">Ensemble Methods</a></li>
-          <li class="toc-sub"><a href="#bagging">Bagging</a></li>
-          <li class="toc-sub"><a href="#boosting">Boosting</a></li>
-          <li class="toc-sub"><a href="#stacking">Stacking</a></li>
-        </ul>
-      </aside>
+          <li><a href="#references">References</a></li>
+        </ol>
+      </div>
 
-      <!-- Main Content -->
-      <div>
+      <!-- ====== 1. PREPROCESSING ====== -->
+      <h2 id="preprocessing">Preprocessing & Feature Engineering</h2>
 
-        <!-- ============================================================ -->
-        <!-- CATEGORY 1: PREPROCESSING & FEATURE ENGINEERING          -->
-        <!-- ============================================================ -->
-        <section class="concept-category" id="preprocessing">
-          <div class="category-header">
-            <span class="category-icon">&#9881;</span>
-            <h2 class="category-title">Preprocessing & Feature Engineering</h2>
-            <span class="category-subtitle">4 concepts</span>
-          </div>
+      <span class="concept-meta">01</span>
+      <h3>Feature Scaling</h3>
+      <p><strong>Normalization (Min-Max Scaling):</strong></p>
+      <div class="formula-box tex">$$x' = \frac{x - x_{\min}}{x_{\max} - x_{\min}}$$</div>
+      <p>Scales features to $[0, 1]$. Sensitive to outliers since min/max are extreme values.</p>
+      <p><strong>Standardization (Z-Score Scaling):</strong></p>
+      <div class="formula-box tex">$$x' = \frac{x - \mu}{\sigma}$$</div>
+      <p>Centers data around zero with unit variance. Less sensitive to outliers. Does not bound data to a fixed range.</p>
+      <p>Many algorithms (SVM, k-NN, neural networks, PCA) assume features are on a comparable scale. Without scaling, features with large magnitudes dominate.</p>
+      <div class="tag-row">
+        <span class="tag green">Use for: SVM, k-NN, PCA, neural networks, gradient descent</span>
+        <span class="tag red">Skip for: Tree-based models (RF, XGBoost)</span>
+      </div>
 
-          <!-- 1.1 Feature Scaling -->
-          <div class="concept-card" id="feature-scaling">
-            <span class="concept-number">01 &mdash; Preprocessing</span>
-            <h3 class="concept-name">Feature Scaling</h3>
-            <div class="concept-body tex">
-              <p><strong>Normalization (Min-Max Scaling):</strong></p>
-              <div class="concept-formula">$$x' = \frac{x - x_{\min}}{x_{\max} - x_{\min}}$$</div>
-              <p>Scales features to the fixed range $[0, 1]$. Sensitive to outliers since the min/max are extreme values.</p>
+      <span class="concept-meta">02</span>
+      <h3>Data Splitting (Train / Validation / Test)</h3>
+      <p>Partition data to prevent information leakage and obtain honest generalization estimates.</p>
+      <ul>
+        <li><strong>Training (~60&ndash;70%):</strong> Fit model parameters.</li>
+        <li><strong>Validation (~15&ndash;20%):</strong> Hyperparameter tuning and model selection.</li>
+        <li><strong>Test (~15&ndash;20%):</strong> Final evaluation (used only once).</li>
+      </ul>
+      <p>Common splits: 70/15/15, 80/10/10. For smaller datasets, use cross-validation.</p>
+      <div class="tag-row">
+        <span class="tag green">Always split before preprocessing that uses data statistics</span>
+        <span class="tag red">Never use test data for model selection</span>
+      </div>
 
-              <p><strong>Standardization (Z-Score Scaling):</strong></p>
-              <div class="concept-formula">$$x' = \frac{x - \mu}{\sigma}$$</div>
-              <p>Centers data around zero with unit variance. Less sensitive to outliers than normalization. Does not bound data to a fixed range.</p>
+      <span class="concept-meta">03</span>
+      <h3>Encoding Categorical Variables</h3>
+      <p><strong>One-Hot Encoding:</strong> Each category becomes a binary column.</p>
+      <div class="formula-box tex">$$\texttt{[A, B, C]} \to \texttt{[1,0,0], [0,1,0], [0,0,1]}$$</div>
+      <p><strong>Label Encoding:</strong> Maps categories to integers. Implies ordinality&mdash;fine for trees, problematic for linear models.</p>
+      <p><strong>Target Encoding:</strong> Replace category with mean target value. Powerful but risks leakage.</p>
+      <div class="tag-row">
+        <span class="tag green">One-Hot: Linear models, neural networks, distance-based</span>
+        <span class="tag green">Label: Tree-based models (RF, XGBoost)</span>
+      </div>
 
-              <p><strong>Why it matters:</strong> Many algorithms (SVM, k-NN, neural networks, PCA) assume all features are on a comparable scale. Without scaling, features with large magnitudes dominate distance computations and gradient updates.</p>
-            </div>
-            <div class="use-tags">
-              <span class="use-tag when">Use for: SVM, k-NN, PCA, neural networks, gradient descent</span>
-              <span class="use-tag avoid">Skip for: Tree-based models (Random Forest, XGBoost)</span>
-            </div>
-          </div>
+      <span class="concept-meta">04</span>
+      <h3>Handling Missing Data</h3>
+      <ul>
+        <li><strong>Deletion:</strong> Remove rows/columns with missing values. Simple but wasteful.</li>
+        <li><strong>Mean/Median/Mode Imputation:</strong> Fast, reduces variance, ignores correlations.</li>
+        <li><strong>KNN Imputation:</strong> Fill using neighbors. Preserves structure, expensive.</li>
+        <li><strong>Forward/Backward Fill:</strong> For time-series&mdash;propagate last known value.</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag green">Mean imputation for <5% missing</span>
+        <span class="tag green">KNN or MICE for structured patterns</span>
+      </div>
 
-          <!-- 1.2 Data Splitting -->
-          <div class="concept-card" id="data-splitting">
-            <span class="concept-number">02 &mdash; Preprocessing</span>
-            <h3 class="concept-name">Data Splitting (Train / Validation / Test)</h3>
-            <div class="concept-body">
-              <p>Partitioning the dataset into disjoint subsets to prevent information leakage and obtain honest estimates of generalization performance.</p>
-              <ul>
-                <li><strong>Training set (~60&ndash;70%):</strong> Used to fit model parameters.</li>
-                <li><strong>Validation set (~15&ndash;20%):</strong> Used for hyperparameter tuning and model selection.</li>
-                <li><strong>Test set (~15&ndash;20%):</strong> Held out until the final evaluation; used only once to estimate real-world performance.</li>
-              </ul>
-              <p>Common splits: 70/15/15, 80/10/10, or 60/20/20 depending on dataset size. For smaller datasets, cross-validation replaces a fixed validation split.</p>
-            </div>
-            <div class="use-tags">
-              <span class="use-tag when">Standard practice: Always split before any preprocessing that uses statistics from the data</span>
-              <span class="use-tag avoid">Never: Use test data for model selection or repeated evaluation</span>
-            </div>
-          </div>
+      <hr class="section-break">
 
-          <!-- 1.3 Encoding Categorical Variables -->
-          <div class="concept-card" id="encoding">
-            <span class="concept-number">03 &mdash; Preprocessing</span>
-            <h3 class="concept-name">Encoding Categorical Variables</h3>
-            <div class="concept-body tex">
-              <p><strong>One-Hot Encoding:</strong> Each category becomes a binary column. Suitable for nominal categories with no ordinal relationship.</p>
-              <div class="concept-formula">$$\texttt{[cat\_A, cat\_B, cat\_C]} \rightarrow \texttt{[1,0,0], [0,1,0], [0,0,1]}$$</div>
+      <!-- ====== 2. MODEL SELECTION ====== -->
+      <h2 id="model-selection">Model Selection & Validation</h2>
 
-              <p><strong>Label Encoding:</strong> Maps each category to an integer (0, 1, 2, &hellip;). Implies ordinality; appropriate for tree-based models but problematic for linear models.</p>
+      <span class="concept-meta">05</span>
+      <h3>Bias-Variance Tradeoff</h3>
+      <p>Generalization error decomposes as:</p>
+      <div class="formula-box tex">$$\mathbb{E}[(\hat{y} - y)^2] = \operatorname{Bias}(\hat{y})^2 + \operatorname{Var}(\hat{y}) + \sigma_{\varepsilon}^2$$</div>
+      <ul>
+        <li><strong>Bias:</strong> Error from simplistic assumptions (underfitting).</li>
+        <li><strong>Variance:</strong> Error from sensitivity to training fluctuations (overfitting).</li>
+        <li><strong>Tradeoff:</strong> Higher complexity &rarr; lower bias &rarr; higher variance. Minimize total error.</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag green">High training error &rarr; high bias</span>
+        <span class="tag red">Large train/test gap &rarr; high variance</span>
+      </div>
 
-              <p><strong>Target Encoding:</strong> Replaces each category with the mean of the target variable for that category. Powerful but risks target leakage &mdash; requires careful cross-validation.</p>
-            </div>
-            <div class="use-tags">
-              <span class="use-tag when">One-Hot: Linear models, neural networks, distance-based models</span>
-              <span class="use-tag when">Label Encoding: Tree-based models (RF, XGBoost, LightGBM)</span>
-            </div>
-          </div>
+      <span class="concept-meta">06</span>
+      <h3>Cross-Validation</h3>
+      <p><strong>K-Fold:</strong> Split data into $K$ folds. Train on $K-1$, evaluate on held-out fold. Repeat $K$ times.</p>
+      <div class="formula-box tex">$$\text{CV}(K) = \frac{1}{K} \sum_{i=1}^K \text{Score}_i$$</div>
+      <ul>
+        <li><strong>$k=5$ or $k=10$:</strong> Standard choices.</li>
+        <li><strong>Stratified:</strong> Preserves class proportions&mdash;essential for imbalanced data.</li>
+        <li><strong>LOOCV:</strong> $K=N$. Low bias, high variance, expensive.</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag green">K-Fold: Standard evaluation</span>
+        <span class="tag green">Stratified: Imbalanced classification</span>
+        <span class="tag red">LOOCV: Only for $N < 100$</span>
+      </div>
 
-          <!-- 1.4 Handling Missing Data -->
-          <div class="concept-card" id="imputation">
-            <span class="concept-number">04 &mdash; Preprocessing</span>
-            <h3 class="concept-name">Handling Missing Data</h3>
-            <div class="concept-body">
-              <p><strong>Common strategies:</strong></p>
-              <ul>
-                <li><strong>Deletion:</strong> Remove rows (listwise) or columns with missing values. Simple but can discard useful data.</li>
-                <li><strong>Mean / Median / Mode Imputation:</strong> Fill missing entries with the column statistic. Fast but reduces variance and ignores correlations.</li>
-                <li><strong>KNN Imputation:</strong> Fill using the mean of k-nearest neighbors. Preserves structure but is computationally expensive.</li>
-                <li><strong>Regression Imputation:</strong> Predict missing values using a model trained on observed features.</li>
-                <li><strong>Forward / Backward Fill:</strong> Used for time-series &mdash; propagate the last known value forward.</li>
-              </ul>
-            </div>
-            <div class="use-tags">
-              <span class="use-tag when">Simple: Mean imputation for <5% missing</span>
-              <span class="use-tag when">Advanced: KNN or MICE for structured missing patterns</span>
-            </div>
-          </div>
-        </section>
+      <span class="concept-meta">07</span>
+      <h3>Overfitting & Underfitting</h3>
+      <p><strong>Underfitting:</strong> Model too simple &rarr; high bias, high training and test error.</p>
+      <p><strong>Overfitting:</strong> Model memorizes noise &rarr; low training error, high test error.</p>
+      <p><strong>Remedies:</strong> Overfit &rarr; more data, regularization, reduce complexity, early stopping. Underfit &rarr; increase complexity, add features, reduce regularization.</p>
 
-        <!-- ============================================================ -->
-        <!-- CATEGORY 2: MODEL SELECTION & VALIDATION                 -->
-        <!-- ============================================================ -->
-        <section class="concept-category" id="model-selection">
-          <div class="category-header">
-            <span class="category-icon">&#128300;</span>
-            <h2 class="category-title">Model Selection & Validation</h2>
-            <span class="category-subtitle">4 concepts</span>
-          </div>
+      <span class="concept-meta">08</span>
+      <h3>Hyperparameter Tuning</h3>
+      <ul>
+        <li><strong>Grid Search:</strong> Exhaustive over a grid. Guaranteed optimum within grid, exponential in parameters.</li>
+        <li><strong>Random Search:</strong> Sample from distributions. More efficient for high dimensions.</li>
+        <li><strong>Bayesian Optimization:</strong> Probabilistic model of performance. Most sample-efficient.</li>
+      </ul>
+      <div class="tldr"><strong>TL;DR:</strong> Random search as baseline; Bayesian when evaluations are expensive.</div>
 
-          <!-- 2.1 Bias-Variance Tradeoff -->
-          <div class="concept-card" id="bias-variance">
-            <span class="concept-number">05 &mdash; Model Selection</span>
-            <h3 class="concept-name">Bias-Variance Tradeoff</h3>
-            <div class="concept-body tex">
-              <p>The generalization error of a model decomposes into three components:</p>
-              <div class="concept-formula">$$\mathbb{E}\big[(\hat{y} - y)^2\big] = \operatorname{Bias}(\hat{y})^2 + \operatorname{Var}(\hat{y}) + \sigma_{\varepsilon}^2$$</div>
-              <ul>
-                <li><strong>Bias:</strong> Error from overly simplistic assumptions (underfitting). High-bias models miss relevant patterns.</li>
-                <li><strong>Variance:</strong> Error from sensitivity to small fluctuations in the training set (overfitting). High-variance models capture noise.</li>
-                <li><strong>Tradeoff:</strong> Increasing model complexity reduces bias but increases variance. The goal is to find the complexity level that minimizes total error.</li>
-              </ul>
-            </div>
-            <div class="use-tags">
-              <span class="use-tag when">Diagnose: High training error &rarr; high bias</span>
-              <span class="use-tag avoid">Large gap between train & test &rarr; high variance</span>
-            </div>
-          </div>
+      <hr class="section-break">
 
-          <!-- 2.2 Cross-Validation -->
-          <div class="concept-card" id="cross-validation">
-            <span class="concept-number">06 &mdash; Model Selection</span>
-            <h3 class="concept-name">Cross-Validation</h3>
-            <div class="concept-body tex">
-              <p><strong>K-Fold Cross-Validation:</strong> Split data into $K$ folds. Train on $K-1$ folds, evaluate on the held-out fold. Repeat $K$ times. Report average metric.</p>
-              <div class="concept-formula">$$\text{CV}(K) = \frac{1}{K} \sum_{i=1}^{K} \text{Score}_i$$</div>
-              <ul>
-                <li><strong>$k = 5$ or $k = 10$</strong> are standard choices &mdash; balance between bias and computational cost.</li>
-                <li><strong>Stratified K-Fold:</strong> Preserves class proportions in each fold &mdash; essential for imbalanced classification.</li>
-                <li><strong>Leave-One-Out (LOOCV):</strong> $K = N$ (one sample per fold). Low bias, high variance, expensive for large $N$.</li>
-              </ul>
-            </div>
-            <div class="use-tags">
-              <span class="use-tag when">K-Fold: Standard model evaluation</span>
-              <span class="use-tag when">Stratified: Imbalanced classification</span>
-              <span class="use-tag avoid">LOOCV: Only for very small datasets ($N < 100$)</span>
-            </div>
-          </div>
+      <!-- ====== 3. REGULARIZATION & OPTIMIZATION ====== -->
+      <h2 id="regularization">Regularization & Optimization</h2>
 
-          <!-- 2.3 Overfitting & Underfitting -->
-          <div class="concept-card" id="overfitting">
-            <span class="concept-number">07 &mdash; Model Selection</span>
-            <h3 class="concept-name">Overfitting & Underfitting</h3>
-            <div class="concept-body">
-              <p><strong>Underfitting:</strong> Model is too simple to capture the underlying pattern &rarr; high bias, high training error, high test error.</p>
-              <p><strong>Overfitting:</strong> Model memorizes training data including noise &rarr; low training error, high test error, large generalization gap.</p>
-              <p><strong>Detection:</strong> Monitor the gap between training and validation performance. A widening gap signals overfitting.</p>
-              <p><strong>Remedies:</strong></p>
-              <ul>
-                <li><strong>Overfitting &rarr;</strong> More data, regularization (L1/L2), reduce model complexity, dropout, early stopping.</li>
-                <li><strong>Underfitting &rarr;</strong> Increase model complexity, add features, reduce regularization, train longer.</li>
-              </ul>
-            </div>
-          </div>
+      <span class="concept-meta">09</span>
+      <h3>Regularization (L1, L2, Elastic Net)</h3>
+      <p><strong>L1 (Lasso):</strong></p>
+      <div class="formula-box tex">$$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{data}} + \lambda \sum_{j} |w_j|$$</div>
+      <p>Encourages sparsity&mdash;drives weights to zero (feature selection).</p>
+      <p><strong>L2 (Ridge):</strong></p>
+      <div class="formula-box tex">$$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{data}} + \lambda \sum_{j} w_j^2$$</div>
+      <p>Shrinks weights, handles multicollinearity, differentiable everywhere.</p>
+      <p><strong>Elastic Net:</strong> Combines L1 + L2.</p>
+      <div class="formula-box tex">$$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{data}} + \lambda_1 \sum_{j} |w_j| + \lambda_2 \sum_{j} w_j^2$$</div>
+      <div class="tag-row">
+        <span class="tag green">L1: Feature selection, sparse problems</span>
+        <span class="tag green">L2: General-purpose, multicollinearity</span>
+        <span class="tag green">Elastic Net: Correlated features + sparsity</span>
+      </div>
 
-          <!-- 2.4 Hyperparameter Tuning -->
-          <div class="concept-card" id="hyperparameter-tuning">
-            <span class="concept-number">08 &mdash; Model Selection</span>
-            <h3 class="concept-name">Hyperparameter Tuning</h3>
-            <div class="concept-body">
-              <ul>
-                <li><strong>Grid Search:</strong> Exhaustive search over a predefined set of hyperparameter values. Guaranteed to find the best within the grid, but exponential in number of parameters.</li>
-                <li><strong>Random Search:</strong> Sample hyperparameters from a distribution. More efficient than grid search for high-dimensional spaces &mdash; finds good configurations faster.</li>
-                <li><strong>Bayesian Optimization:</strong> Builds a probabilistic model mapping hyperparameters to performance. Selects the next candidate using an acquisition function (e.g., expected improvement). More sample-efficient but more complex to implement.</li>
-              </ul>
-              <div class="tldr-box">
-                <strong>TL;DR:</strong> Use <em>random search</em> as a baseline; use <em>Bayesian optimization</em> when each evaluation is expensive (deep learning, large datasets).
-              </div>
-            </div>
-          </div>
-        </section>
+      <span class="concept-meta">10</span>
+      <h3>Gradient Descent Variants</h3>
+      <div class="formula-box tex">$$w^{(t+1)} = w^{(t)} - \eta \nabla \mathcal{L}(w^{(t)})$$</div>
+      <ul>
+        <li><strong>Batch:</strong> Full dataset per update. Deterministic, slow for large data.</li>
+        <li><strong>SGD:</strong> Single sample per update. Noisy, escapes local minima, never fully converges.</li>
+        <li><strong>Mini-Batch:</strong> 32&ndash;256 samples. Most common in practice.</li>
+        <li><strong>Adam:</strong> Per-parameter adaptive learning rates. Default for deep learning.</li>
+      </ul>
 
-        <!-- ============================================================ -->
-        <!-- CATEGORY 3: REGULARIZATION & OPTIMIZATION                -->
-        <!-- ============================================================ -->
-        <section class="concept-category" id="regularization-optimization">
-          <div class="category-header">
-            <span class="category-icon">&#128210;</span>
-            <h2 class="category-title">Regularization & Optimization</h2>
-            <span class="category-subtitle">3 concepts</span>
-          </div>
+      <span class="concept-meta">11</span>
+      <h3>Loss Functions</h3>
+      <p><strong>Regression:</strong></p>
+      <ul>
+        <li><strong>MSE:</strong> $\displaystyle \frac{1}{n}\sum (y_i - \hat{y}_i)^2$ &mdash; penalizes large errors quadratically.</li>
+        <li><strong>MAE:</strong> $\displaystyle \frac{1}{n}\sum |y_i - \hat{y}_i|$ &mdash; robust to outliers.</li>
+        <li><strong>Huber:</strong> Quadratic for small errors, linear for large. Best of both.</li>
+      </ul>
+      <p><strong>Classification:</strong></p>
+      <ul>
+        <li><strong>Cross-Entropy:</strong> $\displaystyle -\frac{1}{n}\sum \big[y_i\log\hat{y}_i + (1-y_i)\log(1-\hat{y}_i)\big]$ &mdash; standard for classification.</li>
+        <li><strong>Hinge:</strong> $\max(0, 1 - y\hat{y})$ &mdash; used by SVMs.</li>
+      </ul>
 
-          <!-- 3.1 Regularization -->
-          <div class="concept-card" id="regularization">
-            <span class="concept-number">09 &mdash; Regularization</span>
-            <h3 class="concept-name">Regularization (L1, L2, Elastic Net)</h3>
-            <div class="concept-body tex">
-              <p>Regularization adds a penalty term to the loss function to discourage overly complex models and reduce overfitting.</p>
+      <hr class="section-break">
 
-              <p><strong>L1 (Lasso) Regularization:</strong></p>
-              <div class="concept-formula">$$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{data}} + \lambda \sum_{j=1}^{p} |w_j|$$</div>
-              <p>Encourages sparsity &mdash; drives some weights to exactly zero, performing automatic feature selection. Effective when many features are irrelevant.</p>
+      <!-- ====== 4. EVALUATION ====== -->
+      <h2 id="evaluation">Evaluation & Metrics</h2>
 
-              <p><strong>L2 (Ridge) Regularization:</strong></p>
-              <div class="concept-formula">$$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{data}} + \lambda \sum_{j=1}^{p} w_j^2$$</div>
-              <p>Shrinks weights proportionally but does not zero them out. Handles multicollinearity well and is differentiable everywhere.</p>
+      <span class="concept-meta">12</span>
+      <h3>Classification Metrics</h3>
+      <ul>
+        <li><strong>Accuracy:</strong> $\displaystyle \frac{TP+TN}{TP+TN+FP+FN}$ &mdash; misleading for imbalanced data.</li>
+        <li><strong>Precision:</strong> $\displaystyle \frac{TP}{TP+FP}$ &mdash; how many predicted positives are correct.</li>
+        <li><strong>Recall:</strong> $\displaystyle \frac{TP}{TP+FN}$ &mdash; how many actual positives were found.</li>
+        <li><strong>F1:</strong> $\displaystyle 2\cdot\frac{P\cdot R}{P+R}$ &mdash; harmonic mean of precision and recall.</li>
+        <li><strong>AUC-ROC:</strong> Area under ROC curve. $0.5$ = random, $1.0$ = perfect.</li>
+      </ul>
+      <div class="tldr"><strong>TL;DR:</strong> Balanced &rarr; Accuracy. Imbalanced &rarr; Precision, Recall, F1. Ranking &rarr; AUC-ROC.</div>
 
-              <p><strong>Elastic Net:</strong> Combines L1 and L2 penalties. Useful when there are correlated features and sparsity is desired.</p>
-              <div class="concept-formula">$$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{data}} + \lambda_1 \sum_{j=1}^{p} |w_j| + \lambda_2 \sum_{j=1}^{p} w_j^2$$</div>
-            </div>
-            <div class="use-tags">
-              <span class="use-tag when">L1: Feature selection, high-dimensional sparse problems</span>
-              <span class="use-tag when">L2: General-purpose, multicollinearity</span>
-              <span class="use-tag when">Elastic Net: Correlated features with sparsity</span>
-            </div>
-          </div>
+      <span class="concept-meta">13</span>
+      <h3>Regression Metrics</h3>
+      <ul>
+        <li><strong>MSE:</strong> $\displaystyle \frac{1}{n}\sum (y_i - \hat{y}_i)^2$</li>
+        <li><strong>RMSE:</strong> $\displaystyle \sqrt{\frac{1}{n}\sum (y_i - \hat{y}_i)^2}$ &mdash; interpretable in original units.</li>
+        <li><strong>MAE:</strong> $\displaystyle \frac{1}{n}\sum |y_i - \hat{y}_i|$ &mdash; robust to outliers.</li>
+        <li><strong>R&sup2;:</strong> $\displaystyle 1 - \frac{SS_{\text{res}}}{SS_{\text{tot}}}$ &mdash; proportion of variance explained.</li>
+        <li><strong>MAPE:</strong> $\displaystyle \frac{100}{n}\sum \big|\frac{y_i - \hat{y}_i}{y_i}\big|$ &mdash; percentage error.</li>
+      </ul>
 
-          <!-- 3.2 Gradient Descent -->
-          <div class="concept-card" id="gradient-descent">
-            <span class="concept-number">10 &mdash; Optimization</span>
-            <h3 class="concept-name">Gradient Descent Variants</h3>
-            <div class="concept-body tex">
-              <div class="concept-formula">$$w^{(t+1)} = w^{(t)} - \eta \cdot \nabla \mathcal{L}(w^{(t)})$$</div>
+      <span class="concept-meta">14</span>
+      <h3>Confusion Matrix</h3>
+      <p>A $K \times K$ table comparing actual vs. predicted labels.</p>
+      <table>
+        <thead>
+          <tr><th></th><th>Predicted Positive</th><th>Predicted Negative</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Actual Positive</strong></td><td>TP</td><td>FN</td></tr>
+          <tr><td><strong>Actual Negative</strong></td><td>FP</td><td>TN</td></tr>
+        </tbody>
+      </table>
+      <p>All classification metrics derive from these four cells. For multi-class, use one-vs-rest and macro-average.</p>
 
-              <ul>
-                <li><strong>Batch Gradient Descent:</strong> Computes gradient over the entire dataset per update. Deterministic but slow for large datasets.</li>
-                <li><strong>Stochastic Gradient Descent (SGD):</strong> Computes gradient on a single sample per update. Fast, noisy &mdash; helps escape local minima but never fully converges.</li>
-                <li><strong>Mini-Batch Gradient Descent:</strong> Compromise &mdash; uses a small random batch (e.g., 32&ndash;256 samples). Most common in practice.</li>
-                <li><strong>Adam (Adaptive Moment Estimation):</strong> Maintains per-parameter learning rates using running averages of gradients and squared gradients. Default choice for deep learning.</li>
-              </ul>
-            </div>
-            <div class="use-tags">
-              <span class="use-tag when">Adam: Default for neural networks</span>
-              <span class="use-tag when">SGD + momentum: Often generalizes better for vision tasks</span>
-            </div>
-          </div>
+      <hr class="section-break">
 
-          <!-- 3.3 Loss Functions -->
-          <div class="concept-card" id="loss-functions">
-            <span class="concept-number">11 &mdash; Optimization</span>
-            <h3 class="concept-name">Loss Functions</h3>
-            <div class="concept-body tex">
+      <!-- ====== 5. DIMENSIONALITY REDUCTION ====== -->
+      <h2 id="dimensionality">Dimensionality Reduction</h2>
 
-              <p><strong>Regression:</strong></p>
-              <ul>
-                <li><strong>Mean Squared Error (MSE):</strong> $\displaystyle L = \frac{1}{n}\sum_{i=1}^{n} (y_i - \hat{y}_i)^2$ &mdash; penalizes large errors quadratically. Sensitive to outliers.</li>
-                <li><strong>Mean Absolute Error (MAE):</strong> $\displaystyle L = \frac{1}{n}\sum_{i=1}^{n} |y_i - \hat{y}_i|$ &mdash; robust to outliers, but gradient is constant (less efficient).</li>
-                <li><strong>Huber Loss:</strong> Quadratic for small errors, linear for large errors. Combines best of MSE and MAE.</li>
-              </ul>
+      <span class="concept-meta">15</span>
+      <h3>Principal Component Analysis (PCA)</h3>
+      <p>Unsupervised linear projection onto orthogonal axes (principal components) that maximize variance.</p>
+      <div class="formula-box tex">$$X' = XW \quad \text{where} \quad W = \text{eigenvectors of } \operatorname{Cov}(X)$$</div>
+      <p><strong>Steps:</strong> (1) Center data, (2) Compute covariance, (3) Eigendecomposition, (4) Select top-$k$, (5) Project.</p>
+      <p><strong>Use cases:</strong> Visualization, noise reduction, speeding up models. <strong>Limitations:</strong> Linear only, components are hard to interpret.</p>
+      <div class="tag-row">
+        <span class="tag green">Always standardize before PCA</span>
+      </div>
 
-              <p><strong>Classification:</strong></p>
-              <ul>
-                <li><strong>Cross-Entropy (Log Loss):</strong> $\displaystyle L = -\frac{1}{n}\sum_{i=1}^{n} \big[y_i \log(\hat{y}_i) + (1-y_i) \log(1-\hat{y}_i)\big]$ &mdash; standard for binary and multi-class classification.</li>
-                <li><strong>Hinge Loss:</strong> $L = \max\big(0,\, 1 - y \cdot \hat{y}\big)$ &mdash; used by SVMs. Encourages a margin of separation.</li>
-              </ul>
-            </div>
-          </div>
-        </section>
+      <span class="concept-meta">16</span>
+      <h3>t-SNE</h3>
+      <p>Non-linear, probabilistic technique for <strong>visualization</strong> of high-dimensional data in 2D/3D.</p>
+      <ul>
+        <li>Models similarities in high-d with Gaussians, in low-d with Student-$t$.</li>
+        <li>Minimizes KL divergence via gradient descent.</li>
+        <li>Key hyperparameter: <code>perplexity</code> (5&ndash;50).</li>
+      </ul>
+      <div class="tldr"><strong>TL;DR:</strong> PCA for exploration. t-SNE for visualization. Stochastic, non-parametric, expensive.</div>
+      <div class="tag-row">
+        <span class="tag red">Not for: Feature extraction, inference, global distance preservation</span>
+      </div>
 
-        <!-- ============================================================ -->
-        <!-- CATEGORY 4: EVALUATION & METRICS                         -->
-        <!-- ============================================================ -->
-        <section class="concept-category" id="evaluation">
-          <div class="category-header">
-            <span class="category-icon">&#128202;</span>
-            <h2 class="category-title">Evaluation & Metrics</h2>
-            <span class="category-subtitle">3 concepts</span>
-          </div>
+      <hr class="section-break">
 
-          <!-- 4.1 Classification Metrics -->
-          <div class="concept-card" id="classification-metrics">
-            <span class="concept-number">12 &mdash; Evaluation</span>
-            <h3 class="concept-name">Classification Metrics</h3>
-            <div class="concept-body tex">
-              <ul>
-                <li><strong>Accuracy:</strong> $\displaystyle \frac{TP + TN}{TP + TN + FP + FN}$ &mdash; misleading for imbalanced classes.</li>
-                <li><strong>Precision:</strong> $\displaystyle \frac{TP}{TP + FP}$ &mdash; of predicted positives, how many are actually positive?</li>
-                <li><strong>Recall (Sensitivity):</strong> $\displaystyle \frac{TP}{TP + FN}$ &mdash; of actual positives, how many were found?</li>
-                <li><strong>F1 Score:</strong> $\displaystyle 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}$ &mdash; harmonic mean of precision and recall.</li>
-                <li><strong>AUC-ROC:</strong> Area under the ROC curve (TPR vs FPR at various thresholds). $AUC = 0.5$ is random, $1.0$ is perfect.</li>
-              </ul>
-              <div class="tldr-box">
-                <strong>TL;DR:</strong> For <em>balanced</em> data &rarr; Accuracy. For <em>imbalanced</em> data &rarr; Precision, Recall, F1. For <em>ranking</em> &rarr; AUC-ROC.
-              </div>
-            </div>
-          </div>
+      <!-- ====== 6. ENSEMBLE METHODS ====== -->
+      <h2 id="ensemble">Ensemble Methods</h2>
 
-          <!-- 4.2 Regression Metrics -->
-          <div class="concept-card" id="regression-metrics">
-            <span class="concept-number">13 &mdash; Evaluation</span>
-            <h3 class="concept-name">Regression Metrics</h3>
-            <div class="concept-body tex">
-              <ul>
-                <li><strong>Mean Squared Error (MSE):</strong> $\displaystyle \frac{1}{n}\sum_{i=1}^{n} (y_i - \hat{y}_i)^2$</li>
-                <li><strong>Root Mean Squared Error (RMSE):</strong> $\displaystyle \sqrt{\frac{1}{n}\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}$ &mdash; interpretable in original units.</li>
-                <li><strong>Mean Absolute Error (MAE):</strong> $\displaystyle \frac{1}{n}\sum_{i=1}^{n} |y_i - \hat{y}_i|$ &mdash; robust to outliers.</li>
-                <li><strong>R&sup2; (Coefficient of Determination):</strong> $\displaystyle 1 - \frac{SS_{\text{res}}}{SS_{\text{tot}}}$</li>
-                <li><strong>MAPE:</strong> $\displaystyle \frac{100}{n}\sum_{i=1}^{n} \left|\frac{y_i - \hat{y}_i}{y_i}\right|$ &mdash; relative error in percentage.</li>
-              </ul>
-            </div>
-          </div>
+      <span class="concept-meta">17</span>
+      <h3>Bagging (Bootstrap Aggregating)</h3>
+      <p>Train models independently on bootstrap samples. Aggregate by average (regression) or vote (classification).</p>
+      <div class="formula-box tex">$$\hat{y}_{\text{ens}} = \frac{1}{M}\sum_{m=1}^M \hat{y}_m$$</div>
+      <ul>
+        <li>Reduces variance without increasing bias.</li>
+        <li>Models train in parallel.</li>
+        <li><strong>Random Forest:</strong> Bagging + random feature subsets at each split.</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag green">RF: Strong default for tabular data, minimal tuning</span>
+      </div>
 
-          <!-- 4.3 Confusion Matrix -->
-          <div class="concept-card" id="confusion-matrix">
-            <span class="concept-number">14 &mdash; Evaluation</span>
-            <h3 class="concept-name">Confusion Matrix</h3>
-            <div class="concept-body">
-              <p>A $K \times K$ table comparing actual labels against predicted labels for a classification problem.</p>
-              <div class="concept-table-wrap">
-                <table>
-                  <thead>
-                    <tr><th></th><th>Predicted Positive</th><th>Predicted Negative</th></tr>
-                  </thead>
-                  <tbody>
-                    <tr><td><strong>Actual Positive</strong></td><td>True Positive (TP)</td><td>False Negative (FN)</td></tr>
-                    <tr><td><strong>Actual Negative</strong></td><td>False Positive (FP)</td><td>True Negative (TN)</td></tr>
-                  </tbody>
-                </table>
-              </div>
-              <p>From the confusion matrix, all classification metrics can be derived: accuracy, precision, recall, specificity ($TN/(TN+FP)$), and F1 score.</p>
-              <p><strong>Multi-class:</strong> Use a one-vs-rest approach for each class, then macro-average or weighted-average the metrics.</p>
-            </div>
-          </div>
-        </section>
+      <span class="concept-meta">18</span>
+      <h3>Boosting</h3>
+      <p>Train models <strong>sequentially</strong>, each correcting the previous errors.</p>
+      <ul>
+        <li><strong>AdaBoost:</strong> Increases weight of misclassified samples.</li>
+        <li><strong>Gradient Boosting:</strong> Fits residuals (negative gradient).</li>
+        <li><strong>XGBoost / LightGBM / CatBoost:</strong> Optimized with regularization, GPU support.</li>
+      </ul>
+      <div class="tldr"><strong>TL;DR:</strong> Boosting reduces both bias and variance. More prone to overfitting than bagging.</div>
+      <div class="tag-row">
+        <span class="tag green">Gradient Boosting: State of the art for tabular data</span>
+        <span class="tag red">Risk: Overfits with too many estimators or high learning rate</span>
+      </div>
 
-        <!-- ============================================================ -->
-        <!-- CATEGORY 5: DIMENSIONALITY REDUCTION                         -->
-        <!-- ============================================================ -->
-        <section class="concept-category" id="dimensionality">
-          <div class="category-header">
-            <span class="category-icon">&#128201;</span>
-            <h2 class="category-title">Dimensionality Reduction</h2>
-            <span class="category-subtitle">2 concepts</span>
-          </div>
+      <span class="concept-meta">19</span>
+      <h3>Stacking (Stacked Generalization)</h3>
+      <p>Combine diverse base models via a <strong>meta-learner</strong> trained on their predictions.</p>
+      <ul>
+        <li><strong>Level 0:</strong> Diverse algorithms (RF, SVM, k-NN, XGBoost).</li>
+        <li><strong>Level 1:</strong> Meta model trained on out-of-fold predictions to prevent leakage.</li>
+      </ul>
+      <p>Often best in competitions, but more complex and less interpretable.</p>
 
-          <!-- 5.1 PCA -->
-          <div class="concept-card" id="pca">
-            <span class="concept-number">15 &mdash; Dimensionality Reduction</span>
-            <h3 class="concept-name">Principal Component Analysis (PCA)</h3>
-            <div class="concept-body tex">
-              <p>An unsupervised linear technique that projects data onto orthogonal axes (principal components) that capture maximum variance.</p>
-              <div class="concept-formula">$$X' = X W \quad\text{where}\quad W = \text{eigenvectors of } \operatorname{Cov}(X)$$</div>
-              <p><strong>Steps:</strong> (1) Center the data, (2) Compute covariance matrix, (3) Eigendecomposition, (4) Sort eigenvalues and select top-$k$ components, (5) Project.</p>
-              <ul>
-                <li><strong>Use cases:</strong> Visualization (2D/3D), noise reduction, speeding up models, addressing multicollinearity.</li>
-                <li><strong>Limitations:</strong> Linear only; principal components are hard to interpret; scaling matters &mdash; always standardize before PCA.</li>
-              </ul>
-            </div>
-            <div class="use-tags">
-              <span class="use-tag when">Visualization, noise filtering, pre-processing for linear models</span>
-            </div>
-          </div>
+      <hr class="section-break">
 
-          <!-- 5.2 t-SNE -->
-          <div class="concept-card" id="tsne">
-            <span class="concept-number">16 &mdash; Dimensionality Reduction</span>
-            <h3 class="concept-name">t-SNE</h3>
-            <div class="concept-body">
-              <p>A non-linear, probabilistic technique primarily used for <strong>visualization</strong> of high-dimensional data in 2D or 3D.</p>
-              <ul>
-                <li>Models pairwise similarities in high-dimensional space using a Gaussian distribution.</li>
-                <li>Models pairwise similarities in low-dimensional space using a Student-$t$ distribution (heavier tails &rarr; avoids crowding).</li>
-                <li>Minimizes the KL divergence between the two distributions via gradient descent.</li>
-                <li><strong>Key hyperparameter:</strong> <code>perplexity</code> (typically 5&ndash;50) &mdash; balances local vs. global structure.</li>
-              </ul>
-              <div class="tldr-box">
-                <strong>TL;DR:</strong> PCA for exploration. t-SNE for visualization. t-SNE is stochastic (run multiple times), non-parametric (can't embed new points), and computationally expensive.
-              </div>
-            </div>
-            <div class="use-tags">
-              <span class="use-tag when">Visualizing clusters, exploring embeddings, qualitative analysis</span>
-              <span class="use-tag avoid">Not suitable for: Feature extraction, inference on new data</span>
-            </div>
-          </div>
-        </section>
+      <!-- ====== REFERENCES ====== -->
+      <h2 id="references">References & Further Reading</h2>
+      <ul>
+        <li>Goodfellow, Bengio, & Courville. <em>Deep Learning</em>. MIT Press, 2016.</li>
+        <li>Hastie, Tibshirani, & Friedman. <em>The Elements of Statistical Learning</em>. Springer, 2009.</li>
+        <li>Bishop. <em>Pattern Recognition and Machine Learning</em>. Springer, 2006.</li>
+        <li>Murphy. <em>Probabilistic Machine Learning</em>. MIT Press, 2022.</li>
+        <li><a href="https://scikit-learn.org/stable/modules/preprocessing.html" target="_blank" rel="noopener">Scikit-learn: Preprocessing</a> &middot; <a href="https://scikit-learn.org/stable/modules/model_evaluation.html" target="_blank" rel="noopener">Model Evaluation</a> &middot; <a href="https://scikit-learn.org/stable/modules/ensemble.html" target="_blank" rel="noopener">Ensembles</a></li>
+      </ul>
 
-        <!-- ============================================================ -->
-        <!-- CATEGORY 6: ENSEMBLE METHODS                                 -->
-        <!-- ============================================================ -->
-        <section class="concept-category" id="ensemble">
-          <div class="category-header">
-            <span class="category-icon">&#127794;</span>
-            <h2 class="category-title">Ensemble Methods</h2>
-            <span class="category-subtitle">3 concepts</span>
-          </div>
-
-          <!-- 6.1 Bagging -->
-          <div class="concept-card" id="bagging">
-            <span class="concept-number">17 &mdash; Ensemble</span>
-            <h3 class="concept-name">Bagging (Bootstrap Aggregating)</h3>
-            <div class="concept-body tex">
-              <p>Train multiple models independently on bootstrap samples (random subsets with replacement) of the training data. Aggregate predictions by averaging (regression) or majority voting (classification).</p>
-              <div class="concept-formula">$$\hat{y}_{\text{ensemble}} = \frac{1}{M}\sum_{m=1}^{M} \hat{y}_m$$</div>
-              <p><strong>Key properties:</strong></p>
-              <ul>
-                <li>Reduces variance without increasing bias &mdash; ideal for high-variance models (e.g., deep decision trees).</li>
-                <li>Models can be trained in parallel.</li>
-                <li><strong>Random Forest:</strong> Bagging applied to decision trees with an additional randomization step &mdash; at each split, only a random subset of features is considered.</li>
-              </ul>
-            </div>
-            <div class="use-tags">
-              <span class="use-tag when">Random Forest: Strong default for tabular data, handles non-linearity</span>
-            </div>
-          </div>
-
-          <!-- 6.2 Boosting -->
-          <div class="concept-card" id="boosting">
-            <span class="concept-number">18 &mdash; Ensemble</span>
-            <h3 class="concept-name">Boosting</h3>
-            <div class="concept-body">
-              <p>Train models <strong>sequentially</strong>, where each new model focuses on correcting the errors of the previous ensemble.</p>
-              <ul>
-                <li><strong>AdaBoost:</strong> Increases the weight of misclassified samples after each iteration. Combines weak learners (stumps) into a strong classifier.</li>
-                <li><strong>Gradient Boosting (GBM):</strong> Each new model fits the <em>residuals</em> (negative gradient) of the current loss function.</li>
-                <li><strong>XGBoost / LightGBM / CatBoost:</strong> Optimized implementations with regularization, tree pruning, and GPU support. Dominant in structured-data competitions.</li>
-              </ul>
-              <div class="tldr-box">
-                <strong>TL;DR:</strong> Boosting reduces bias <em>and</em> variance (with proper regularization). More prone to overfitting than bagging.
-              </div>
-            </div>
-            <div class="use-tags">
-              <span class="use-tag when">Gradient Boosting: Tabular data &mdash; state of the art</span>
-              <span class="use-tag avoid">Risk: Overfits if too many estimators or high learning rate</span>
-            </div>
-          </div>
-
-          <!-- 6.3 Stacking -->
-          <div class="concept-card" id="stacking">
-            <span class="concept-number">19 &mdash; Ensemble</span>
-            <h3 class="concept-name">Stacking (Stacked Generalization)</h3>
-            <div class="concept-body">
-              <p>Combine predictions from multiple diverse base models using a <strong>meta-learner</strong> (a second-level model).</p>
-              <ul>
-                <li><strong>Level-0 (Base models):</strong> Diverse algorithms (e.g., RF, SVM, k-NN, XGBoost) trained on the original data.</li>
-                <li><strong>Level-1 (Meta model):</strong> Trained on the <em>predictions</em> of the base models (optionally + original features).</li>
-                <li><strong>Key detail:</strong> Base model predictions must be generated using cross-validation (out-of-fold) to prevent target leakage to the meta model.</li>
-              </ul>
-              <p>Stacking often yields the best performance in competitions but is more complex and less interpretable than simpler ensembles.</p>
-            </div>
-          </div>
-        </section>
-
-        <!-- ============================================================ -->
-        <!-- References                                                    -->
-        <!-- ============================================================ -->
-        <section class="section" style="border-top: 0.8px solid rgba(170, 170, 170, 0.15);">
-          <div class="section-header" style="margin-bottom: 1.5rem;">
-            <h3 class="section-title">References & Further Reading</h3>
-          </div>
-          <div class="section-body" style="font-size: 0.95rem; line-height: 1.7;">
-            <ul>
-              <li>Goodfellow, I., Bengio, Y., & Courville, A. (2016). <em>Deep Learning</em>. MIT Press.</li>
-              <li>Hastie, T., Tibshirani, R., & Friedman, J. (2009). <em>The Elements of Statistical Learning</em>. Springer.</li>
-              <li>Bishop, C. (2006). <em>Pattern Recognition and Machine Learning</em>. Springer.</li>
-              <li>Murphy, K. (2022). <em>Probabilistic Machine Learning: An Introduction</em>. MIT Press.</li>
-              <li>Scikit-learn: <a href="https://scikit-learn.org/stable/modules/preprocessing.html" target="_blank" rel="noopener">Preprocessing</a> &middot; <a href="https://scikit-learn.org/stable/modules/model_evaluation.html" target="_blank" rel="noopener">Model Evaluation</a> &middot; <a href="https://scikit-learn.org/stable/modules/ensemble.html" target="_blank" rel="noopener">Ensembles</a></li>
-            </ul>
-          </div>
-        </section>
-
-      </div><!-- end main content -->
-    </div><!-- end concepts-layout -->
-
+    </div>
   </main>
 
-  <!-- Footer -->
   <footer class="footer">
     <div class="footer-inner">
       <p class="footer-copy">&copy; 2026 Romeo Mhakayakora. Designed with an editorial aesthetic.</p>
