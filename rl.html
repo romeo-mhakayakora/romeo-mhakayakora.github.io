@@ -3,18 +3,52 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reinforcement Learning — Romeo Mhakayakora</title>
+  <title>Modern Reinforcement Learning — Romeo Mhakayakora</title>
+  <meta name="description" content="A modern syllabus mapping deep reinforcement learning algorithm mechanics, neural value/policy optimization, and LLM human-preference alignment architectures."/>
   
-  <!-- Google Fonts: Lora (Editorial Serif) & Assistant (Clean Sans-serif) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="style.css?v=2">
+
+  <style>
+    .container.guide-container { max-width: 680px; }
+    .guide-header { padding: 5rem 0 2rem 0; }
+    .guide-header h1 { font-size: 2.5rem; font-weight: 600; font-family: var(--font-serif); letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 1rem; color: var(--text-color); }
+    .guide-header p { font-size: 1rem; color: var(--text-muted); line-height: 1.65; }
+    .guide-header .meta { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent-color); font-weight: 600; margin-bottom: 0.5rem; display: block; }
+    .guide-header .note { font-size: 0.85rem; color: var(--accent-color); font-style: italic; margin-top: 1rem; }
+
+    .toc-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700; color: var(--text-muted); margin-bottom: 0.75rem; }
+
+    .chapter-list { list-style: none; padding: 0; margin: 0; border-top: 1px solid rgba(170,170,170,0.15); }
+    .chapter-item { border-bottom: 1px solid rgba(170,170,170,0.15); }
+    .chapter-link {
+      display: flex; align-items: baseline; gap: 1rem; padding: 1.2rem 0;
+      text-decoration: none; transition: color 0.15s;
+      color: var(--text-color);
+    }
+    .chapter-link:hover { color: var(--accent-color); }
+    .chapter-num { font-size: 0.75rem; font-family: var(--font-sans); font-weight: 600; color: var(--text-muted); flex-shrink: 0; width: 5rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .chapter-info { flex: 1; }
+    .chapter-title { font-size: 0.95rem; font-weight: 600; display: block; margin-bottom: 0.15rem; }
+    .chapter-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.45; display: block; }
+    .chapter-arrow { color: rgba(170,170,170,0.3); flex-shrink: 0; transition: color 0.15s; margin-top: 0.15rem; }
+    .chapter-link:hover .chapter-arrow { color: var(--accent-color); }
+
+    footer { padding: 3rem 0; border-top: 1px solid rgba(170,170,170,0.1); margin-top: 3rem; }
+    footer p { font-size: 0.78rem; color: var(--text-muted); }
+
+    @media (max-width: 600px) {
+      .guide-header h1 { font-size: 1.8rem; }
+      .chapter-num { width: 3.5rem; font-size: 0.7rem; }
+      .chapter-title { font-size: 0.88rem; }
+    }
+  </style>
 </head>
 <body data-page="rl">
 
-  <!-- Header / Navigation -->
   <header class="header">
     <div class="header-inner">
       <a href="index.html" class="logo">Romeo Mhakayakora <span class="logo-accent">/></span></a>
@@ -39,98 +73,89 @@
     </div>
   </header>
 
-  <!-- Main Container -->
-  <main class="container">
-    
-    <!-- Page Header -->
-    <header class="page-header">
-      <span class="page-label">Research & Core Focus</span>
-      <h1 class="page-title">Reinforcement Learning</h1>
-      <p class="page-subtitle">Centralized logs tracking my alignment research, agentic architectures, and landmark papers.</p>
+  <main class="container guide-container">
+    <header class="guide-header">
+      <span class="meta">Reference Guide</span>
+      <h1>Modern Reinforcement Learning</h1>
+      <p>A modern syllabus mapping deep RL algorithm mechanics, neural value/policy optimization, and LLM human-preference alignment architectures.</p>
+      <p class="note">I write these modules as I learn. Content will be added over time.</p>
     </header>
 
-    <!-- Section 1: Blogs & Deep Dives -->
-    <section class="section-compact">
-      <div class="section-header-sub">
-        <h3 class="section-title-sub">RL Blogs & Deep Dives</h3>
-      </div>
-      <div class="blogs-list">
-        <div class="paper-item-empty" style="color: var(--text-muted); font-style: italic; padding: 1.5rem 0; font-size: 0.95rem;">
-          Reinforcement Learning alignment and agentic policy write-ups coming soon.
-        </div>
-      </div>
-    </section>
+    <p class="toc-label">Table of contents</p>
+    <ol class="chapter-list">
 
-    <!-- Section 2: Landmark Literature -->
-    <section class="section-compact" style="padding-top: 0;">
-      <div class="section-header-sub">
-        <h3 class="section-title-sub">Landmark Literature Reading Log</h3>
-      </div>
-      <div class="papers-list">
+      <li class="chapter-item">
+        <a href="rl/module-1-value-function.html" class="chapter-link">
+          <span class="chapter-num">Module 01</span>
+          <span class="chapter-info">
+            <span class="chapter-title">Value Function Approximation & DQNs</span>
+            <span class="chapter-desc">Deep Q-Networks (DQN), experience replay buffers, target network freezing, and stabilization of off-policy neural function approximation.</span>
+          </span>
+          <svg class="chapter-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </a>
+      </li>
 
-        <!-- Paper: OpenClaw-RL -->
-        <div class="paper-item" style="padding-top: 0; border-top: none;">
-          <div class="paper-meta">
-            <span class="paper-category">Agentic RL</span>
-            <span class="paper-year">2026</span>
-          </div>
-          <h4 class="paper-title">
-            <a href="https://arxiv.org/abs/2603.10165" target="_blank" rel="noopener">
-              OpenClaw-RL: Train Any Agent Simply by Talking
-            </a>
-          </h4>
-          <p class="paper-authors">Yinjie Wang, Xuyang Chen, Xiaolong Jin, Mengdi Wang, Ling Yang (Princeton University)</p>
-          <p class="paper-summary">Introduces a fully asynchronous reinforcement learning framework that optimizes agent policies in real-time during live deployment. Decouples serving, execution, reward judging, and training loops, leveraging scalar Process Reward Models and token-level Hindsight-Guided On-Policy Distillation.</p>
-        </div>
+      <li class="chapter-item">
+        <a href="rl/module-2-policy-gradients.html" class="chapter-link">
+          <span class="chapter-num">Module 02</span>
+          <span class="chapter-info">
+            <span class="chapter-title">Policy Gradient Methods</span>
+            <span class="chapter-desc">Policy objective functions, Likelihood Ratio estimators, REINFORCE algorithm, policy gradient theorem, and baseline variance reduction techniques.</span>
+          </span>
+          <svg class="chapter-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </a>
+      </li>
 
-        <!-- Paper: On-Policy Distillation -->
-        <div class="paper-item">
-          <div class="paper-meta">
-            <span class="paper-category">RL Distillation</span>
-            <span class="paper-year">2025</span>
-          </div>
-          <h4 class="paper-title">
-            <a href="https://thinkingmachines.ai/blog/on-policy-distillation" target="_blank" rel="noopener">
-              On-Policy Distillation
-            </a>
-          </h4>
-          <p class="paper-authors">Kevin Lu, Thinking Machines Lab</p>
-          <p class="paper-summary">On-policy distillation optimizes student LLM policies by evaluating student rollouts against a fixed teacher using token-level reverse KL divergence. This eliminates compounding off-policy evaluation errors, providing a dense training signal that matches RL reasoning performance at a fraction of the compute cost.</p>
-        </div>
+      <li class="chapter-item">
+        <a href="rl/module-3-actor-critic.html" class="chapter-link">
+          <span class="chapter-num">Module 03</span>
+          <span class="chapter-info">
+            <span class="chapter-title">Actor-Critic Algorithms</span>
+            <span class="chapter-desc">Advantage Actor-Critic (A2C/A3C), Generalized Advantage Estimation (GAE), baseline-value critics, and parameter sharing.</span>
+          </span>
+          <svg class="chapter-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </a>
+      </li>
 
-        <!-- Paper: GrandCode -->
-        <div class="paper-item">
-          <div class="paper-meta">
-            <span class="paper-category">RL for LLM & Agentic Alignment</span>
-            <span class="paper-year">2026</span>
-          </div>
-          <h4 class="paper-title">
-            <a href="https://arxiv.org/abs/2604.02721" target="_blank" rel="noopener">
-              GrandCode: Achieving Grandmaster Level in Competitive Programming via Agentic Reinforcement Learning
-            </a>
-          </h4>
-          <p class="paper-authors">Xiaoya Li, Xiaofei Sun, Guoyin Wang, Songqiao Su, Chris Shum, Jiwei Li (DeepReinforce Team)</p>
-          <p class="paper-summary">Introduces GrandCode, a multi-agent reinforcement learning system that achieves grandmaster level in competitive programming by utilizing Agentic GRPO (Group Relative Policy Optimization) to coordinate solvers, hypothesis generators, and test verifiers.</p>
-        </div>
+      <li class="chapter-item">
+        <a href="rl/module-4-trpo-ppo.html" class="chapter-link">
+          <span class="chapter-num">Module 04</span>
+          <span class="chapter-info">
+            <span class="chapter-title">TRPO & Proximal Policy Optimization</span>
+            <span class="chapter-desc">Policy optimization bounds, Trust Region Policy Optimization (TRPO), Proximal Policy Optimization (PPO), surrogate loss functions, and clipping heuristics.</span>
+          </span>
+          <svg class="chapter-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </a>
+      </li>
 
-      </div>
-    </section>
+      <li class="chapter-item">
+        <a href="rl/module-5-model-based.html" class="chapter-link">
+          <span class="chapter-num">Module 05</span>
+          <span class="chapter-info">
+            <span class="chapter-title">Model-Based & Exploration Dynamics</span>
+            <span class="chapter-desc">Planning with models, Dyna-Q, Monte Carlo Tree Search (MCTS), AlphaGo/AlphaZero architectures, and intrinsic curiosity exploration.</span>
+          </span>
+          <svg class="chapter-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </a>
+      </li>
 
-    <!-- Section 3: External Resources -->
-    <section class="section-compact" style="padding-top: 0; margin-top: 2rem;">
-      <div class="section-header-sub">
-        <h3 class="section-title-sub">External Resources</h3>
-      </div>
-      <div style="font-size: 0.95rem; line-height: 1.6;">
-        <p style="margin: 0; color: var(--text-muted);">For academic and lecture references, see the official <a href="https://cs224r.stanford.edu/" target="_blank" rel="noopener" style="color: var(--accent-color); text-decoration: underline; font-weight: 600;">Stanford CS224R &mdash; Deep Reinforcement Learning</a> course website.</p>
-      </div>
-    </section>
+      <li class="chapter-item">
+        <a href="rl/module-6-rlhf.html" class="chapter-link">
+          <span class="chapter-num">Module 06</span>
+          <span class="chapter-info">
+            <span class="chapter-title">Deep RL Alignment & RLHF</span>
+            <span class="chapter-desc">Reward modeling, PPO alignment in LLMs, Direct Preference Optimization (DPO), and Process Reward Models (PRMs).</span>
+          </span>
+          <svg class="chapter-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </a>
+      </li>
+
+    </ol>
   </main>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="footer-inner">
-      <p class="footer-copy">&copy; 2026 Romeo Mhakayakora. Designed with an editorial aesthetic.</p>
+  <footer>
+    <div class="container guide-container">
+      <p>&copy; 2026 Romeo Mhakayakora. Built with an editorial aesthetic.</p>
     </div>
   </footer>
 

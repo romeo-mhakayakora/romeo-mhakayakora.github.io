@@ -217,7 +217,7 @@ pre code {
 
 .section {
   padding: 6.5rem 0;
-  border-top: 0.8px solid rgba(170, 170, 170, 0.15);
+  border-top: 1.5px solid rgba(170, 170, 170, 0.3);
 }
 
 [data-theme="dark"] .section {
@@ -248,7 +248,7 @@ pre code {
    ========================================================================== */
 
 .hero {
-  padding: 8rem 0 6.5rem 0;
+  padding: 3rem 0 2rem 0;
 }
 
 .hero-badge {
@@ -999,10 +999,46 @@ pre code {
 }
 
 /* ==========================================================================
-   Media Queries (Responsiveness)
-   ========================================================================== */
+    Work Modules Grid
+    ========================================================================== */
+
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.work-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.work-card-link:hover {
+  transform: translateY(-2px);
+}
+
+.work-card-link .knowledge-card {
+  height: 100%;
+  padding: 2rem;
+}
+
+.work-card-link .knowledge-card .card-title {
+  font-size: 1.2rem;
+  margin-bottom: 0.6rem;
+}
+
+.work-card-link .knowledge-card .card-description {
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
 
 @media (max-width: 768px) {
+  .work-grid {
+    grid-template-columns: 1fr;
+  }
+  
   body {
     font-size: 17px;
   }
