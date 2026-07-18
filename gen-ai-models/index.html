@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generative AI Models — Romeo Mhakayakora</title>
+  <meta name="description" content="A from-scratch guide to generative AI models: language models, diffusion, flow matching, vision-language models, alignment, and the frontier of multimodal generation."/>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../style.css?v=2">
+
+  <style>
+    .container.guide-container { max-width: 680px; }
+    .guide-header { padding: 5rem 0 2rem 0; }
+    .guide-header h1 { font-size: 2.5rem; font-weight: 600; font-family: var(--font-serif); letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 1rem; color: var(--text-color); }
+    .guide-header p { font-size: 1rem; color: var(--text-muted); line-height: 1.65; }
+    .guide-header .meta { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent-color); font-weight: 600; margin-bottom: 0.5rem; display: block; }
+    .guide-header .note { font-size: 0.85rem; color: var(--accent-color); font-style: italic; margin-top: 1rem; }
+
+    .toc-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700; color: var(--text-muted); margin-bottom: 0.75rem; }
+
+    .chapter-list { list-style: none; padding: 0; margin: 0; border-top: 1px solid rgba(170,170,170,0.15); }
+    .chapter-item { border-bottom: 1px solid rgba(170,170,170,0.15); }
+    .chapter-link {
+      display: flex; align-items: baseline; gap: 1rem; padding: 1.2rem 0;
+      text-decoration: none; transition: color 0.15s;
+      color: var(--text-color);
+    }
+    .chapter-link:hover { color: var(--accent-color); }
+    .chapter-num { font-size: 0.75rem; font-family: var(--font-sans); font-weight: 600; color: var(--text-muted); flex-shrink: 0; width: 5rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .chapter-info { flex: 1; }
+    .chapter-title { font-size: 0.95rem; font-weight: 600; display: block; margin-bottom: 0.15rem; }
+    .chapter-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.45; display: block; }
+    .chapter-arrow { color: rgba(170,170,170,0.3); flex-shrink: 0; transition: color 0.15s; margin-top: 0.15rem; }
+    .chapter-link:hover .chapter-arrow { color: var(--accent-color); }
+
+    footer { padding: 3rem 0; border-top: 1px solid rgba(170,170,170,0.1); margin-top: 3rem; }
+    footer p { font-size: 0.78rem; color: var(--text-muted); }
+
+    @media (max-width: 600px) {
+      .guide-header h1 { font-size: 1.8rem; }
+      .chapter-num { width: 3.5rem; font-size: 0.7rem; }
+      .chapter-title { font-size: 0.88rem; }
+    }
+  </style>
+</head>
+<body data-page="gen-ai-models">
+
+  <header class="header">
+    <div class="header-inner">
+      <a href="../index.html" class="logo">Romeo Mhakayakora <span class="logo-accent">/></span></a>
+      <nav class="nav">
+        <a href="../index.html" class="nav-link">Home</a>
+        <a href="../projects.html" class="nav-link">Projects</a>
+        <a href="../rl.html" class="nav-link">RL</a>
+        <a href="../lm.html" class="nav-link">Language Models</a>
+        <a href="../agentic-ai.html" class="nav-link">Agentic AI</a>
+        <a href="../inference.html" class="nav-link">Inference</a>
+        <a href="../blogs.html" class="nav-link">Blogs</a>
+        <a href="../courses.html" class="nav-link">Courses</a>
+        <a href="../learning.html" class="nav-link">Learning</a>
+        <a href="../ml-concepts.html" class="nav-link">ML Concepts</a>
+        <a href="../papers.html" class="nav-link">Papers</a>
+        <a href="../contact.html" class="nav-link">Contact</a>
+        <button id="theme-toggle" class="theme-btn" aria-label="Toggle dark mode">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container guide-container">
+    <header class="guide-header">
+      <span class="meta">Reference Guide</span>
+      <h1>Generative AI Models</h1>
+      <p>A from-scratch guide to the models behind modern generative AI: language models, diffusion, flow matching, vision-language models, RLHF, alignment, and the frontier of multimodal generation. Each chapter builds on the last&mdash;from foundations to the systems running today.</p>
+      <p class="note">I write these chapters as I learn. Content will be added over time.</p>
+    </header>
+
+    <p class="toc-label">Table of contents</p>
+    <ol class="chapter-list">
+
+      <li class="chapter-item">
+        <a href="chapter-1-foundations.html" class="chapter-link">
+          <span class="chapter-num">Chapter 1</span>
+          <span class="chapter-info">
+            <span class="chapter-title">Foundations: Probability & Information Theory</span>
+            <span class="chapter-desc">Entropy, KL divergence, likelihood, Bayes, and the statistical principles that underpin every generative model.</span>
+          </span>
+          <svg class="chapter-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </a>
+      </li>
+
+      <li class="chapter-item">
+        <a href="chapter-2-neural-architectures.html" class="chapter-link">
+          <span class="chapter-num">Chapter 2</span>
+          <span class="chapter-info">
+            <span class="chapter-title">Neural Architectures: From MLPs to Transformers</span>
+            <span class="chapter-desc">How information flows through a network: MLPs, CNNs, RNNs, attention, and the transformer that changed everything.</span>
+          </span>
+          <svg class="chapter-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </a>
+      </li>
+
+      <li class="chapter-item">
+        <a href="chapter-3-language-modeling.html" class="chapter-link">
+          <span class="chapter-num">Chapter 3</span>
+          <span class="chapter-info">
+            <span class="chapter-title">Language Modeling: Autoregressive & Masked Models</span>
+            <span class="chapter-desc">GPT, BERT, and their descendants: next-token prediction, masked language modeling, and what makes a good representation.</span>
+          </span>
+          <svg class="chapter-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </a>
+      </li>
+
+      <li class="chapter-item">
+        <a href="chapter-4-diffusion-models.html" class="chapter-link">
+          <span class="chapter-num">Chapter 4</span>
+          <span class="chapter-info">
+            <span class="chapter-title">Diffusion Models: From VAEs to Score-Based</span>
+            <span class="chapter-desc">Variational autoencoders, the reparameterization trick, denoising diffusion, score matching, and what makes DALL-E and Stable Diffusion work.</span>
+          </span>
+          <svg class="chapter-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </a>
+      </li>
+
+      <li class="chapter-item">
+        <a href="chapter-5-flow-matching.html" class="chapter-link">
+          <span class="chapter-num">Chapter 5</span>
+          <span class="chapter-info">
+            <span class="chapter-title">Flow Matching & Continuous Normalizing Flows</span>
+            <span class="chapter-desc">The generative engine inside modern policies: ODEs and SDEs, probability paths, the flow matching loss, and why it beats diffusion.</span>
+          </span>
+          <svg class="chapter-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </a>
+      </li>
+
+      <li class="chapter-item">
+        <a href="chapter-6-gans.html" class="chapter-link">
+          <span class="chapter-num">Chapter 6</span>
+          <span class="chapter-info">
+            <span class="chapter-title">Generative Adversarial Networks</span>
+            <span class="chapter-desc">The generator-discriminator game, training stability, conditional GANs, and where GANs still win.</span>
+          </span>
+          <svg class="chapter-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </a>
+      </li>
+
+      <li class="chapter-item">
+        <a href="chapter-7-vision-language.html" class="chapter-link">
+          <span class="chapter-num">Chapter 7</span>
+          <span class="chapter-info">
+            <span class="chapter-title">Vision-Language Models</span>
+            <span class="chapter-desc">CLIP, SigLIP, vision encoders, multimodal fusion, and how models learn to connect pixels and text.</span>
+          </span>
+          <svg class="chapter-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </a>
+      </li>
+
+      <li class="chapter-item">
+        <a href="chapter-8-rlhf.html" class="chapter-link">
+          <span class="chapter-num">Chapter 8</span>
+          <span class="chapter-info">
+            <span class="chapter-title">Reinforcement Learning from Human Feedback</span>
+            <span class="chapter-desc">Reward modeling, PPO for language, DPO, and the alignment techniques that make LLMs helpful and safe.</span>
+          </span>
+          <svg class="chapter-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </a>
+      </li>
+
+      <li class="chapter-item">
+        <a href="chapter-9-alignment-safety.html" class="chapter-link">
+          <span class="chapter-num">Chapter 9</span>
+          <span class="chapter-info">
+            <span class="chapter-title">Alignment & Safety</span>
+            <span class="chapter-desc">Constitutional AI, red teaming, mechanistic interpretability, and the science of building models that do what we intend.</span>
+          </span>
+          <svg class="chapter-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </a>
+      </li>
+
+      <li class="chapter-item">
+        <a href="chapter-10-inference-deployment.html" class="chapter-link">
+          <span class="chapter-num">Chapter 10</span>
+          <span class="chapter-info">
+            <span class="chapter-title">Efficient Inference & Deployment</span>
+            <span class="chapter-desc">Quantization, KV-cache, speculative decoding, vLLM, distillation, and serving models at scale.</span>
+          </span>
+          <svg class="chapter-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </a>
+      </li>
+
+      <li class="chapter-item">
+        <a href="chapter-11-multimodal-generation.html" class="chapter-link">
+          <span class="chapter-num">Chapter 11</span>
+          <span class="chapter-info">
+            <span class="chapter-title">Multimodal Generation</span>
+            <span class="chapter-desc">Text-to-image, text-to-video, text-to-speech, music generation, and the architectures that unify modalities.</span>
+          </span>
+          <svg class="chapter-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </a>
+      </li>
+
+      <li class="chapter-item">
+        <a href="chapter-12-frontiers.html" class="chapter-link">
+          <span class="chapter-num">Chapter 12</span>
+          <span class="chapter-info">
+            <span class="chapter-title">Frontiers: Agents, Reasoning & Beyond</span>
+            <span class="chapter-desc">LLM agents, tool use, chain-of-thought reasoning, test-time compute, and where generative models are headed next.</span>
+          </span>
+          <svg class="chapter-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </a>
+      </li>
+
+    </ol>
+  </main>
+
+  <footer>
+    <div class="container guide-container">
+      <p>&copy; 2026 Romeo Mhakayakora. Built with an editorial aesthetic.</p>
+    </div>
+  </footer>
+
+  <script src="../script.js"></script>
+</body>
+</html>
