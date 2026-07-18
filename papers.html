@@ -11,6 +11,116 @@
   <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="style.css?v=2">
+
+  <style>
+    .p-domain-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 4rem;
+    }
+
+    .p-domain-card {
+      background-color: var(--card-bg);
+      border: var(--card-border);
+      border-radius: 6px;
+      padding: 1.5rem;
+      text-decoration: none;
+      transition: border-color 0.3s, background-color 0.3s, transform 0.25s;
+    }
+
+    .p-domain-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent-color);
+    }
+
+    .p-domain-card .domain-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-color);
+      margin-bottom: 0.4rem;
+    }
+
+    .p-domain-card .domain-count {
+      font-size: 0.8rem;
+      color: var(--accent-color);
+      font-weight: 600;
+    }
+
+    .p-domain-card .domain-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.6rem;
+      line-height: 1.4;
+    }
+
+    .paper-read-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.75rem;
+      color: var(--accent-color);
+      font-weight: 600;
+      margin-left: 0.5rem;
+    }
+
+    .paper-queue-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-left: 0.5rem;
+    }
+
+    .papers-section {
+      border-top: 0.8px solid rgba(170, 170, 170, 0.15);
+      padding-top: 3rem;
+    }
+
+    .papers-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 1.5rem;
+    }
+
+    .papers-section-title {
+      font-size: 1.3rem;
+      font-family: var(--font-serif);
+      font-weight: 600;
+      color: var(--text-color);
+    }
+
+    .back-to-domains {
+      font-size: 0.85rem;
+      color: var(--accent-color);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .paper-subsection {
+      margin-bottom: 2.5rem;
+    }
+
+    .paper-subsection-title {
+      font-size: 1rem;
+      font-family: var(--font-serif);
+      font-weight: 600;
+      color: var(--text-color);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .p-domain-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body data-page="papers">
 
@@ -21,7 +131,6 @@
       <nav class="nav">
         <a href="index.html" class="nav-link">Home</a>
         <a href="projects.html" class="nav-link">Projects</a>
-        <a href="rl.html" class="nav-link">RL</a>
         <a href="lm.html" class="nav-link">Language Models</a>
         <a href="agentic-ai.html" class="nav-link">Agentic AI</a>
         <a href="inference.html" class="nav-link">Inference</a>
@@ -45,87 +154,464 @@
     <!-- Page Header -->
     <header class="page-header">
       <span class="page-label">05 // Reading Log</span>
-      <h1 class="page-title">Papers I Read</h1>
-      <p class="page-subtitle">A repository of academic literature and reviews of foundational computer science papers.</p>
+      <h1 class="page-title">Papers</h1>
+<p class="page-subtitle">Research papers I've read and papers in my reading queue. Click domains to explore.</p>
     </header>
 
-    <!-- Section: Read & Reviewed -->
-    <section class="section-compact" style="padding-bottom: 2rem;">
-      <div class="section-header-sub">
-        <h3 class="section-title-sub">Read & Reviewed</h3>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const domainCards = document.querySelectorAll('.p-domain-card');
+      const sections = document.querySelectorAll('.papers-section');
+
+      domainCards.forEach(card => {
+        card.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          // Get target section
+          const targetId = this.getAttribute('href');
+          const targetSection = document.querySelector(targetId);
+          
+          // Hide all sections
+          sections.forEach(section => {
+            section.style.display = 'none';
+          });
+          
+      // Show target section
+          if (targetSection) {
+            targetSection.style.display = 'block';
+            // Scroll to the section
+            setTimeout(() => {
+              targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+          }
+        });
+      });
+
+      // Back to domains - show all sections
+      document.querySelectorAll('.back-to-domains').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          sections.forEach(section => {
+            section.style.display = 'block';
+          });
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      });
+    });
+    </script>
+
+    <!-- Domain Categories Grid -->
+    <div class="p-domain-grid">
+      <a href="#reinforcement-learning" class="p-domain-card">
+        <div class="domain-name">Reinforcement Learning</div>
+        <span class="domain-count">2 read · 2 queued</span>
+        <p class="domain-desc">Policy optimization, value functions, and agent alignment.</p>
+      </a>
+
+      <a href="#language-models" class="p-domain-card">
+        <div class="domain-name">Language Models</div>
+        <span class="domain-count">2 read · 3 queued</span>
+        <p class="domain-desc">Transformer architecture, scaling laws, and LLM training.</p>
+      </a>
+
+      <a href="#agentic-ai" class="p-domain-card">
+        <div class="domain-name">Agentic AI</div>
+        <span class="domain-count">1 read · 2 queued</span>
+        <p class="domain-desc">Reasoning, planning, and autonomous agents.</p>
+      </a>
+
+      <a href="#alignment" class="p-domain-card">
+        <div class="domain-name">AI Model Instruction Alignment</div>
+        <span class="domain-count">1 read · 2 queued</span>
+        <p class="domain-desc">RLHF, reward modeling, and alignment techniques.</p>
+      </a>
+
+      <a href="#distributed-systems" class="p-domain-card">
+        <div class="domain-name">Distributed Systems</div>
+        <span class="domain-count">3 read · 2 queued</span>
+        <p class="domain-desc">Consensus, blockchain, and large-scale processing.</p>
+      </a>
+    </div>
+
+    <!-- Papers Listing by Domain -->
+
+    <!-- Reinforcement Learning Section -->
+    <section id="reinforcement-learning" class="papers-section">
+      <div class="papers-section-header">
+        <h3 class="papers-section-title">Reinforcement Learning Papers</h3>
+        <a href="#" class="back-to-domains">↑ Back to domains</a>
       </div>
-      <div class="papers-list">
 
-        <!-- Paper 1: Raft -->
-        <div class="paper-item">
-          <div class="paper-meta">
-            <span class="paper-category">Distributed Systems</span>
-            <span class="paper-year">2014</span>
+      <div class="paper-subsection">
+        <h4 class="paper-subsection-title">
+          <span class="paper-read-badge">✓ Read (2)</span>
+        </h4>
+        <div class="papers-list">
+          <div class="paper-item">
+            <div class="paper-meta">
+              <span class="paper-category">Policy Optimization</span>
+              <span class="paper-year">2017</span>
+            </div>
+            <h4 class="paper-title">
+              <a href="https://arxiv.org/pdf/1707.02286.pdf" target="_blank" rel="noopener">
+                Trust Region Policy Optimization
+              </a>
+            </h4>
+            <p class="paper-authors">John Schulman, et al.</p>
+            <p class="paper-summary">Introduces TRPO, an optimization method that prevents performance collapse by constraining policy updates within a trust region.</p>
           </div>
-          <h4 class="paper-title">
-            <a href="https://raft.github.io/raft.pdf" target="_blank" rel="noopener">
-              In Search of an Understandable Consensus Algorithm (Raft)
-            </a>
-          </h4>
-          <p class="paper-authors">Diego Ongaro, John Ousterhout</p>
-          <p class="paper-summary">Introduced the Raft consensus protocol, decomposing replication into leader election, log replication, and safety states to improve understandability over Paxos.</p>
-        </div>
-
-        <!-- Paper 2: Bitcoin -->
-        <div class="paper-item">
-          <div class="paper-meta">
-            <span class="paper-category">Distributed Systems</span>
-            <span class="paper-year">2008</span>
+          <div class="paper-item">
+            <div class="paper-meta">
+              <span class="paper-category">Deep RL</span>
+              <span class="paper-year">2015</span>
+            </div>
+            <h4 class="paper-title">
+              <a href="https://arxiv.org/pdf/1509.02971.pdf" target="_blank" rel="noopener">
+                Deep Reinforcement Learning that Matters
+              </a>
+            </h4>
+            <p class="paper-authors">Hado Van Hasselt, et al.</p>
+            <p class="paper-summary">Examines reproducibility and significance of findings in deep RL, highlighting that simple baselines often outperform reported results when properly tuned.</p>
           </div>
-          <h4 class="paper-title">
-            <a href="https://bitcoin.org/bitcoin.pdf" target="_blank" rel="noopener">
-              Bitcoin: A Peer-to-Peer Electronic Cash System
-            </a>
-          </h4>
-          <p class="paper-authors">Satoshi Nakamoto</p>
-          <p class="paper-summary">Constructed a peer-to-peer electronic cash network using a proof-of-work consensus chain to solve the double-spending problem without central authorities.</p>
         </div>
+      </div>
 
-        <!-- Paper 3: MapReduce -->
-        <div class="paper-item">
-          <div class="paper-meta">
-            <span class="paper-category">HPC & Distributed Systems</span>
-            <span class="paper-year">2004</span>
+      <div class="paper-subsection">
+        <h4 class="paper-subsection-title">
+          <span class="paper-queue-badge">📋 Queued (2)</span>
+        </h4>
+        <div class="papers-list">
+          <div class="paper-item">
+            <div class="paper-meta">
+              <span class="paper-category">Actor-Critic</span>
+              <span class="paper-year">2017</span>
+            </div>
+            <h4 class="paper-title">
+              <a href="https://arxiv.org/pdf/1708.05144.pdf" target="_blank" rel="noopener">
+                Proximal Policy Optimization
+              </a>
+            </h4>
+            <p class="paper-authors">John Schulman, et al.</p>
+            <p class="paper-summary">PPO: a simplified, robust variant of TRPO that uses clipped objective for policy updates.</p>
           </div>
-          <h4 class="paper-title">
-            <a href="https://static.googleusercontent.com/media/research.google.com/en//archive/mapreduce-osdi04.pdf" target="_blank" rel="noopener">
-              MapReduce: Simplified Data Processing on Large Clusters
-            </a>
-          </h4>
-          <p class="paper-authors">Jeffrey Dean, Sanjay Ghemawat</p>
-          <p class="paper-summary">Designed a programming model and implementation for processing large-scale datasets, automatically handling parallel execution, load balancing, and fault tolerance.</p>
+          <div class="paper-item">
+            <div class="paper-meta">
+              <span class="paper-category">Value Function</span>
+              <span class="paper-year">1998</span>
+            </div>
+            <h4 class="paper-title">
+              <a href="https://arxiv.org/pdf/1810.09231.pdf" target="_blank" rel="noopener">
+                Soft Actor-Critic
+              </a>
+            </h4>
+            <p class="paper-authors">Tuomas Haarnoja, et al.</p>
+            <p class="paper-summary">Maximum entropy RL framework with stochastic policy iteration for sample-efficient learning.</p>
+          </div>
         </div>
-
       </div>
     </section>
 
-    <!-- Section: Scheduled for Reading -->
-    <section class="section-compact" style="padding-top: 1.5rem; padding-bottom: 5rem;">
-      <div class="section-header-sub">
-        <h3 class="section-title-sub">Scheduled for Reading</h3>
+    <!-- Language Models Section -->
+    <section id="language-models" class="papers-section">
+      <div class="papers-section-header">
+        <h3 class="papers-section-title">Language Models Papers</h3>
+        <a href="#" class="back-to-domains">↑ Back to domains</a>
       </div>
-      <div class="papers-list">
 
-        <!-- Paper 4: PyHessian -->
-        <div class="paper-item">
-          <div class="paper-meta">
-            <span class="paper-category">Machine Learning / Optimization</span>
-            <span class="paper-year">2019</span>
+      <div class="paper-subsection">
+        <h4 class="paper-subsection-title">
+          <span class="paper-read-badge">✓ Read (2)</span>
+        </h4>
+        <div class="papers-list">
+          <div class="paper-item">
+            <div class="paper-meta">
+              <span class="paper-category">Architecture</span>
+              <span class="paper-year">2017</span>
+            </div>
+            <h4 class="paper-title">
+              <a href="https://arxiv.org/pdf/1706.03762.pdf" target="_blank" rel="noopener">
+                Attention Is All You Need
+              </a>
+            </h4>
+            <p class="paper-authors">Ashish Vaswani, et al.</p>
+            <p class="paper-summary">Introduced the Transformer architecture with multi-head attention.</p>
           </div>
-          <h4 class="paper-title">
-            <a href="https://arxiv.org/pdf/1912.07145.pdf" target="_blank" rel="noopener">
-              PyHessian: Neural Networks Through the Lens of the Hessian
-            </a>
-          </h4>
-          <p class="paper-authors">Zhewei Yao, Amir Gholami, Kurt Keutzer, Michael W. Mahoney</p>
-          <p class="paper-summary">Introduces a scalable framework for computing second-order derivative information (Hessian eigenvalues, trace, and spectral density) to analyze the loss landscapes of deep neural networks.</p>
+          <div class="paper-item">
+            <div class="paper-meta">
+              <span class="paper-category">Scaling</span>
+              <span class="paper-year">2020</span>
+            </div>
+            <h4 class="paper-title">
+              <a href="https://arxiv.org/pdf/2001.08361.pdf" target="_blank" rel="noopener">
+                Language Models are Few-Shot Learners
+              </a>
+            </h4>
+            <p class="paper-authors">Tom B. Brown, et al.</p>
+            <p class="paper-summary">Demonstrated that large-scale language models can perform few-shot learning without gradient updates.</p>
+          </div>
         </div>
+      </div>
 
+      <div class="paper-subsection">
+        <h4 class="paper-subsection-title">
+          <span class="paper-queue-badge">📋 Queued (3)</span>
+        </h4>
+        <div class="papers-list">
+          <div class="paper-item">
+            <div class="paper-meta">
+              <span class="paper-category">Scaling</span>
+              <span class="paper-year">2022</span>
+            </div>
+            <h4 class="paper-title">
+              <a href="https://arxiv.org/pdf/2203.02155.pdf" target="_blank" rel="noopener">
+                On the Opportunities and Risks of Foundation Models
+              </a>
+            </h4>
+            <p class="paper-authors">Rishi Bommasani, et al.</p>
+            <p class="paper-summary">Comprehensive analysis of foundation models: capabilities, risks, and future directions.</p>
+          </div>
+          <div class="paper-item">
+            <div class="paper-meta">
+              <span class="paper-category">Architecture</span>
+              <span class="paper-year">2021</span>
+            </div>
+            <h4 class="paper-title">
+              <a href="https://arxiv.org/pdf/2104.09864.pdf" target="_blank" rel="noopener">
+                On the Properties of the Transformer's Positional Encoding
+              </a>
+            </h4>
+            <p class="paper-authors">Shaojie Shao, et al.</p>
+            <p class="paper-summary">Analyzes and improves positional encoding in Transformers for better sequence modeling.</p>
+          </div>
+          <div class="paper-item">
+            <div class="paper-meta">
+              <span class="paper-category">Efficiency</span>
+              <span class="paper-year">2022</span>
+            </div>
+            <h4 class="paper-title">
+              <a href="https://arxiv.org/pdf/2205.01917.pdf" target="_blank" rel="noopener">
+                Efficient Benchmarking of Language Models with Crosslingual Transfer
+              </a>
+            </h4>
+            <p class="paper-authors">Naman Goyal, et al.</p>
+            <p class="paper-summary">Efficient methods for benchmarking language models across languages.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Agentic AI Section -->
+    <section id="agentic-ai" class="papers-section">
+      <div class="papers-section-header">
+        <h3 class="papers-section-title">Agentic AI Papers</h3>
+        <a href="#" class="back-to-domains">↑ Back to domains</a>
+      </div>
+
+      <div class="paper-subsection">
+        <h4 class="paper-subsection-title">
+          <span class="paper-read-badge">✓ Read (1)</span>
+        </h4>
+        <div class="papers-list">
+          <div class="paper-item">
+            <div class="paper-meta">
+              <span class="paper-category">Reasoning</span>
+              <span class="paper-year">2022</span>
+            </div>
+            <h4 class="paper-title">
+              <a href="https://arxiv.org/pdf/2203.02155.pdf" target="_blank" rel="noopener">
+                Chain-of-Thought Prompting Elicits Reasoning in Large Language Models
+              </a>
+            </h4>
+            <p class="paper-authors">Takeshi Kojima, et al.</p>
+            <p class="paper-summary">Showed that prompting with "Let's think step by step" enables large language models to perform complex reasoning tasks.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="paper-subsection">
+        <h4 class="paper-subsection-title">
+          <span class="paper-queue-badge">📋 Queued (2)</span>
+        </h4>
+        <div class="papers-list">
+          <div class="paper-item">
+            <div class="paper-meta">
+              <span class="paper-category">Planning</span>
+              <span class="paper-year">2023</span>
+            </div>
+            <h4 class="paper-title">
+              <a href="https://arxiv.org/pdf/2302.07387.pdf" target="_blank" rel="noopener">
+                LLM+P: Multi-Agent Collaboration with LLMs for Planning
+              </a>
+            </h4>
+            <p class="paper-authors">Yongchao Dou, et al.</p>
+            <p class="paper-summary">Demonstrates multi-agent collaboration using LLMs for complex planning tasks.</p>
+          </div>
+          <div class="paper-item">
+            <div class="paper-meta">
+              <span class="paper-category">Reasoning</span>
+              <span class="paper-year">2023</span>
+            </div>
+            <h4 class="paper-title">
+              <a href="https://arxiv.org/pdf/2306.05846.pdf" target="_blank" rel="noopener">
+                Tree of Thoughts
+              </a>
+            </h4>
+            <p class="paper-authors">Shojaei, et al.</p>
+            <p class="paper-summary">Enables language models to perform tree search for improved reasoning.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Alignment Section -->
+    <section id="alignment" class="papers-section">
+      <div class="papers-section-header">
+        <h3 class="papers-section-title">AI Model Instruction Alignment Papers</h3>
+        <a href="#" class="back-to-domains">↑ Back to domains</a>
+      </div>
+
+      <div class="paper-subsection">
+        <h4 class="paper-subsection-title">
+          <span class="paper-read-badge">✓ Read (1)</span>
+        </h4>
+        <div class="papers-list">
+          <div class="paper-item">
+            <div class="paper-meta">
+              <span class="paper-category">RLHF</span>
+              <span class="paper-year">2022</span>
+            </div>
+            <h4 class="paper-title">
+              <a href="https://arxiv.org/pdf/2203.02155.pdf" target="_blank" rel="noopener">
+                Training Language Models to Follow Instructions with Human Feedback
+              </a>
+            </h4>
+            <p class="paper-authors">Long Ouyang, et al.</p>
+            <p class="paper-summary">Introduced RLHF for aligning language models with human intent.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="paper-subsection">
+        <h4 class="paper-subsection-title">
+          <span class="paper-queue-badge">📋 Queued (2)</span>
+        </h4>
+        <div class="papers-list">
+          <div class="paper-item">
+            <div class="paper-meta">
+              <span class="paper-category">RLAIF</span>
+              <span class="paper-year">2023</span>
+            </div>
+            <h4 class="paper-title">
+              <a href="https://arxiv.org/pdf/2304.08961.pdf" target="_blank" rel="noopener">
+                Fine-tuning Language Models from Human Preferences without Humans
+              </a>
+            </h4>
+            <p class="paper-authors">Loren et al.</p>
+            <p class="paper-summary">RLAIF: Using AI feedback for alignment without human annotations.</p>
+          </div>
+          <div class="paper-item">
+            <div class="paper-meta">
+              <span class="paper-category">Constitutional AI</span>
+              <span class="paper-year">2023</span>
+            </div>
+            <h4 class="paper-title">
+              <a href="https://arxiv.org/pdf/2210.11270.pdf" target="_blank" rel="noopener">
+                Constitutional AI: Harmlessness from AI Feedback
+              </a>
+            </h4>
+            <p class="paper-authors">Yudhakar, et al.</p>
+            <p class="paper-summary">Training harmless AI assistants using constitutional principles.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Distributed Systems Section -->
+    <section id="distributed-systems" class="papers-section">
+      <div class="papers-section-header">
+        <h3 class="papers-section-title">Distributed Systems Papers</h3>
+        <a href="#" class="back-to-domains">↑ Back to domains</a>
+      </div>
+
+      <div class="paper-subsection">
+        <h4 class="paper-subsection-title">
+          <span class="paper-read-badge">✓ Read (3)</span>
+        </h4>
+        <div class="papers-list">
+          <div class="paper-item">
+            <div class="paper-meta">
+              <span class="paper-category">Consensus</span>
+              <span class="paper-year">2014</span>
+            </div>
+            <h4 class="paper-title">
+              <a href="https://raft.github.io/raft.pdf" target="_blank" rel="noopener">
+                In Search of an Understandable Consensus Algorithm (Raft)
+              </a>
+            </h4>
+            <p class="paper-authors">Diego Ongaro, John Ousterhout</p>
+            <p class="paper-summary">Introduced the Raft consensus protocol.</p>
+          </div>
+          <div class="paper-item">
+            <div class="paper-meta">
+              <span class="paper-category">Blockchain</span>
+              <span class="paper-year">2008</span>
+            </div>
+            <h4 class="paper-title">
+              <a href="https://bitcoin.org/bitcoin.pdf" target="_blank" rel="noopener">
+                Bitcoin: A Peer-to-Peer Electronic Cash System
+              </a>
+            </h4>
+            <p class="paper-authors">Satoshi Nakamoto</p>
+            <p class="paper-summary">Peer-to-peer electronic cash network using proof-of-work.</p>
+          </div>
+          <div class="paper-item">
+            <div class="paper-meta">
+              <span class="paper-category">HPC & Distributed</span>
+              <span class="paper-year">2004</span>
+            </div>
+            <h4 class="paper-title">
+              <a href="https://static.googleusercontent.com/media/research.google.com/en//archive/mapreduce-osdi04.pdf" target="_blank" rel="noopener">
+                MapReduce: Simplified Data Processing on Large Clusters
+              </a>
+            </h4>
+            <p class="paper-authors">Jeffrey Dean, Sanjay Ghemawat</p>
+            <p class="paper-summary">Programming model for processing large-scale datasets.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="paper-subsection">
+        <h4 class="paper-subsection-title">
+          <span class="paper-queue-badge">📋 Queued (2)</span>
+        </h4>
+        <div class="papers-list">
+          <div class="paper-item">
+            <div class="paper-meta">
+              <span class="paper-category">Consensus</span>
+              <span class="paper-year">2019</span>
+            </div>
+            <h4 class="paper-title">
+              <a href="https://github.com/facebookarchive/rocksdb/wiki/Paxos" target="_blank" rel="noopener">
+                Paxos Made Simple
+              </a>
+            </h4>
+            <p class="paper-authors">Leslie Lamport</p>
+            <p class="paper-summary">The Paxos consensus algorithm for distributed systems.</p>
+          </div>
+          <div class="paper-item">
+            <div class="paper-meta">
+              <span class="paper-category">Distributed Training</span>
+              <span class="paper-year">2020</span>
+            </div>
+            <h4 class="paper-title">
+              <a href="https://arxiv.org/pdf/1807.01202.pdf" target="_blank" rel="noopener">
+                Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism
+              </a>
+            </h4>
+            <p class="paper-authors">Mohammad Shoeybi, et al.</p>
+            <p class="paper-summary">Model parallelism techniques for training large language models.</p>
+          </div>
+        </div>
       </div>
     </section>
 

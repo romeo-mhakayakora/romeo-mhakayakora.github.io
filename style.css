@@ -531,7 +531,7 @@ pre code {
 
 .paper-item {
   border-bottom: 0.8px solid rgba(170, 170, 170, 0.15);
-  padding: 2.2rem 0;
+  padding: 1.5rem 0;
   transition: padding-left 0.25s ease;
 }
 
@@ -1004,8 +1004,14 @@ pre code {
 
 .work-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .work-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .work-card-link {
@@ -1032,86 +1038,6 @@ pre code {
 .work-card-link .knowledge-card .card-description {
   font-size: 0.85rem;
   margin-bottom: 1rem;
-}
-
-@media (max-width: 768px) {
-  .work-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  body {
-    font-size: 17px;
-  }
-  
-  .hero-inner-layout {
-    flex-direction: column;
-    text-align: center;
-    gap: 2.2rem;
-  }
-  
-  .hero-profile-img {
-    width: 160px;
-    height: 160px;
-  }
-  
-  .hero {
-    padding: 5rem 0 4rem 0;
-  }
-  
-  .hero-title {
-    font-size: 2.8rem;
-  }
-  
-  .hero-subtitle {
-    font-size: 1.25rem;
-  }
-  
-  .page-title {
-    font-size: 2.4rem;
-  }
-  
-  .page-subtitle {
-    font-size: 1.1rem;
-  }
-  
-  .section {
-    padding: 4.5rem 0;
-  }
-  
-  .section-compact {
-    padding: 1.5rem 0 4.5rem 0;
-  }
-  
-  .knowledge-card, .contact-box {
-    padding: 2rem;
-  }
-  
-  .projects-grid, .courses-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .split-preview-grid {
-    grid-template-columns: 1fr;
-    gap: 2.8rem;
-  }
-
-  /* Responsive Reader */
-  .post-layout {
-    margin: 3rem auto 5rem auto;
-  }
-
-  .post-full-title {
-    font-size: 1.85rem;
-  }
-
-  .post-lead-intro {
-    font-size: 1.1rem;
-  }
-
-  .post-body-content h2 {
-    font-size: 1.35rem;
-    margin: 2rem 0 1rem 0;
-  }
 }
 
 @media (max-width: 992px) {
