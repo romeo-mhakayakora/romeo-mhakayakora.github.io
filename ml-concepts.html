@@ -12,6 +12,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="style.css?v=2">
+  
+  <!-- KaTeX for scientific notation -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+    onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}]});"></script>
 
   <style>
     /* ==========================================================================
@@ -100,12 +106,19 @@
       background-color: var(--secondary-bg);
       border: 1px solid rgba(170, 170, 170, 0.12);
       border-radius: 6px;
-      padding: 1rem 1.25rem;
+      padding: 0.8rem 1.25rem;
       margin: 0.8rem 0 1rem 0;
-      font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace;
-      font-size: 0.95rem;
       overflow-x: auto;
       color: var(--text-color);
+      text-align: center;
+    }
+
+    .concept-formula .katex-display {
+      margin: 0.25rem 0;
+    }
+
+    .concept-formula .katex {
+      font-size: 1.1rem;
     }
 
     [data-theme="dark"] .concept-formula {
@@ -417,11 +430,11 @@
             <h3 class="concept-name">Feature Scaling</h3>
             <div class="concept-body">
               <p><strong>Normalization (Min-Max Scaling):</strong></p>
-              <div class="concept-formula">x' = (x - x_min) / (x_max - x_min)</div>
+              <div class="concept-formula">$$x' = \frac{x - x_{\min}}{x_{\max} - x_{\min}}$$</div>
               <p>Scales features to a fixed range of [0, 1]. Sensitive to outliers since the min/max are extreme values.</p>
 
               <p><strong>Standardization (Z-Score Scaling):</strong></p>
-              <div class="concept-formula">x' = (x - μ) / σ</div>
+              <div class="concept-formula">$$x' = \frac{x - \mu}{\sigma}$$</div>
               <p>Centers data around zero with unit variance. Less sensitive to outliers than normalization. Does <em>not</em> bound data to a fixed range.</p>
 
               <p><strong>Why it matters:</strong> Many algorithms (SVM, k-NN, neural networks, PCA) assume all features are on a comparable scale. Without scaling, features with large magnitudes dominate distance computations and gradient updates.</p>
@@ -457,7 +470,7 @@
             <h3 class="concept-name">Encoding Categorical Variables</h3>
             <div class="concept-body">
               <p><strong>One-Hot Encoding:</strong> Each category becomes a binary column. Suitable for nominal categories with no ordinal relationship.</p>
-              <div class="concept-formula">[cat_A, cat_B, cat_C] → [1,0,0], [0,1,0], [0,0,1]</div>
+              <div class="concept-formula">$$\text{[cat\_A, cat\_B, cat\_C]} \to \text{[1,0,0], [0,1,0], [0,0,1]}$$</div>
 
               <p><strong>Label Encoding:</strong> Maps each category to an integer (0, 1, 2, …). Implies ordinality; appropriate for tree-based models but problematic for linear models.</p>
 
@@ -506,7 +519,7 @@
             <h3 class="concept-name">Bias-Variance Tradeoff</h3>
             <div class="concept-body">
               <p>The generalization error of a model decomposes into three components:</p>
-              <div class="concept-formula">E[ (ŷ - y)² ] = Bias(ŷ)² + Var(ŷ) + σ² (irreducible error)</div>
+              <div class="concept-formula">$$\mathbb{E}\big[(\hat{y} - y)^2\big] = \text{Bias}(\hat{y})^2 + \text{Var}(\hat{y}) + \sigma^2$$</div>
               <ul>
                 <li><strong>Bias:</strong> Error from overly simplistic assumptions (underfitting). High-bias models miss relevant patterns.</li>
                 <li><strong>Variance:</strong> Error from sensitivity to small fluctuations in the training set (overfitting). High-variance models capture noise.</li>
@@ -524,7 +537,7 @@
             <h3 class="concept-name">Cross-Validation</h3>
             <div class="concept-body">
               <p><strong>K-Fold Cross-Validation:</strong> Split data into K folds. Train on K−1 folds, evaluate on the held-out fold. Repeat K times. Report average metric.</p>
-              <div class="concept-formula">CV Score = (1/K) Σᵢ₌₁ᴷ Scoreᵢ</div>
+              <div class="concept-formula">$$\text{CV Score} = \frac{1}{K}\sum_{i=1}^{K} \text{Score}_i$$</div>
               <ul>
                 <li><strong>k=5 or k=10</strong> are standard choices — balance between bias and computational cost.</li>
                 <li><strong>Stratified K-Fold:</strong> Preserves class proportions in each fold — essential for imbalanced classification.</li>
@@ -589,15 +602,15 @@
               <p>Regularization adds a penalty term to the loss function to discourage overly complex models and reduce overfitting.</p>
 
               <p><strong>L1 (Lasso) Regularization:</strong></p>
-              <div class="concept-formula">Loss = Original Loss + λ Σⱼ |wⱼ|</div>
+              <div class="concept-formula">$$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{original}} + \lambda \sum_{j} |w_j|$$</div>
               <p>Encourages sparsity — drives some weights to exactly zero, performing automatic feature selection. Effective when many features are irrelevant.</p>
 
               <p><strong>L2 (Ridge) Regularization:</strong></p>
-              <div class="concept-formula">Loss = Original Loss + λ Σⱼ wⱼ²</div>
+              <div class="concept-formula">$$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{original}} + \lambda \sum_{j} w_j^2$$</div>
               <p>Shrinks weights proportionally but does not zero them out. Handles multicollinearity well and is differentiable everywhere.</p>
 
               <p><strong>Elastic Net:</strong> Combines L1 and L2 penalties. Useful when there are correlated features and you still want sparsity.</p>
-              <div class="concept-formula">Loss = Original Loss + λ₁ Σⱼ |wⱼ| + λ₂ Σⱼ wⱼ²</div>
+              <div class="concept-formula">$$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{original}} + \lambda_1 \sum_{j} |w_j| + \lambda_2 \sum_{j} w_j^2$$</div>
             </div>
             <div class="use-tags">
               <span class="use-tag when">L1: Feature selection, high-dimensional sparse problems</span>
@@ -611,7 +624,7 @@
             <span class="concept-number">10 — Optimization</span>
             <h3 class="concept-name">Gradient Descent Variants</h3>
             <div class="concept-body">
-              <div class="concept-formula">w ← w − η · ∇L(w)</div>
+              <div class="concept-formula">$$w \leftarrow w - \eta \cdot \nabla L(w)$$</div>
 
               <ul>
                 <li><strong>Batch Gradient Descent:</strong> Computes gradient over the entire dataset per update. Deterministic but slow for large datasets.</li>
@@ -634,15 +647,15 @@
 
               <p><strong>Regression:</strong></p>
               <ul>
-                <li><strong>Mean Squared Error (MSE):</strong> <code>L = (1/n) Σ (y − ŷ)²</code> — penalizes large errors quadratically. Sensitive to outliers.</li>
-                <li><strong>Mean Absolute Error (MAE):</strong> <code>L = (1/n) Σ |y − ŷ|</code> — robust to outliers, but gradient is constant (less efficient).</li>
+                <li><strong>Mean Squared Error (MSE):</strong> \(L = \frac{1}{n}\sum (y - \hat{y})^2\) — penalizes large errors quadratically. Sensitive to outliers.</li>
+                <li><strong>Mean Absolute Error (MAE):</strong> \(L = \frac{1}{n}\sum |y - \hat{y}|\) — robust to outliers, but gradient is constant (less efficient).</li>
                 <li><strong>Huber Loss:</strong> Quadratic for small errors, linear for large errors. Combines best of MSE and MAE.</li>
               </ul>
 
               <p><strong>Classification:</strong></p>
               <ul>
-                <li><strong>Cross-Entropy (Log Loss):</strong> <code>L = −(y log(ŷ) + (1−y) log(1−ŷ))</code> — standard for binary and multi-class classification. Penalizes confident wrong predictions heavily.</li>
-                <li><strong>Hinge Loss:</strong> <code>L = max(0, 1 − y · ŷ)</code> — used by SVMs. Encourages a margin of separation.</li>
+                <li><strong>Cross-Entropy (Log Loss):</strong> \(L = -(y \log(\hat{y}) + (1-y) \log(1-\hat{y}))\) — standard for binary and multi-class classification. Penalizes confident wrong predictions heavily.</li>
+                <li><strong>Hinge Loss:</strong> \(L = \max(0, 1 - y \cdot \hat{y})\) — used by SVMs. Encourages a margin of separation.</li>
               </ul>
             </div>
           </div>
@@ -682,11 +695,11 @@
             <h3 class="concept-name">Regression Metrics</h3>
             <div class="concept-body">
               <ul>
-                <li><strong>Mean Squared Error (MSE):</strong> (1/n) Σ (y − ŷ)² — penalizes large errors. In same units as y².</li>
-                <li><strong>Root Mean Squared Error (RMSE):</strong> √MSE — interpretable in original units. Standard metric for regression.</li>
-                <li><strong>Mean Absolute Error (MAE):</strong> (1/n) Σ |y − ŷ| — robust to outliers.</li>
-                <li><strong>R² (Coefficient of Determination):</strong> 1 − (SS_res / SS_tot) — proportion of variance explained by the model. Can be negative for poorly fitting models.</li>
-                <li><strong>MAPE:</strong> (100/n) Σ |(y − ŷ) / y| — relative error in percentage. Undefined when y = 0.</li>
+                <li><strong>Mean Squared Error (MSE):</strong> \(\frac{1}{n}\sum (y - \hat{y})^2\) — penalizes large errors. In same units as \(y^2\).</li>
+                <li><strong>Root Mean Squared Error (RMSE):</strong> \(\sqrt{\text{MSE}}\) — interpretable in original units. Standard metric for regression.</li>
+                <li><strong>Mean Absolute Error (MAE):</strong> \(\frac{1}{n}\sum |y - \hat{y}|\) — robust to outliers.</li>
+                <li><strong>R² (Coefficient of Determination):</strong> \(1 - \frac{SS_{\text{res}}}{SS_{\text{tot}}}\) — proportion of variance explained by the model. Can be negative for poorly fitting models.</li>
+                <li><strong>MAPE:</strong> \(\frac{100}{n}\sum \left|\frac{y - \hat{y}}{y}\right|\) — relative error in percentage. Undefined when \(y = 0\).</li>
               </ul>
             </div>
           </div>
@@ -730,7 +743,7 @@
             <h3 class="concept-name">Principal Component Analysis (PCA)</h3>
             <div class="concept-body">
               <p>An unsupervised linear technique that projects data onto orthogonal axes (principal components) that capture maximum variance.</p>
-              <div class="concept-formula">X' = X · W &nbsp; where &nbsp; W = eigenvectors of Cov(X)</div>
+              <div class="concept-formula">$$X' = X \cdot W \quad \text{where} \quad W = \text{eigenvectors of } \text{Cov}(X)$$</div>
               <p><strong>Steps:</strong> (1) Center the data, (2) Compute covariance matrix, (3) Eigendecomposition, (4) Sort eigenvalues and select top-k components, (5) Project.</p>
               <ul>
                 <li><strong>Use cases:</strong> Visualization (2D/3D), noise reduction, speeding up models, addressing multicollinearity.</li>
@@ -781,7 +794,7 @@
             <h3 class="concept-name">Bagging (Bootstrap Aggregating)</h3>
             <div class="concept-body">
               <p>Train multiple models independently on bootstrap samples (random subsets with replacement) of the training data. Aggregate predictions by averaging (regression) or majority voting (classification).</p>
-              <div class="concept-formula">ŷ_ensemble = (1/M) Σᵢ₌₁ᴹ ŷᵢ</div>
+              <div class="concept-formula">$$\hat{y}_{\text{ensemble}} = \frac{1}{M}\sum_{i=1}^{M} \hat{y}_i$$</div>
               <p><strong>Key properties:</strong></p>
               <ul>
                 <li>Reduces variance without increasing bias — ideal for high-variance models (e.g., deep decision trees).</li>
