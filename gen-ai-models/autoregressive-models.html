@@ -3,13 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Autoregressive Models — Language Modeling</title>
+  <title>Autoregressive Models — Chapter 3</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../style.css?v=2">
-  <script>window.MathJax = {tex: {inlineMath: [['$','$'], ['\\(','\\)']], displayMath: [['$$','$$'], ['\\[','\\]']], processEscapes: true, processEnvironments: true}};</script>
-  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <style>
     .container.p-chapter { max-width: 680px; }
     .ch-nav { padding: 2rem 0 1rem 0; }
@@ -19,15 +17,6 @@
     .ch-header .ch-num { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; color: var(--accent-color); display: block; margin-bottom: 0.4rem; }
     .ch-header h1 { font-size: 2rem; font-weight: 600; font-family: var(--font-serif); color: var(--text-color); margin-bottom: 0.8rem; line-height: 1.25; }
     .ch-header p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
-    .ch-content { font-family: var(--font-serif); font-size: 1.08rem; line-height: 1.75; color: var(--text-color); max-width: 680px; }
-    .ch-content h2 { font-size: 1.6rem; font-weight: 600; margin: 3rem 0 1.2rem 0; color: var(--text-color); }
-    .ch-content h3 { font-size: 1.3rem; font-weight: 600; margin: 2rem 0 0.8rem 0; color: var(--text-color); }
-    .ch-content p { margin-bottom: 1.6rem; }
-    .ch-content ul { margin: 0 0 1.6rem 1.8rem; }
-    .ch-content li { margin-bottom: 0.5rem; }
-    .ch-content em { font-style: italic; font-family: var(--font-serif); }
-    .ch-content code { font-family: monospace; font-size: 0.9rem; background: var(--secondary-bg); padding: 0.15rem 0.35rem; border-radius: 4px; }
-    .ch-content pre { background: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; overflow-x: auto; margin-bottom: 1.6rem; border: 1px solid rgba(170,170,170,0.12); }
     .ch-placeholder { padding: 4rem 0; text-align: center; color: var(--text-muted); }
     .ch-placeholder p { font-size: 1rem; }
     .ch-placeholder .icon { font-size: 2.5rem; margin-bottom: 1rem; display: block; }
@@ -67,52 +56,13 @@
 
     <header class="ch-header">
       <span class="ch-num">Chapter 3</span>
-      <h1>Autoregressive Models</h1>
+      <h1>Language Modeling: Autoregressive Models</h1>
       <p>Next-token prediction, causal attention, and the GPT architecture family.</p>
     </header>
 
-    <div class="ch-content">
-      <h2>The Autoregressive Principle</h2>
-      <p>Autoregressive models generate sequences by factorizing the joint probability as a product of conditionals:</p>
-      <p>$$p(x_1, x_2, \ldots, x_n) = \prod_{i=1}^n p(x_i \mid x_1, x_2, \ldots, x_{i-1})$$</p>
-      <p>Each token is predicted based only on previous tokens, never future ones. This causal structure is what enables generation.</p>
-
-      <h2>Causal Attention</h2>
-      <p>The attention mechanism in autoregressive models must be <strong>causal</strong> (masked) to prevent information from future positions from influencing past predictions.</p>
-      <p>The attention weight matrix is upper-triangular, with zeros above the diagonal:
-      $$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d}} + M\right)V$$
-      where $M$ is a mask that sets future positions to $-\infty$.</p>
-
-      <h2>GPT Architecture</h2>
-      <ul>
-        <li><strong>Decoder-only transformer</strong> — uses masked multi-head attention</li>
-        <li><strong>Large context windows</strong> — typically 1K-8K+ tokens for ability to condition on extensive history</li>
-        <li><strong>Pre-norm residual connection</strong> — LayerNorm applied before attention/MLP blocks</li>
-        <li><strong>No bidirectional context</strong> — strictly left-to-right prediction</li>
-      </ul>
-
-      <h2>Training Objective</h2>
-      <p>Given a sequence of tokens, maximize the log-likelihood of the next token:</p>
-      <p>$$\mathcal{L}_{\text{LM}} = \sum_{i=1}^n \log p(x_i \mid x_{<i}; \theta)$$</p>
-      <p>This is equivalent to minimizing the cross-entropy between predicted and actual next tokens.</p>
-
-      <h2>Key Variants</h2>
-      <ul>
-        <li><strong>GPT-1:</strong> 117M parameters, demonstrated zero-shot task transfer</li>
-        <li><strong>GPT-2:</strong> 1.5B parameters, showed strong few-shot capabilities</li>
-        <li><strong>GPT-3:</strong> 175B parameters, introduced in-context learning</li>
-        <li><strong>GPT-4:</strong> Multimodal, improved reasoning and alignment</li>
-      </ul>
-
-      <h2>Limitations</h2>
-      <ul>
-        <li><strong>Slow inference</strong> — cannot parallelize token generation</li>
-        <li><strong>Error accumulation</strong> — mistakes early in generation compound in later tokens</li>
-        <li><strong>Context window limits</strong> — bounded history affects long-term coherence</li>
-        <li><strong>Bias modeling</strong> — learns to reproduce training data biases, requiring alignment work</li>
-      </ul>
-
-      <p><em>Content coming soon. I'm working through this chapter now.</em></p>
+    <div class="ch-placeholder">
+      <span class="icon">✎</span>
+      <p>Content coming soon. I'm working through this chapter now.</p>
     </div>
   </main>
 
