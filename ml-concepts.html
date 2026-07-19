@@ -212,18 +212,19 @@
     <div class="ml-concepts">
 
       <!-- TOC -->
-      <div class="toc-mini">
-        <p>Contents</p>
-        <ol>
-          <li><a href="#preprocessing">Preprocessing</a></li>
-          <li><a href="#model-selection">Model Selection</a></li>
-          <li><a href="#regularization">Regularization & Optimization</a></li>
-          <li><a href="#evaluation">Evaluation & Metrics</a></li>
-          <li><a href="#dimensionality">Dimensionality Reduction</a></li>
-          <li><a href="#ensemble">Ensemble Methods</a></li>
-          <li><a href="#references">References</a></li>
-        </ol>
-      </div>
+  <div class="toc-mini">
+    <p>Contents</p>
+    <ol>
+      <li><a href="#preprocessing">Preprocessing</a></li>
+      <li><a href="#model-selection">Model Selection</a></li>
+      <li><a href="#regularization">Regularization & Optimization</a></li>
+      <li><a href="#evaluation">Evaluation & Metrics</a></li>
+      <li><a href="#dimensionality">Dimensionality Reduction</a></li>
+      <li><a href="#ensemble">Ensemble Methods</a></li>
+      <li><a href="#activation">Activation Functions</a></li>
+      <li><a href="#references">References</a></li>
+    </ol>
+  </div>
 
       <!-- ====== 1. PREPROCESSING ====== -->
       <h2 id="preprocessing">Preprocessing & Feature Engineering</h2>
@@ -482,6 +483,63 @@
         <li><strong>Level 1:</strong> Meta model trained on out-of-fold predictions to prevent leakage.</li>
       </ul>
       <p>Often best in competitions, but more complex and less interpretable.</p>
+
+      <hr class="section-break">
+
+      <!-- ====== 7. ACTIVATION FUNCTIONS ====== -->
+      <h2 id="activation">Activation Functions</h2>
+
+      <span class="concept-meta">20</span>
+      <h3>Sigmoid (Logistic)</h3>
+      <p>$$\sigma(x) = \frac{1}{1 + e^{-x}}$$</p>
+      <p>Maps inputs to $(0, 1)$. Historically used for binary classification output layers. Suffers from vanishing gradients and outputs are not zero-centered.</p>
+      <div class="tag-row">
+        <span class="tag red">Avoid for: Hidden layers (vanishing gradients)</span>
+        <span class="tag green">Use for: Binary classification output</span>
+      </div>
+
+      <span class="concept-meta">21</span>
+      <h3>Hyperbolic Tangent (tanh)</h3>
+      <p>$$\tanh(x) = \frac{e^{x} - e^{-x}}{e^{x} + e^{-x}}$$</p>
+      <p>Zero-centered version of sigmoid, outputs in $(-1, 1)$. Better than sigmoid but still suffers from vanishing gradients in deep networks.</p>
+      <div class="tag-row">
+        <span class="tag green">Better than sigmoid for hidden layers</span>
+        <span class="tag red">Still problematic in very deep networks</span>
+      </div>
+
+      <span class="concept-meta">22</span>
+      <h3>Rectified Linear Unit (ReLU)</h3>
+      <p>$$\text{ReLU}(x) = \max(0, x)$$</p>
+      <p>Computationally efficient, mitigates vanishing gradient problem. Dead neurons for $x < 0$ can cause permanent zero outputs.</p>
+      <div class="tag-row">
+        <span class="tag green">Default choice for hidden layers</span>
+        <span class="tag red">Can suffer from dying ReLU problem</span>
+      </div>
+
+      <span class="concept-meta">23</span>
+      <h3>Leaky ReLU</h3>
+      <p>$$\text{LeakyReLU}(x) = \max(\alpha x, x) \quad \text{where } \alpha \sim 0.01$$</p>
+      <p>Allows small gradients for negative inputs, preventing dead neurons. Still computationally efficient.</p>
+      <div class="tag-row">
+        <span class="tag green">Fix for dying ReLU</span>
+      </div>
+
+      <span class="concept-meta">24</span>
+      <h3>GELU (Gaussian Error Linear Unit)</h3>
+      <p>$$\text{GELU}(x) = x \cdot \Phi(x) = x \cdot \frac{1}{2}\left[1 + \text{erf}\left(\frac{x}{\sqrt{2}}\right)\right]$$</p>
+      <p>Smooth approximation of ReLU. Weights inputs by their probability under Gaussian distribution. Default in Transformers.</p>
+      <div class="tag-row">
+        <span class="tag green">Transformer default</span>
+        <span class="tag green">Best for: NLP, Vision Transformers</span>
+      </div>
+
+      <span class="concept-meta">25</span>
+      <h3>Softmax</h3>
+      <p>$$\text{softmax}(x_i) = \frac{e^{x_i}}{\sum_{j} e^{x_j}}$$</p>
+      <p>Converts logits to probability distribution. Used for multi-class classification output layers. Temperature parameter controls sharpness.</p>
+      <div class="tag-row">
+        <span class="tag green">Use for: Multi-class output, attention weights</span>
+      </div>
 
       <hr class="section-break">
 
