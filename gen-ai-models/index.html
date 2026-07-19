@@ -8,7 +8,7 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400,600&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="../style.css?v=2">
 
@@ -56,7 +56,7 @@
         <a href="../index.html" class="nav-link">Home</a>
         <a href="../projects.html" class="nav-link">Projects</a>
         <a href="../rl.html" class="nav-link">RL</a>
-        <a href="../lm.html" class="nav-link">Language Models</a>
+        <a href="../lm.html" class="nav-link active">Language Models</a>
         <a href="../agentic-ai.html" class="nav-link">Agentic AI</a>
         <a href="../inference.html" class="nav-link">Inference</a>
         <a href="../blogs.html" class="nav-link">Blogs</a>
@@ -107,10 +107,32 @@
       </li>
 
       <li class="chapter-item">
-        <a href="autoregressive-models.html" class="chapter-link">
+        <a href="chapter-3-autoencoders.html" class="chapter-link">
           <span class="chapter-num">Chapter 3</span>
           <span class="chapter-info">
-<span class="chapter-title">Autoregressive Models</span>
+            <span class="chapter-title">Autoencoders</span>
+            <span class="chapter-desc">Learning compressed representations with encoder-decoder architectures.</span>
+          </span>
+          <svg class="chapter-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </a>
+      </li>
+
+      <li class="chapter-item">
+        <a href="chapter-4-vae.html" class="chapter-link">
+          <span class="chapter-num">Chapter 4</span>
+          <span class="chapter-info">
+            <span class="chapter-title">Variational Autoencoders</span>
+            <span class="chapter-desc">Latent variable models with variational inference and the reparameterization trick.</span>
+          </span>
+          <svg class="chapter-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </a>
+      </li>
+
+      <li class="chapter-item">
+        <a href="chapter-5-autoregressive.html" class="chapter-link">
+          <span class="chapter-num">Chapter 5</span>
+          <span class="chapter-info">
+            <span class="chapter-title">Autoregressive Models</span>
             <span class="chapter-desc">Next-token prediction, causal attention, and the GPT architecture family.</span>
           </span>
           <svg class="chapter-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
@@ -118,8 +140,8 @@
       </li>
 
       <li class="chapter-item">
-        <a href="chapter-4-diffusion-models.html" class="chapter-link">
-          <span class="chapter-num">Chapter 4</span>
+        <a href="chapter-6-diffusion-models.html" class="chapter-link">
+          <span class="chapter-num">Chapter 6</span>
           <span class="chapter-info">
             <span class="chapter-title">Diffusion Models: From VAEs to Score-Based</span>
             <span class="chapter-desc">Variational autoencoders, the reparameterization trick, denoising diffusion, score matching, and what makes DALL-E and Stable Diffusion work.</span>
@@ -129,8 +151,8 @@
       </li>
 
       <li class="chapter-item">
-        <a href="chapter-5-flow-matching.html" class="chapter-link">
-          <span class="chapter-num">Chapter 5</span>
+        <a href="chapter-7-flow-matching.html" class="chapter-link">
+          <span class="chapter-num">Chapter 7</span>
           <span class="chapter-info">
             <span class="chapter-title">Flow Matching & Continuous Normalizing Flows</span>
             <span class="chapter-desc">The generative engine inside modern policies: ODEs and SDEs, probability paths, the flow matching loss, and why it beats diffusion.</span>
@@ -140,8 +162,8 @@
       </li>
 
       <li class="chapter-item">
-        <a href="chapter-6-gans.html" class="chapter-link">
-          <span class="chapter-num">Chapter 6</span>
+        <a href="chapter-8-gans.html" class="chapter-link">
+          <span class="chapter-num">Chapter 8</span>
           <span class="chapter-info">
             <span class="chapter-title">Generative Adversarial Networks</span>
             <span class="chapter-desc">The generator-discriminator game, training stability, conditional GANs, and where GANs still win.</span>
@@ -151,8 +173,8 @@
       </li>
 
       <li class="chapter-item">
-        <a href="chapter-7-vision-language.html" class="chapter-link">
-          <span class="chapter-num">Chapter 7</span>
+        <a href="chapter-9-vision-language.html" class="chapter-link">
+          <span class="chapter-num">Chapter 9</span>
           <span class="chapter-info">
             <span class="chapter-title">Vision-Language Models</span>
             <span class="chapter-desc">CLIP, SigLIP, vision encoders, multimodal fusion, and how models learn to connect pixels and text.</span>

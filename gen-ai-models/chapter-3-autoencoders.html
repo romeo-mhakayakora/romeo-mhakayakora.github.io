@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autoencoders — Chapter 03</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css?v=2">
+  <script>window.MathJax = {tex: {inlineMath: [['$','$'], ['\\(','\\)']], displayMath: [['$$','$$'], ['\\[','\\]']], processEscapes: true, processEnvironments: true}};</script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    .container.p-chapter { max-width: 1080px; }
+    .ch-nav { padding: 2rem 0 1rem 0; }
+    .ch-nav a { font-size: 0.8rem; color: var(--text-muted); text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem; transition: color 0.15s; }
+    .ch-nav a:hover { color: var(--accent-color); }
+    .ch-header { padding: 3rem 0 2rem 0; }
+    .ch-header .ch-num { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; color: var(--accent-color); display: block; margin-bottom: 0.4rem; }
+    .ch-header h1 { font-size: 2rem; font-weight: 600; font-family: var(--font-serif); color: var(--text-color); margin-bottom: 0.8rem; line-height: 1.25; }
+    .ch-header p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
+    .ch-content { font-family: var(--font-serif); font-size: 1.08rem; line-height: 1.75; color: var(--text-color); max-width: 680px; margin: 0 auto; }
+    .ch-content h2 { font-size: 1.6rem; font-weight: 600; margin: 3rem 0 1.2rem 0; color: var(--text-color); }
+    .ch-content h3 { font-size: 1.3rem; font-weight: 600; margin: 2rem 0 0.8rem 0; color: var(--text-color); }
+    .ch-content p { margin-bottom: 1.6rem; }
+    .ch-content ul { margin: 0 0 1.6rem 1.8rem; }
+    .ch-content li { margin-bottom: 0.5rem; }
+    .ch-content em { font-style: italic; font-family: var(--font-serif); }
+    .ch-content code { font-family: monospace; font-size: 0.9rem; background: var(--secondary-bg); padding: 0.15rem 0.35rem; border-radius: 4px; }
+    .ch-content pre { background: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; overflow-x: auto; margin-bottom: 1.6rem; border: 1px solid rgba(170,170,170,0.12); }
+    .ch-content blockquote { margin: 1.6rem auto; padding-left: 1.2rem; border-left: 2px solid var(--accent-color); color: var(--text-muted); font-style: italic; max-width: 680px; }
+    .ch-content .MathJax_Display { margin: 1.6rem auto; text-align: center; max-width: 680px; }
+    footer { padding: 3rem 0; border-top: 1px solid rgba(170,170,170,0.1); margin-top: 3rem; }
+    footer p { font-size: 0.78rem; color: var(--text-muted); }
+    .ch-placeholder { padding: 4rem 0; text-align: center; color: var(--text-muted); }
+    .ch-placeholder p { font-size: 1rem; }
+    
+    /* Sidebar Styles */
+    .doc-layout { display: flex; gap: 4rem; margin: 0 auto; max-width: 1080px; }
+    .sidebar { flex: 0 0 220px; position: sticky; top: 6rem; align-self: start; max-height: calc(100vh - 8rem); overflow-y: auto; }
+    .sidebar h3 { font-size: 0.85rem; font-family: var(--font-sans); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 1rem; }
+    .toc-list { list-style: none; padding: 0; margin: 0; }
+    .toc-item { margin-bottom: 0.8rem; }
+    .toc-link { display: block; text-decoration: none; font-family: var(--font-serif); font-size: 0.95rem; color: var(--text-color); transition: color 0.15s; }
+    .toc-link:hover { color: var(--accent-color); }
+    .toc-link.active { color: var(--accent-color); font-weight: 600; }
+    .toc-num { color: var(--text-muted); font-size: 0.85rem; margin-right: 0.3rem; }
+    .content-area { flex: 1; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="../index.html" class="logo">Romeo Mhakayakora <span class="logo-accent">/></span></a>
+      <nav class="nav">
+        <a href="../index.html" class="nav-link">Home</a>
+        <a href="../projects.html" class="nav-link">Projects</a>
+        <a href="../rl.html" class="nav-link">RL</a>
+        <a href="../lm.html" class="nav-link active">Language Models</a>
+        <a href="../agentic-ai.html" class="nav-link">Agentic AI</a>
+        <a href="../inference.html" class="nav-link">Inference</a>
+        <a href="../blogs.html" class="nav-link">Blogs</a>
+        <a href="../courses.html" class="nav-link">Courses</a>
+        <a href="../learning.html" class="nav-link">Learning</a>
+        <a href="../ml-concepts.html" class="nav-link">ML Concepts</a>
+        <a href="../papers.html" class="nav-link">Papers</a>
+        <a href="../contact.html" class="nav-link">Contact</a>
+        <button id="theme-toggle" class="theme-btn" aria-label="Toggle dark mode">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container p-chapter">
+    <nav class="ch-nav">
+      <a href="index.html">← back to guide</a>
+    </nav>
+
+    <header class="ch-header">
+      <span class="ch-num">Chapter 3</span>
+      <h1>Autoencoders</h1>
+      <p>Learning compressed representations with encoder-decoder architectures.</p>
+    </header>
+
+    <div class="doc-layout">
+      <aside class="sidebar">
+        <h3>Contents</h3>
+        <ul class="toc-list">
+          <li class="toc-item">
+            <a href="chapter-3-autoencoders.html" class="toc-link active">
+              <span class="toc-num">3.1</span> Autoencoders
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="chapter-4-vae.html" class="toc-link">
+              <span class="toc-num">3.2</span> Variational Autoencoders
+            </a>
+          </li>
+        </ul>
+      </aside>
+
+      <div class="content-area">
+        <div class="ch-content">
+          <p>Content for Autoencoders will be added here.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container p-chapter">
+      <p>&copy; 2026 Romeo Mhakayakora. Built with an editorial aesthetic.</p>
+    </div>
+  </footer>
+
+  <script src="../script.js"></script>
+</body>
+</html>
