@@ -100,9 +100,6 @@
 
       <div class="content-area">
         <div class="ch-content">
-          <h2>What this document covers</h2>
-          <p>We are going to look at autoregressive (AR) models and their major components — what sequential data is, the goal these models share with other generative approaches, the objective used to train them, the core AR equation, and how AR models evolved from simple linear formulas to neural networks to RNNs (and why that evolution happened).</p>
-
           <h2>1. Sequential Data</h2>
           <p>We start with sequential data and defining what it is, because it's the kind of data that autoregressive models are built for.</p>
           <p>A data point is treated as a <strong>sequence</strong>:</p>
@@ -127,9 +124,9 @@
           <h2>3. Training Objective</h2>
           <p>With the goal set, next comes the criterion used to fit the model — this stays fixed for every AR variant covered later.</p>
           <p>Fit $\theta$ by <strong>minimizing KL divergence</strong> between the true and model distributions:</p>
-          <p>$$\theta^{ast} = \arg\min_{\theta} \; D_{KL}\big(p(x) \parallel p_\theta(x)\big)$$</p>
+          <p>$$\theta^{*} = \arg\min_{\theta} \; D_{KL}\big(p(x) \parallel p_\theta(x)\big)$$</p>
           <p>Equivalent to <strong>maximizing expected log-likelihood</strong>:</p>
-          <p>$$\theta^{ast} = \arg\max_{\theta} \; \mathbb{E}_{x \sim p(x)}\big[\log p_\theta(x)\big]$$</p>
+          <p>$$\theta^{*} = \arg\max_{\theta} \; \mathbb{E}_{x \sim p(x)}\big[\log p_\theta(x)\big]$$</p>
           <p>(Since $D_{KL} = \mathbb{E}[\log p(x)] - \mathbb{E}[\log p_\theta(x)]$, and the first term doesn't depend on $\theta$.)</p>
           <p><strong>In plain terms:</strong> maximize the probability the model assigns to the data we've actually observed — i.e., push $p_\theta$ toward giving high likelihood to real examples.</p>
           <p><strong>Key distinction:</strong> autoregressive models compute the <strong>exact</strong> likelihood — no lower bound required, unlike latent-variable-based generative approaches.</p>
