@@ -11,7 +11,7 @@
   <script>window.MathJax = {tex: {inlineMath: [['$','$'], ['\\(','\\)']], displayMath: [['$$','$$'], ['\\[','\\]']], processEscapes: true, processEnvironments: true}};</script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <style>
-    .container.p-chapter { max-width: 680px; }
+    .container.p-chapter { max-width: 1080px; }
     .ch-nav { padding: 2rem 0 1rem 0; }
     .ch-nav a { font-size: 0.8rem; color: var(--text-muted); text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem; transition: color 0.15s; }
     .ch-nav a:hover { color: var(--accent-color); }
@@ -19,7 +19,7 @@
     .ch-header .ch-num { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; color: var(--accent-color); display: block; margin-bottom: 0.4rem; }
     .ch-header h1 { font-size: 2rem; font-weight: 600; font-family: var(--font-serif); color: var(--text-color); margin-bottom: 0.8rem; line-height: 1.25; }
     .ch-header p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
-    .ch-content { font-family: var(--font-serif); font-size: 1.08rem; line-height: 1.75; color: var(--text-color); max-width: 680px; }
+    .ch-content { font-family: var(--font-serif); font-size: 1.08rem; line-height: 1.75; color: var(--text-color); max-width: 680px; margin: 0 auto; }
     .ch-content h2 { font-size: 1.6rem; font-weight: 600; margin: 3rem 0 1.2rem 0; color: var(--text-color); }
     .ch-content h3 { font-size: 1.3rem; font-weight: 600; margin: 2rem 0 0.8rem 0; color: var(--text-color); }
     .ch-content p { margin-bottom: 1.6rem; }
@@ -28,13 +28,13 @@
     .ch-content em { font-style: italic; font-family: var(--font-serif); }
     .ch-content code { font-family: monospace; font-size: 0.9rem; background: var(--secondary-bg); padding: 0.15rem 0.35rem; border-radius: 4px; }
     .ch-content pre { background: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; overflow-x: auto; margin-bottom: 1.6rem; border: 1px solid rgba(170,170,170,0.12); }
-    .ch-content blockquote { margin: 1.6rem 0; padding-left: 1.2rem; border-left: 2px solid var(--accent-color); color: var(--text-muted); font-style: italic; }
+    .ch-content blockquote { margin: 1.6rem auto; padding-left: 1.2rem; border-left: 2px solid var(--accent-color); color: var(--text-muted); font-style: italic; max-width: 680px; }
     footer { padding: 3rem 0; border-top: 1px solid rgba(170,170,170,0.1); margin-top: 3rem; }
     footer p { font-size: 0.78rem; color: var(--text-muted); }
     
     /* Sidebar Styles */
-    .doc-layout { display: flex; gap: 3rem; }
-    .sidebar { flex: 0 0 200px; position: sticky; top: 6rem; align-self: start; max-height: calc(100vh - 8rem); overflow-y: auto; }
+    .doc-layout { display: flex; gap: 4rem; margin: 0 auto; max-width: 1080px; }
+    .sidebar { flex: 0 0 220px; position: sticky; top: 6rem; align-self: start; max-height: calc(100vh - 8rem); overflow-y: auto; }
     .sidebar h3 { font-size: 0.85rem; font-family: var(--font-sans); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 1rem; }
     .toc-list { list-style: none; padding: 0; margin: 0; }
     .toc-item { margin-bottom: 0.8rem; }
@@ -45,7 +45,7 @@
     .content-area { flex: 1; }
     
     /* Table Styles */
-    .ch-content table { width: 100%; border-collapse: collapse; margin: 2rem 0; }
+    .ch-content table { width: 100%; border-collapse: collapse; margin: 2rem auto; max-width: 680px; }
     .ch-content th, .ch-content td { border: 1px solid rgba(170,170,170,0.2); padding: 0.8rem; text-align: left; }
     .ch-content th { background: var(--secondary-bg); font-weight: 600; }
   </style>

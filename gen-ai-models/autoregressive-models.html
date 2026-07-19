@@ -6,10 +6,10 @@
   <title>Autoregressive Models — Chapter 3</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../style.css?v=2">
   <style>
-    .container.p-chapter { max-width: 680px; }
+    .container.p-chapter { max-width: 1080px; }
     .ch-nav { padding: 2rem 0 1rem 0; }
     .ch-nav a { font-size: 0.8rem; color: var(--text-muted); text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem; transition: color 0.15s; }
     .ch-nav a:hover { color: var(--accent-color); }
@@ -17,7 +17,7 @@
     .ch-header .ch-num { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; color: var(--accent-color); display: block; margin-bottom: 0.4rem; }
     .ch-header h1 { font-size: 2rem; font-weight: 600; font-family: var(--font-serif); color: var(--text-color); margin-bottom: 0.8rem; line-height: 1.25; }
     .ch-header p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
-    .ch-content { font-family: var(--font-serif); font-size: 1.08rem; line-height: 1.75; color: var(--text-color); max-width: 680px; }
+    .ch-content { font-family: var(--font-serif); font-size: 1.08rem; line-height: 1.75; color: var(--text-color); max-width: 680px; margin: 0 auto; }
     .ch-content h2 { font-size: 1.6rem; font-weight: 600; margin: 3rem 0 1.2rem 0; color: var(--text-color); }
     .ch-content h3 { font-size: 1.3rem; font-weight: 600; margin: 2rem 0 0.8rem 0; color: var(--text-color); }
     .ch-content p { margin-bottom: 1.6rem; }
@@ -30,8 +30,8 @@
     footer p { font-size: 0.78rem; color: var(--text-muted); }
     
     /* Sidebar Styles */
-    .doc-layout { display: flex; gap: 3rem; }
-    .sidebar { flex: 0 0 200px; position: sticky; top: 6rem; align-self: start; max-height: calc(100vh - 8rem); overflow-y: auto; }
+    .doc-layout { display: flex; gap: 4rem; margin: 0 auto; max-width: 1080px; }
+    .sidebar { flex: 0 0 220px; position: sticky; top: 6rem; align-self: start; max-height: calc(100vh - 8rem); overflow-y: auto; }
     .sidebar h3 { font-size: 0.85rem; font-family: var(--font-sans); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 1rem; }
     .toc-list { list-style: none; padding: 0; margin: 0; }
     .toc-item { margin-bottom: 0.8rem; }
@@ -74,8 +74,8 @@
 
     <header class="ch-header">
       <span class="ch-num">Chapter 3</span>
-<h1>Autoregressive Models</h1>
-  <p>Next-token prediction, causal attention, and the GPT architecture family.</p>
+      <h1>Autoregressive Models</h1>
+      <p>Next-token prediction, causal attention, and the GPT architecture family.</p>
     </header>
 
     <div class="doc-layout">
