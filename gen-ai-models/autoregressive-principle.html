@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../style.css?v=2">
+  <script>window.MathJax = {tex: {inlineMath: [['$','$'], ['\\(','\\)']], displayMath: [['$$','$$'], ['\\[','\\]']], processEscapes: true, processEnvironments: true}};</script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <style>
     .container.p-chapter { max-width: 680px; }
     .ch-nav { padding: 2rem 0 1rem 0; }
@@ -26,6 +28,7 @@
     .ch-content em { font-style: italic; font-family: var(--font-serif); }
     .ch-content code { font-family: monospace; font-size: 0.9rem; background: var(--secondary-bg); padding: 0.15rem 0.35rem; border-radius: 4px; }
     .ch-content pre { background: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; overflow-x: auto; margin-bottom: 1.6rem; border: 1px solid rgba(170,170,170,0.12); }
+    .ch-content blockquote { margin: 1.6rem 0; padding-left: 1.2rem; border-left: 2px solid var(--accent-color); color: var(--text-muted); font-style: italic; }
     footer { padding: 3rem 0; border-top: 1px solid rgba(170,170,170,0.1); margin-top: 3rem; }
     footer p { font-size: 0.78rem; color: var(--text-muted); }
     
@@ -40,6 +43,11 @@
     .toc-link.active { color: var(--accent-color); font-weight: 600; }
     .toc-num { color: var(--text-muted); font-size: 0.85rem; margin-right: 0.3rem; }
     .content-area { flex: 1; }
+    
+    /* Table Styles */
+    .ch-content table { width: 100%; border-collapse: collapse; margin: 2rem 0; }
+    .ch-content th, .ch-content td { border: 1px solid rgba(170,170,170,0.2); padding: 0.8rem; text-align: left; }
+    .ch-content th { background: var(--secondary-bg); font-weight: 600; }
   </style>
 </head>
 <body>
@@ -91,7 +99,117 @@
 
       <div class="content-area">
         <div class="ch-content">
-          <p>Content for the Autoregressive Principle section will be added here.</p>
+          <h2>What this document covers</h2>
+          <p>We are going to look at autoregressive (AR) models and their major components — what sequential data is, the goal these models share with other generative approaches, the objective used to train them, the core AR equation, and how AR models evolved from simple linear formulas to neural networks to RNNs (and why that evolution happened).</p>
+
+          <h2>1. Sequential Data</h2>
+          <p>We start with sequential data and defining what it is, because it's the kind of data that autoregressive models are built for.</p>
+          <p>A data point is treated as a <strong>sequence</strong>:</p>
+          <p>$$x = (x_1, x_2, \dots, x_T)$$</p>
+          <p>Examples:</p>
+          <ul>
+            <li>Sentence → each word = one $x_t$</li>
+            <li>Multivariate time series → each timestep = one $x_t$</li>
+            <li>Image → flattened pixel scan (left→right, top→bottom)</li>
+          </ul>
+          <blockquote>Note: here $x_1, \dots, x_T$ = tokens within <strong>one</strong> sequence (not diffusion-style latents).</blockquote>
+
+          <h2>2. The General Goal</h2>
+          <p>Before defining AR models specifically, it helps to place them within the broader goal every generative model is chasing:</p>
+          <p><strong>Estimate $p(x)$ and learn to sample from it.</strong></p>
+          <ul>
+            <li>$p(x)$ → the <strong>true, unknown data distribution</strong> (what actually generated the observed data; never directly accessible, only sampled from)</li>
+            <li>$p_\theta(x)$ → the <strong>model distribution</strong> (our approximation, controlled by learnable parameters $\theta$)</li>
+          </ul>
+          <p>What differs between families is <em>how</em> $p_\theta(x)$ is parameterized and fit — not the goal itself.</p>
+
+          <h2>3. Training Objective</h2>
+          <p>With the goal set, next comes the criterion used to fit the model — this stays fixed for every AR variant covered later.</p>
+          <p>Fit $\theta$ by <strong>minimizing KL divergence</strong> between the true and model distributions:</p>
+          <p>$$\theta^{*} = \arg\min_{\theta} \; D_{KL}\big(p(x) \,\|\, p_\theta(x)\big)$$</p>
+          <p>Equivalent to <strong>maximizing expected log-likelihood</strong>:</p>
+          <p>$$\theta^{*} = \arg\max_{\theta} \; \mathbb{E}_{x \sim p(x)}\big[\log p_\theta(x)\big]$$</p>
+          <p>(Since $D_{KL} = \mathbb{E}[\log p(x)] - \mathbb{E}[\log p_\theta(x)]$, and the first term doesn't depend on $\theta$.)</p>
+          <p><strong>In plain terms:</strong> maximize the probability the model assigns to the data we've actually observed — i.e., push $p_\theta$ toward giving high likelihood to real examples.</p>
+          <p><strong>Key distinction:</strong> autoregressive models compute the <strong>exact</strong> likelihood — no lower bound required, unlike latent-variable-based generative approaches.</p>
+
+          <h2>4. Defining Equation of Autoregressive (AR) Models</h2>
+          <p>With the objective in place, here is the actual definition of an AR model:</p>
+          <p>$$p_\theta(x) = p_\theta(x_1, \dots, x_T) = \prod_{t=1}^{T} p_\theta(x_t \mid x_{<t})$$</p>
+          <ul>
+            <li>$\mid$ → "given" (conditional probability)</li>
+            <li>$x_{<t} = (x_1, \dots, x_{t-1})$ → everything before position $t$</li>
+            <li>Derived from the <strong>chain rule of probability</strong> — exact identity, not an approximation</li>
+          </ul>
+          <p><strong>"Autoregressive"</strong> → $x_t$ modeled as a function of its own past (regressing on self).</p>
+          <p>The log-likelihood decomposes exactly, term by term:</p>
+          <p>$$\log p_\theta(x) = \sum_{t=1}^{T} \log p_\theta(x_t \mid x_{<t})$$</p>
+
+          <h2>5. Evolution of AR Model Types</h2>
+          <p>This section walks through how AR models developed over time. The objective from Section 3 never changes across any of these — only <strong>how $p_\theta(x_t \mid x_{<t})$ is computed</strong> changes, each version solving a limitation of the one before it.</p>
+
+          <h3>5.1 Classical AR / Linear Prediction</h3>
+          <p>$$x_t = \sum_{i=1}^{p} a_i \, x_{t-i} + \epsilon_t, \qquad \epsilon_t \sim \mathcal{N}(0, \sigma^2)$$</p>
+          <ul>
+            <li>$a_i$ → learnable coefficients ($p$ total — the entire parameter set)</li>
+            <li>$p$ → order (hyperparameter, chosen not learned)</li>
+            <li>$x_t$ is an affine transform of Gaussian noise → <strong>$x_t$ is Gaussian</strong></li>
+          </ul>
+          <p><strong>Limitation:</strong> only linear, Gaussian dependence → cannot model complex data like natural language.</p>
+
+          <h3>5.2 Neural AR Models</h3>
+          <p>$$p_\theta(x_t \mid x_{<t}) = \text{NeuralNet}_\theta(x_{<t})$$</p>
+          <ul>
+            <li>Network: MLP, CNN, etc.</li>
+            <li>Trained via <strong>MLE + backpropagation</strong></li>
+          </ul>
+          <p><strong>Limitation:</strong> no explicit recurrent memory; fixed-size input context.</p>
+
+          <h3>5.3 RNNs (→ GRU, LSTM)</h3>
+          <p>Hidden-state recursion:</p>
+          <p>$$h_t = f_\theta(h_{t-1}, x_{t-1}), \qquad x_t = g_v(h_t)$$</p>
+          <ul>
+            <li>$h_t$ → compressed memory of all history up to $t-1$</li>
+            <li>$f_\theta, g_v$ → learnable neural functions</li>
+            <li><strong>Parameter sharing across time</strong>: same $\theta, v$ reused at every step → enables arbitrary sequence length</li>
+          </ul>
+          <p><strong>Limitation: vanishing gradients</strong> — two equivalent views:</p>
+          <ol>
+            <li><strong>Gradient view:</strong> the same parameters get multiplied repeatedly through backprop-through-time → gradient magnitude shrinks for earlier tokens in long sequences.</li>
+            <li><strong>Bottleneck view:</strong> $h_t$ is a single fixed-size vector forced to compress all history $(x_0, \dots, x_{t-1})$ → information loss grows with sequence length.</li>
+          </ol>
+          <p><strong>→ Motivates attention mechanisms (next topic).</strong></p>
+
+          <h2>6. Summary Table</h2>
+          <p>To close, here's the whole progression side by side:</p>
+          <table>
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Form of $p_\theta(x_t \mid x_{<t})$</th>
+                <th>Limitation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Classical AR</td>
+                <td>Linear combination of last $p$ values + Gaussian noise</td>
+                <td>Linear, Gaussian only</td>
+              </tr>
+              <tr>
+                <td>Neural AR</td>
+                <td>MLP/CNN output</td>
+                <td>No recurrent memory, fixed context</td>
+              </tr>
+              <tr>
+                <td>RNN (GRU/LSTM)</td>
+                <td>Hidden-state recursion, shared params</td>
+                <td>Vanishing gradients, memory bottleneck</td>
+              </tr>
+            </tbody>
+          </table>
+          <p><strong>Constant throughout:</strong> the objective (maximize expected log-likelihood).</p>
+          <p><strong>Variable throughout:</strong> the parameterization of $p_\theta(x_t \mid x_{<t})$.</p>
         </div>
       </div>
     </div>
