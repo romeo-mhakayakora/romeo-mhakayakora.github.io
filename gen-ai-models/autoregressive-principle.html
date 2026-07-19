@@ -127,27 +127,27 @@
           <h2>3. Training Objective</h2>
           <p>With the goal set, next comes the criterion used to fit the model — this stays fixed for every AR variant covered later.</p>
           <p>Fit $\theta$ by <strong>minimizing KL divergence</strong> between the true and model distributions:</p>
-          <p>$$\theta^{*} = \arg\min_{\theta} \; D_{KL}\big(p(x) \,\|\, p_\theta(x)\big)$$</p>
+          <p>$$\theta^{ast} = \arg\min_{\theta} \; D_{KL}\big(p(x) \parallel p_\theta(x)\big)$$</p>
           <p>Equivalent to <strong>maximizing expected log-likelihood</strong>:</p>
-          <p>$$\theta^{*} = \arg\max_{\theta} \; \mathbb{E}_{x \sim p(x)}\big[\log p_\theta(x)\big]$$</p>
+          <p>$$\theta^{ast} = \arg\max_{\theta} \; \mathbb{E}_{x \sim p(x)}\big[\log p_\theta(x)\big]$$</p>
           <p>(Since $D_{KL} = \mathbb{E}[\log p(x)] - \mathbb{E}[\log p_\theta(x)]$, and the first term doesn't depend on $\theta$.)</p>
           <p><strong>In plain terms:</strong> maximize the probability the model assigns to the data we've actually observed — i.e., push $p_\theta$ toward giving high likelihood to real examples.</p>
           <p><strong>Key distinction:</strong> autoregressive models compute the <strong>exact</strong> likelihood — no lower bound required, unlike latent-variable-based generative approaches.</p>
 
           <h2>4. Defining Equation of Autoregressive (AR) Models</h2>
           <p>With the objective in place, here is the actual definition of an AR model:</p>
-          <p>$$p_\theta(x) = p_\theta(x_1, \dots, x_T) = \prod_{t=1}^{T} p_\theta(x_t \mid x_{<t})$$</p>
+          <p>$$p_\theta(x) = p_\theta(x_1, \dots, x_T) = \prod_{t=1}^{T} p_\theta(x_t \mid x_{t-1} )$$</p>
           <ul>
             <li>$\mid$ → "given" (conditional probability)</li>
-            <li>$x_{<t} = (x_1, \dots, x_{t-1})$ → everything before position $t$</li>
+            <li>$x_{t-1}$ → everything before position $t$</li>
             <li>Derived from the <strong>chain rule of probability</strong> — exact identity, not an approximation</li>
           </ul>
           <p><strong>"Autoregressive"</strong> → $x_t$ modeled as a function of its own past (regressing on self).</p>
           <p>The log-likelihood decomposes exactly, term by term:</p>
-          <p>$$\log p_\theta(x) = \sum_{t=1}^{T} \log p_\theta(x_t \mid x_{<t})$$</p>
+          <p>$$\log p_\theta(x) = \sum_{t=1}^{T} \log p_\theta(x_t \mid x_{t-1} )$$</p>
 
           <h2>5. Evolution of AR Model Types</h2>
-          <p>This section walks through how AR models developed over time. The objective from Section 3 never changes across any of these — only <strong>how $p_\theta(x_t \mid x_{<t})$ is computed</strong> changes, each version solving a limitation of the one before it.</p>
+          <p>This section walks through how AR models developed over time. The objective from Section 3 never changes across any of these — only <strong>how $p_\theta(x_t \mid x_{t-1} )$ is computed</strong> changes, each version solving a limitation of the one before it.</p>
 
           <h3>5.1 Classical AR / Linear Prediction</h3>
           <p>$$x_t = \sum_{i=1}^{p} a_i \, x_{t-i} + \epsilon_t, \qquad \epsilon_t \sim \mathcal{N}(0, \sigma^2)$$</p>
@@ -159,7 +159,7 @@
           <p><strong>Limitation:</strong> only linear, Gaussian dependence → cannot model complex data like natural language.</p>
 
           <h3>5.2 Neural AR Models</h3>
-          <p>$$p_\theta(x_t \mid x_{<t}) = \text{NeuralNet}_\theta(x_{<t})$$</p>
+          <p>$$p_\theta(x_t \mid x_{t-i}) = \text{NeuralNet}_\theta(x_{t-i})$$</p>
           <ul>
             <li>Network: MLP, CNN, etc.</li>
             <li>Trained via <strong>MLE + backpropagation</strong></li>
@@ -187,7 +187,7 @@
             <thead>
               <tr>
                 <th>Model</th>
-                <th>Form of $p_\theta(x_t \mid x_{<t})$</th>
+                <th>Form of $p_\theta(x_t \mid x_{t-1} )$</th>
                 <th>Limitation</th>
               </tr>
             </thead>
@@ -210,7 +210,7 @@
             </tbody>
           </table>
           <p><strong>Constant throughout:</strong> the objective (maximize expected log-likelihood).</p>
-          <p><strong>Variable throughout:</strong> the parameterization of $p_\theta(x_t \mid x_{<t})$.</p>
+          <p><strong>Variable throughout:</strong> the parameterization of $p_\theta(x_t \mid x_{t-1} )$.</p>
         </div>
       </div>
     </div>
