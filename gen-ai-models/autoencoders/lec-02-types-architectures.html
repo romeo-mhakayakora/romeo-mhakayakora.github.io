@@ -20,20 +20,35 @@
     .ch-header h1 { font-size: 2rem; font-weight: 600; font-family: var(--font-serif); color: var(--text-color); margin-bottom: 0.8rem; line-height: 1.25; }
     .ch-header p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
     .ch-content { font-family: var(--font-serif); font-size: 1.08rem; line-height: 1.75; color: var(--text-color); max-width: 680px; margin: 0 auto; }
-    .ch-content h2 { font-size: 1.6rem; font-weight: 600; margin: 3rem 0 1.2rem 0; color: var(--text-color); }
-    .ch-content h3 { font-size: 1.3rem; font-weight: 600; margin: 2rem 0 0.8rem 0; color: var(--text-color); }
+    .ch-content h2 { font-size: 1.6rem; font-weight: 600; margin: 3rem 0 1.2rem 0; color: var(--text-color); font-family: var(--font-sans); }
+    .ch-content h3 { font-size: 1.3rem; font-weight: 600; margin: 2rem 0 0.8rem 0; color: var(--text-color); font-family: var(--font-sans); }
+    .ch-content h4 { font-size: 1.1rem; font-weight: 600; margin: 1.5rem 0 0.6rem 0; color: var(--text-color); }
     .ch-content p { margin-bottom: 1.6rem; }
-    .ch-content ul { margin: 0 0 1.6rem 1.8rem; }
+    .ch-content ul, .ch-content ol { margin: 0 0 1.6rem 1.8rem; }
     .ch-content li { margin-bottom: 0.5rem; }
+    .ch-content strong { font-weight: 600; }
     .ch-content em { font-style: italic; font-family: var(--font-serif); }
     .ch-content code { font-family: monospace; font-size: 0.9rem; background: var(--secondary-bg); padding: 0.15rem 0.35rem; border-radius: 4px; }
     .ch-content pre { background: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; overflow-x: auto; margin-bottom: 1.6rem; border: 1px solid rgba(170,170,170,0.12); }
     .ch-content blockquote { margin: 1.6rem auto; padding-left: 1.2rem; border-left: 2px solid var(--accent-color); color: var(--text-muted); font-style: italic; max-width: 680px; }
     .ch-content .MathJax_Display { margin: 1.6rem auto; text-align: center; max-width: 680px; }
+    .ch-content .key-concept { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-left: 3px solid var(--accent-color); border-radius: 4px; max-width: 680px; }
+    .ch-content .key-concept strong { color: var(--accent-color); }
+    .ch-content .imp { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-left: 3px solid #e74c3c; border-radius: 4px; max-width: 680px; }
+    .ch-content .imp strong { color: #e74c3c; }
+    .ch-content table { width: 100%; border-collapse: collapse; margin: 2rem auto; max-width: 680px; font-size: 0.95rem; }
+    .ch-content th, .ch-content td { border: 1px solid rgba(170,170,170,0.2); padding: 0.7rem; text-align: left; }
+    .ch-content th { background: var(--secondary-bg); font-weight: 600; font-family: var(--font-sans); }
+    .ch-content .defn { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-radius: 4px; max-width: 680px; }
+    .ch-content .defn strong:first-child { color: var(--accent-color); }
+    .ch-content .fig { margin: 1.6rem auto; max-width: 680px; text-align: center; }
+    .ch-content .fig img { max-width: 100%; height: auto; border: 1px solid rgba(170,170,170,0.15); border-radius: 4px; }
+    .ch-content .fig figcaption { margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted); font-style: italic; font-family: var(--font-sans); }
+    .ch-content .matrix { display: flex; justify-content: center; margin: 1.5rem 0; font-family: monospace; font-size: 1rem; }
+    .ch-content .matrix table { margin: 0; max-width: 100%; width: auto; }
+    .ch-content .matrix td { padding: 0.4rem 0.6rem; text-align: center; min-width: 1.8rem; }
     footer { padding: 3rem 0; border-top: 1px solid rgba(170,170,170,0.1); margin-top: 3rem; }
     footer p { font-size: 0.78rem; color: var(--text-muted); }
-    .ch-placeholder { padding: 4rem 0; text-align: center; color: var(--text-muted); }
-    .ch-placeholder p { font-size: 1rem; }
     
     .doc-layout { display: flex; gap: 4rem; margin: 0 auto; max-width: 1080px; }
     .sidebar { flex: 0 0 220px; position: sticky; top: 6rem; align-self: start; max-height: calc(100vh - 8rem); overflow-y: auto; }
@@ -80,6 +95,7 @@
     <header class="ch-header">
       <span class="ch-num">3.2</span>
       <h1>Types of Autoencoders: Architecture and Code-Level Understanding</h1>
+      <p>CNN-based autoencoders, upsampling techniques, shallow vs. deep architectures, and when to use each.</p>
     </header>
 
     <div class="doc-layout">
@@ -98,9 +114,304 @@
 
       <div class="content-area">
         <div class="ch-content">
-          <div class="ch-placeholder">
-            <p>Content for this lecture is being prepared.</p>
+
+          <p>This session explores the major architectural variants of autoencoders — from CNN-based models for images to shallow and deep dense architectures for tabular data — and the code-level decisions that define their behaviour.</p>
+
+          <h2>1. CNN-Based Autoencoder</h2>
+
+          <h3>1.1 Motivation: From Tabular Data to Images</h3>
+
+          <p>In previous sessions, autoencoders were applied to tabular data where the encoder and decoder used multi-layer perceptrons (MLPs). When the input is an image, the spatial structure of the data demands a different architecture. A standard MLP flattens the image into a single vector, destroying the two-dimensional spatial relationships between pixels. To preserve and exploit this spatial information, the encoder and decoder must use convolutional neural networks (CNNs), yielding a CNN-based autoencoder.</p>
+
+          <p>Regardless of the input data type, every autoencoder retains the same three-component structure: an encoder, a latent space (compressed representation), and a decoder. The only change is in the layer types — from dense layers (MLP) to convolutional layers (CNN) when the input is an image.</p>
+
+          <h3>1.2 Encoder Architecture</h3>
+
+          <p>The encoder in a CNN-based autoencoder uses two key operations to progressively compress the spatial dimensions while extracting meaningful features:</p>
+
+          <ul>
+            <li><strong>Convolutional layer (Conv2D):</strong> Extracts local spatial features (edges, textures, shapes) using learnable kernels. Each kernel slides across the image and produces a feature map. The number of kernels determines the depth of the output volume.</li>
+            <li><strong>Pooling layer (MaxPooling2D):</strong> Reduces the spatial dimensions by taking the maximum value within each pooling window. In autoencoders, max pooling is preferred because it retains the most prominent features while downsampling. A pooling window of size $2 \times 2$ reduces each spatial dimension by half.</li>
+          </ul>
+
+          <p>The encoder alternates between convolutional and pooling layers, progressively reducing spatial dimensions while increasing the number of feature channels — producing a compressed representation that captures the most important spatial features.</p>
+
+          <figure class="fig">
+            <img src="lec02-fig-01-cnn-ae-arch.png" alt="CNN-based autoencoder architecture">
+            <figcaption>CNN-based autoencoder architecture: the encoder compresses the $28 \times 28 \times 1$ input through convolutional and pooling layers to a $7 \times 7 \times 256$ latent space; the decoder upsamples back to the original dimensions.</figcaption>
+          </figure>
+
+          <h3>1.3 Latent Space</h3>
+
+          <p>The latent space is the output of the last convolutional layer in the encoder. It serves as the compressed representation of the input image, containing the most essential features in a reduced spatial format. In the example architecture, the input $28 \times 28 \times 1$ is compressed down to $7 \times 7 \times 256$ — a spatial compression ratio of $4:1$ in each dimension, while channel depth expands from 1 to 256 to capture richer feature representations.</p>
+
+          <h3>1.4 Decoder Architecture</h3>
+
+          <p>The decoder reconstructs the original image from the compressed latent representation. Since the latent space has smaller spatial dimensions, the decoder needs to upsample the data back to the original size using:</p>
+
+          <ul>
+            <li><strong>UpSampling2D layer:</strong> Increases spatial dimensions (e.g., $7 \times 7 \to 14 \times 14$ with factor 2).</li>
+            <li><strong>Conv2D layer:</strong> Applied after upsampling to refine the expanded feature maps and progressively reduce channels.</li>
+            <li><strong>Final Conv2D layer:</strong> Reduces channel depth back to the original number (1 for grayscale) with a sigmoid activation.</li>
+          </ul>
+
+          <div class="key-concept">
+            <strong>Key idea.</strong> The decoder uses upsampling + convolution rather than transposed convolution alone. This avoids the checkerboard artifact problem and produces smoother, higher-quality reconstructions.
           </div>
+
+          <h3>1.5 Detailed Architecture: Encoder Path</h3>
+
+          <p>For a grayscale input of size $28 \times 28 \times 1$:</p>
+
+          <ul>
+            <li><strong>Conv2D:</strong> 64 kernels, $3 \times 3$, ReLU, same padding: $28 \times 28 \times 64$</li>
+            <li><strong>MaxPooling2D:</strong> $2 \times 2$: $14 \times 14 \times 64$</li>
+            <li><strong>Conv2D:</strong> 128 kernels, $3 \times 3$, ReLU, same padding: $14 \times 14 \times 128$</li>
+            <li><strong>MaxPooling2D:</strong> $2 \times 2$: $7 \times 7 \times 128$</li>
+            <li><strong>Conv2D:</strong> 256 kernels, $3 \times 3$, ReLU, same padding: $7 \times 7 \times 256$ (latent space)</li>
+          </ul>
+
+          <h3>1.6 Detailed Architecture: Decoder Path</h3>
+
+          <ul>
+            <li><strong>UpSampling2D:</strong> $2 \times 2$: $14 \times 14 \times 256$</li>
+            <li><strong>Conv2D:</strong> 128 kernels, $3 \times 3$, ReLU: $14 \times 14 \times 128$</li>
+            <li><strong>UpSampling2D:</strong> $2 \times 2$: $28 \times 28 \times 128$</li>
+            <li><strong>Conv2D:</strong> 64 kernels, $3 \times 3$, ReLU: $28 \times 28 \times 64$</li>
+            <li><strong>Conv2D:</strong> 1 kernel, $3 \times 3$, sigmoid: $28 \times 28 \times 1$ (reconstruction)</li>
+          </ul>
+
+          <div class="imp">
+            <strong>Important.</strong> The sigmoid activation at the output layer is chosen because pixel values are typically binary (0 or 1) or normalized to $[0, 1]$. For real-valued inputs that have been standardised (not normalized to $[0, 1]$), a linear activation should be used instead, with MSE as the loss.
+          </div>
+
+          <h2>2. Upsampling Techniques in the Decoder</h2>
+
+          <p>Since the decoder must reconstruct the original image dimensions from a compressed latent space, it needs to increase spatial resolution. Here we cover three upsampling methods.</p>
+
+          <h3>2.1 Nearest Neighbor Upsampling</h3>
+
+          <p>Nearest neighbor upsampling duplicates each input value to fill an expanded region determined by the upsampling factor $s$. For an input matrix $X$ of size $h \times w$, each element $x_{i,j}$ is replicated into an $s \times s$ block in the output:</p>
+
+          <div class="defn">
+            <strong>Nearest neighbor upsampling.</strong> $y_{i \cdot s + a, \; j \cdot s + b} = x_{i,j}$ for $a, b \in \{0, 1, \dots, s-1\}$.
+          </div>
+
+          <p><strong>Example.</strong> Input $X = \begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}$ with $s = 2$:</p>
+
+          <p>$$Y = \begin{bmatrix} 1 & 1 & 2 & 2 \\ 1 & 1 & 2 & 2 \\ 3 & 3 & 4 & 4 \\ 3 & 3 & 4 & 4 \end{bmatrix}$$</p>
+
+          <p>The key limitation is that this introduces no learnable parameters — the model simply copies values without learning how to intelligently expand the representation.</p>
+
+          <h3>2.2 Bed of Nails Upsampling (Zero Insertion)</h3>
+
+          <p>Bed of nails upsampling follows the same expansion pattern but fills all non-source positions with zeros instead of copying the original value. Like nearest neighbor, this has no learnable parameters, making it equally unsuitable as a standalone upsampling strategy.</p>
+
+          <h3>2.3 Transposed Convolution</h3>
+
+          <p>Transposed convolution (also called deconvolution) is an upsampling operation that does involve learnable parameters. The kernel weights are learned during training via backpropagation.</p>
+
+          <div class="defn">
+            <strong>Transposed convolution.</strong> Given input spatial size $i$ and kernel size $k$, output size is $o = i + k - 1$. Each input element is multiplied with the entire kernel, and the resulting matrices are overlaid and summed at their corresponding positions.
+          </div>
+
+          <p><strong>Worked example.</strong> Input $X = \begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}$ and kernel $K = \begin{bmatrix} 4 & 3 \\ 2 & 1 \end{bmatrix}$:</p>
+
+          <p>Each input element multiplies the full kernel, producing four $3 \times 3$ matrices positioned at the four corners. Summing them element-wise:</p>
+
+          <p>$$Y = \begin{bmatrix} 4 & 11 & 6 \\ 14 & 25 & 12 \\ 6 & 11 & 4 \end{bmatrix}$$</p>
+
+          <h3>2.4 Checkerboard Artifact Problem</h3>
+
+          <div class="imp">
+            <strong>Checkerboard artifact.</strong> Transposed convolution produces a systematic artifact because the kernel overlaps the input unevenly — some regions receive multiple kernel applications while others receive only one. The resulting output exhibits alternating bright and dark pixels in a grid-like pattern.
+          </div>
+
+          <p>When the kernel slides over certain input regions multiple times, corresponding output pixels accumulate larger values. Regions visited only once produce smaller values. This systematic unevenness manifests as the characteristic grid pattern in the reconstructed image.</p>
+
+          <h3>2.5 Solution: Upsampling + Convolution</h3>
+
+          <p>The recommended approach is to first perform upsampling (e.g., nearest neighbor) and then apply a standard convolution. This two-step process ensures the kernel is applied evenly across the entire expanded feature map:</p>
+
+          <ul>
+            <li><strong>Step 1:</strong> Upsampling spreads values uniformly, increasing spatial dimensions without introducing uneven overlap.</li>
+            <li><strong>Step 2:</strong> Convolution slides the kernel systematically across the uniformly expanded map, ensuring every region receives equal coverage.</li>
+          </ul>
+
+          <p>This combination avoids checkerboard artifacts while still incorporating learnable parameters through the convolution kernel weights.</p>
+
+          <h2>3. Latent Space Dimensionality as a Hyperparameter</h2>
+
+          <p>The dimensionality of the latent space is a hyperparameter that directly controls reconstruction quality:</p>
+
+          <ul>
+            <li><strong>Too small:</strong> Excessive compression discards important information. Reconstructions become blurry and lose fine details.</li>
+            <li><strong>Moderately large:</strong> A larger latent space preserves more information, producing higher-quality reconstructions with sharper details.</li>
+            <li><strong>Too large:</strong> Beyond a threshold, further increasing dimensionality yields diminishing returns — reconstruction quality deteriorates as the model memorises noise and irrelevant details.</li>
+          </ul>
+
+          <div class="key-concept">
+            <strong>Key idea.</strong> The optimal latent space dimensionality must be determined through fine-tuning and experimentation. Both extremes — too small (forcing useless compression) and too large (allowing memorisation) — degrade reconstruction quality.
+          </div>
+
+          <h2>4. Shallow Autoencoder</h2>
+
+          <h3>4.1 Architecture</h3>
+
+          <p>A shallow autoencoder contains exactly one hidden layer between the input and output layers. The hidden layer serves as both the encoder and the latent space representation.</p>
+
+          <figure class="fig">
+            <img src="lec02-fig-02-shallow-ae.png" alt="Shallow autoencoder architecture">
+            <figcaption>Shallow autoencoder architecture: input (784) $\to$ encoder (Dense 32, ReLU) $\to$ latent space (32) $\to$ decoder (Dense 784, Sigmoid) $\to$ output (784).</figcaption>
+          </figure>
+
+          <div class="defn">
+            <strong>Shallow autoencoder.</strong> A shallow autoencoder has exactly one hidden layer between the input and output. The encoder maps $x \in \mathbb{R}^{784}$ to latent code $h \in \mathbb{R}^{32}$, and the decoder maps $h$ back to reconstruction $\hat{x} \in \mathbb{R}^{784}$:
+            $$h = f(W_e x + b_e), \quad \hat{x} = g(W_d h + b_d)$$
+            where $f$ is the encoder activation (ReLU) and $g$ is the decoder activation.
+          </div>
+
+          <h3>4.2 Concrete Example</h3>
+
+          <p>For a flattened MNIST image ($28 \times 28 = 784$ pixels):</p>
+          <ul>
+            <li>Input layer: 784 neurons</li>
+            <li>Hidden layer (encoder + latent): 32 neurons, ReLU activation</li>
+            <li>Output layer (decoder): 784 neurons — sigmoid if input normalized to $[0, 1]$ (BCE loss), linear if real-valued (MSE loss)</li>
+          </ul>
+
+          <h2>5. Deep Autoencoder</h2>
+
+          <h3>5.1 Architecture</h3>
+
+          <p>A deep autoencoder contains multiple hidden layers in both the encoder and decoder. The encoder layers progressively decrease in dimensionality (compressing), while the decoder layers progressively increase (expanding), mirroring the encoder's structure.</p>
+
+          <figure class="fig">
+            <img src="lec02-fig-03-deep-ae.png" alt="Deep autoencoder architecture">
+            <figcaption>Deep autoencoder: input (784) $\to$ Dense 128 (ReLU) $\to$ Dense 64 (ReLU) $\to$ Dense 32 (ReLU) $\to$ latent (32) $\to$ Dense 64 (ReLU) $\to$ Dense 128 (ReLU) $\to$ Dense 784 (Sigmoid) $\to$ output (784).</figcaption>
+          </figure>
+
+          <div class="defn">
+            <strong>Deep autoencoder.</strong> A deep autoencoder has multiple hidden layers. The encoder progressively compresses: $784 \to 128 \to 64 \to 32$. The decoder progressively expands: $32 \to 64 \to 128 \to 784$.
+          </div>
+
+          <h3>5.2 Layer-by-Layer Details</h3>
+
+          <ul>
+            <li>Encoder H1: $784 \to$ Dense(128, ReLU) $\to 128$</li>
+            <li>Encoder H2: $128 \to$ Dense(64, ReLU) $\to 64$</li>
+            <li>Encoder H3: $64 \to$ Dense(32, ReLU) $\to$ latent $32$</li>
+            <li>Decoder H4: $32 \to$ Dense(64, ReLU) $\to 64$</li>
+            <li>Decoder H5: $64 \to$ Dense(128, ReLU) $\to 128$</li>
+            <li>Decoder output: $128 \to$ Dense(784, sigmoid/linear) $\to 784$</li>
+          </ul>
+
+          <h2>6. CNN vs Deep Autoencoder for Images</h2>
+
+          <h3>6.1 Why Deep Autoencoders Fail on Images</h3>
+
+          <p>A deep autoencoder requires flattening the input image into a single vector before passing it through dense layers. This flattening operation destroys the spatial information — the two-dimensional relationships between neighbouring pixels, local edge structures, and geometric patterns are all lost.</p>
+
+          <div class="imp">
+            <strong>Important.</strong> Flattening an image into a vector removes spatial relationships between pixels. Edges, contours, shapes, and textures — all features that depend on spatial proximity — cannot be properly captured or reconstructed.
+          </div>
+
+          <h3>6.2 Comparison</h3>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>CNN Autoencoder</th>
+                <th>Deep Autoencoder</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Input format</td>
+                <td>2D image ($28 \times 28 \times 1$)</td>
+                <td>Flattened vector (784)</td>
+              </tr>
+              <tr>
+                <td>Spatial information</td>
+                <td>Preserved via convolution</td>
+                <td>Lost after flattening</td>
+              </tr>
+              <tr>
+                <td>Feature extraction</td>
+                <td>Local edges, textures, shapes</td>
+                <td>Global pixel patterns only</td>
+              </tr>
+              <tr>
+                <td>Reconstruction quality</td>
+                <td>Sharp, preserves fine details</td>
+                <td>Blurry, loses contours and edges</td>
+              </tr>
+              <tr>
+                <td>Best use case</td>
+                <td>Image data</td>
+                <td>Tabular data</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="key-concept">
+            <strong>Key idea.</strong> When the input is an image, always use a CNN-based autoencoder. When the input is tabular data, use either a shallow or deep autoencoder with dense layers.
+          </div>
+
+          <h2>7. Summary of Autoencoder Types</h2>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>CNN-Based</th>
+                <th>Shallow</th>
+                <th>Deep</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Hidden layers</td>
+                <td>Multiple (conv + pool)</td>
+                <td>One</td>
+                <td>Multiple (dense)</td>
+              </tr>
+              <tr>
+                <td>Encoder type</td>
+                <td>Conv2D + MaxPool</td>
+                <td>Dense</td>
+                <td>Dense</td>
+              </tr>
+              <tr>
+                <td>Decoder type</td>
+                <td>UpSampling + Conv2D</td>
+                <td>Dense</td>
+                <td>Dense</td>
+              </tr>
+              <tr>
+                <td>Latent space</td>
+                <td>Feature maps (spatial)</td>
+                <td>Vector</td>
+                <td>Vector</td>
+              </tr>
+              <tr>
+                <td>Input data</td>
+                <td>Images</td>
+                <td>Tabular</td>
+                <td>Tabular</td>
+              </tr>
+              <tr>
+                <td>Spatial info</td>
+                <td>Preserved</td>
+                <td>N/A</td>
+                <td>Lost if image</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>The next session covers regularisation techniques for autoencoders — including L1/L2 regularisation, dropout, and the specialised regularisation methods for autoencoders.</p>
+
         </div>
       </div>
     </div>
