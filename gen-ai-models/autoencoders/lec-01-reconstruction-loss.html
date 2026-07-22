@@ -20,20 +20,30 @@
     .ch-header h1 { font-size: 2rem; font-weight: 600; font-family: var(--font-serif); color: var(--text-color); margin-bottom: 0.8rem; line-height: 1.25; }
     .ch-header p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
     .ch-content { font-family: var(--font-serif); font-size: 1.08rem; line-height: 1.75; color: var(--text-color); max-width: 680px; margin: 0 auto; }
-    .ch-content h2 { font-size: 1.6rem; font-weight: 600; margin: 3rem 0 1.2rem 0; color: var(--text-color); }
-    .ch-content h3 { font-size: 1.3rem; font-weight: 600; margin: 2rem 0 0.8rem 0; color: var(--text-color); }
+    .ch-content h2 { font-size: 1.6rem; font-weight: 600; margin: 3rem 0 1.2rem 0; color: var(--text-color); font-family: var(--font-sans); }
+    .ch-content h3 { font-size: 1.3rem; font-weight: 600; margin: 2rem 0 0.8rem 0; color: var(--text-color); font-family: var(--font-sans); }
+    .ch-content h4 { font-size: 1.1rem; font-weight: 600; margin: 1.5rem 0 0.6rem 0; color: var(--text-color); }
     .ch-content p { margin-bottom: 1.6rem; }
-    .ch-content ul { margin: 0 0 1.6rem 1.8rem; }
+    .ch-content ul, .ch-content ol { margin: 0 0 1.6rem 1.8rem; }
     .ch-content li { margin-bottom: 0.5rem; }
+    .ch-content strong { font-weight: 600; }
     .ch-content em { font-style: italic; font-family: var(--font-serif); }
     .ch-content code { font-family: monospace; font-size: 0.9rem; background: var(--secondary-bg); padding: 0.15rem 0.35rem; border-radius: 4px; }
     .ch-content pre { background: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; overflow-x: auto; margin-bottom: 1.6rem; border: 1px solid rgba(170,170,170,0.12); }
     .ch-content blockquote { margin: 1.6rem auto; padding-left: 1.2rem; border-left: 2px solid var(--accent-color); color: var(--text-muted); font-style: italic; max-width: 680px; }
     .ch-content .MathJax_Display { margin: 1.6rem auto; text-align: center; max-width: 680px; }
+    .ch-content .key-concept { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-left: 3px solid var(--accent-color); border-radius: 4px; max-width: 680px; }
+    .ch-content .key-concept strong { color: var(--accent-color); }
+    .ch-content table { width: 100%; border-collapse: collapse; margin: 2rem auto; max-width: 680px; font-size: 0.95rem; }
+    .ch-content th, .ch-content td { border: 1px solid rgba(170,170,170,0.2); padding: 0.7rem; text-align: left; }
+    .ch-content th { background: var(--secondary-bg); font-weight: 600; font-family: var(--font-sans); }
+    .ch-content .defn { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-radius: 4px; max-width: 680px; }
+    .ch-content .defn strong:first-child { color: var(--accent-color); }
+    .ch-content .fig { margin: 1.6rem auto; max-width: 680px; text-align: center; }
+    .ch-content .fig img { max-width: 100%; height: auto; border: 1px solid rgba(170,170,170,0.15); border-radius: 4px; }
+    .ch-content .fig figcaption { margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted); font-style: italic; font-family: var(--font-sans); }
     footer { padding: 3rem 0; border-top: 1px solid rgba(170,170,170,0.1); margin-top: 3rem; }
     footer p { font-size: 0.78rem; color: var(--text-muted); }
-    .ch-placeholder { padding: 4rem 0; text-align: center; color: var(--text-muted); }
-    .ch-placeholder p { font-size: 1rem; }
     
     .doc-layout { display: flex; gap: 4rem; margin: 0 auto; max-width: 1080px; }
     .sidebar { flex: 0 0 220px; position: sticky; top: 6rem; align-self: start; max-height: calc(100vh - 8rem); overflow-y: auto; }
@@ -80,7 +90,7 @@
     <header class="ch-header">
       <span class="ch-num">3.1</span>
       <h1>Training Objective: Reconstruction Loss</h1>
-      <p>MSE, Binary Cross-Entropy, and the objective that drives representation learning.</p>
+      <p>Mathematical formulation of the autoencoder, tied weights, activation functions, MSE and BCE loss, and regularisation.</p>
     </header>
 
     <div class="doc-layout">
@@ -99,9 +109,319 @@
 
       <div class="content-area">
         <div class="ch-content">
-          <div class="ch-placeholder">
-            <p>Content for this lecture is being prepared.</p>
+
+          <p>This session derives the mathematical formulation of autoencoders and the reconstruction loss functions used during training. Starting from the encoder–decoder architecture, we formalise the weight matrices, derive the latent representation $h$ and reconstruction $\hat{X}$ algebraically, introduce the tied weight assumption, specify activation functions based on data type, and derive two loss functions — Mean Squared Error (MSE) for continuous features and Binary Cross-Entropy (BCE) for binary features.</p>
+
+          <h2>1. Mathematical Formulation</h2>
+
+          <h3>1.1 Single-Hidden-Layer Architecture</h3>
+
+          <p>For pedagogical clarity we consider a simple autoencoder with one hidden layer. The input $X$ passes through a single encoder hidden layer; the output of that layer is the latent representation $h$. This $h$ is then passed to a single decoder layer that produces the reconstruction $\hat{X}$.</p>
+
+          <h3>1.2 Encoder: $h = g(X W_E)$</h3>
+
+          <p>The latent representation $h$ is computed as:</p>
+
+          <p>$$h = g\!\left(X W_E\right)$$</p>
+
+          <p>where $g$ is the encoder activation function, $X$ is the input matrix, and $W_E$ is the encoder weight matrix. Bias terms are omitted for clarity but can be included in practice.</p>
+
+          <p><strong>Dimension analysis (example).</strong> Suppose we have $n = 1000$ samples with $d = 6$ features each, so $X$ has shape $n \times d = 1000 \times 6$. The latent dimension is $k = 3$.</p>
+
+          <ul>
+            <li>$X$ dimensions: $1000 \times 6$</li>
+            <li>$W_E$ dimensions: $6 \times 3$ (encoder maps 6 features to 3 latent features)</li>
+            <li>$h$ dimensions: $1000 \times 3$ (same number of samples, reduced feature count)</li>
+          </ul>
+
+          <p>The encoder weight matrix $W_E$ must have dimensions $d \times k$ to transform $X \in \mathbb{R}^{n \times d}$ into $h \in \mathbb{R}^{n \times k}$. This dimensional constraint is fundamental: $k < d$ ensures the latent code is a compressed representation that cannot trivially copy the input.</p>
+
+          <figure class="fig">
+            <img src="lec01-fig-01-simple-ae-network.png" alt="Simple autoencoder network">
+            <figcaption>Simplified autoencoder network: input $X$ (6 features) is compressed through the encoder into a latent representation $h$ (3 features), then reconstructed by the decoder to produce $\hat{X}$ (6 features).</figcaption>
+          </figure>
+
+          <h3>1.3 Decoder: $\hat{X} = f(h W_D)$</h3>
+
+          <p>The reconstruction $\hat{X}$ is computed as:</p>
+
+          <p>$$\hat{X} = f\!\left(h W_D\right)$$</p>
+
+          <p>where $f$ is the decoder activation function and $W_D$ is the decoder weight matrix.</p>
+
+          <p><strong>Dimension analysis:</strong></p>
+          <ul>
+            <li>$h$ dimensions: $1000 \times 3$</li>
+            <li>$W_D$ dimensions: $3 \times 6$ (decoder maps 3 latent features back to 6 features)</li>
+            <li>$\hat{X}$ dimensions: $1000 \times 6$ (same number of samples, original feature count)</li>
+          </ul>
+
+          <p>The decoder weight matrix $W_D$ has dimensions $k \times d$, reversing the encoder's compression. The reconstruction $\hat{X}$ should approximate $X$ as closely as possible: $\hat{X} \approx X$.</p>
+
+          <figure class="fig">
+            <img src="lec01-fig-02-end-to-end-ae.png" alt="End-to-end autoencoder with data tables">
+            <figcaption>End-to-end autoencoder architecture with data tables: encoder $f$ maps 10-dimensional input $X$ to a 2-dimensional latent representation $Z$; decoder $g$ reconstructs $X'$ from $Z$. The bottleneck forces the network to learn a compressed code.</figcaption>
+          </figure>
+
+          <h2>2. Tied Weight Assumption</h2>
+
+          <h3>2.1 Generic Setting vs. Tied Weights</h3>
+
+          <p>In the generic setting, the model learns two independent weight matrices: $W_E$ for encoding and $W_D$ for decoding. This requires training twice as many parameters. However, a key observation simplifies the architecture: $W_E$ has shape $d \times k$ while $W_D$ has shape $k \times d$ — these shapes are transposes of each other.</p>
+
+          <div class="defn">
+            <strong>Tied weight assumption.</strong> Instead of learning two independent weight matrices, the model learns only <em>one</em> weight matrix $W$ for the encoder. The decoder uses the transpose of that same weight: $W_E = W$, $W_D = W^T$.
           </div>
+
+          <p>This reduces the number of trainable parameters by approximately half, lowering model complexity and training time while still preserving the encoding–decoding capability.</p>
+
+          <p><strong>Why tied weights work.</strong> The encoder compresses $X$ into $h$ via $h = g(XW)$, and the decoder reconstructs via $\hat{X} = f(h W^T)$. The transpose $W^T$ naturally has the correct shape $(k \times d)$ for the decoding operation. The values within the matrix are learned during training, and the same learned values are reused (transposed) for reconstruction. This is not an approximation — it is a valid architectural constraint that forces symmetric encoding and decoding behaviour.</p>
+
+          <h3>2.2 Full Formulation Under Tied Weights</h3>
+
+          <p>Under the tied weight assumption, the complete autoencoder mapping becomes:</p>
+
+          <p>$$h = g(XW), \qquad \hat{X} = f(h W^T) = f\!\left(g(XW) \cdot W^T\right)$$</p>
+
+          <p>The reconstruction $\hat{X}$ is a function of the input $X$, the single weight matrix $W$, and the two activation functions $g$ (encoder) and $f$ (decoder). Training now optimises only $W$ instead of both $W_E$ and $W_D$ independently.</p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>Generic Setting</th>
+                <th>Tied Weight Setting</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Weight matrices</td>
+                <td>$W_E$ and $W_D$ learned independently</td>
+                <td>Only $W$ learned; $W_D = W^T$</td>
+              </tr>
+              <tr>
+                <td>Number of parameters</td>
+                <td>$\approx 2 \times d \times k$</td>
+                <td>$\approx d \times k$</td>
+              </tr>
+              <tr>
+                <td>Training complexity</td>
+                <td>Higher (two matrices)</td>
+                <td>Lower (one matrix)</td>
+              </tr>
+              <tr>
+                <td>Shape relationship</td>
+                <td>$W_E : d \times k$ ; $W_D : k \times d$</td>
+                <td>$W : d \times k$ ; $W^T : k \times d$</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2>3. Activation Functions</h2>
+
+          <p>The choice of activation functions depends on the data type being reconstructed.</p>
+
+          <h3>3.1 Binary Features: Sigmoid Output</h3>
+
+          <p>When the input features are binary ($x_i \in \{0, 1\}$), the reconstruction must produce values in $[0, 1]$ so they can be interpreted as probabilities.</p>
+
+          <ul>
+            <li><strong>Encoder activation $g$:</strong> ReLU or sigmoid — nonlinear activations that allow the encoder to learn non-trivial compressed representations.</li>
+            <li><strong>Decoder activation $f$:</strong> Sigmoid, defined as $\sigma(a) = 1 / (1 + e^{-a})$, which maps any real-valued input to $(0, 1)$.</li>
+          </ul>
+
+          <p>The decoder output $\hat{X} = \sigma(h W^T)$ produces probabilities that approximate the original binary features. Values above 0.5 are interpreted as 1, values below 0.5 as 0.</p>
+
+          <h3>3.2 Continuous Features: Linear Output</h3>
+
+          <p>When the input features are real-valued (continuous), e.g. $x_i = 2.5, 7.3, 6.9, 11.4$, the reconstruction must also produce continuous values.</p>
+
+          <ul>
+            <li><strong>Encoder activation $g$:</strong> ReLU, sigmoid, or tanh — any nonlinear activation that enables meaningful compression.</li>
+            <li><strong>Decoder activation $f$:</strong> Linear, defined as $f(a) = a$ (identity function).</li>
+          </ul>
+
+          <p>A linear activation allows the decoder to produce any real value, essential for reconstructing continuous data. If sigmoid were used at the output, the reconstruction would be squashed into $[0, 1]$, which cannot approximate arbitrary real-valued features.</p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Component</th>
+                <th>Binary Features</th>
+                <th>Continuous Features</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Encoder $g$</td>
+                <td>ReLU or sigmoid</td>
+                <td>ReLU, sigmoid, or tanh</td>
+              </tr>
+              <tr>
+                <td>Decoder $f$</td>
+                <td>Sigmoid: $\sigma(a) = \frac{1}{1 + e^{-a}}$</td>
+                <td>Linear: $f(a) = a$</td>
+              </tr>
+              <tr>
+                <td>Output range</td>
+                <td>$(0, 1)$ — probabilities</td>
+                <td>$\mathbb{R}$ — unrestricted</td>
+              </tr>
+              <tr>
+                <td>Loss function</td>
+                <td>Binary Cross-Entropy</td>
+                <td>Mean Squared Error</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2>4. Reconstruction Loss: Mean Squared Error (MSE)</h2>
+
+          <h3>4.1 Per-Sample Error</h3>
+
+          <p>For real-valued (continuous) features, the reconstruction loss uses <strong>Mean Squared Error</strong>. The ideal requirement is $\hat{X}_i = X_i$ for every sample, but in practice we aim for $\hat{X}_i \approx X_i$. The per-sample reconstruction error is:</p>
+
+          <p>$$\ell_i = \|X_i - \hat{X}_i\|^2 = \sum_{j=1}^{d} (x_{ij} - \hat{x}_{ij})^2$$</p>
+
+          <p>where $X_i = (x_{i1}, x_{i2}, \dots, x_{id})$ is the original input for sample $i$, $\hat{X}_i = (\hat{x}_{i1}, \hat{x}_{i2}, \dots, \hat{x}_{id})$ is its reconstruction, and $d$ is the number of features. Squaring the difference makes the error always positive (avoiding sign cancellation) and penalises larger deviations more heavily.</p>
+
+          <h3>4.2 Average Loss Over All Samples</h3>
+
+          <p>The total reconstruction loss over $n$ training samples is the average of per-sample errors:</p>
+
+          <p>$$\mathcal{L}_{\text{MSE}} = \frac{1}{n} \sum_{i=1}^{n} \|X_i - \hat{X}_i\|^2$$</p>
+
+          <p>Minimising $\mathcal{L}_{\text{MSE}}$ drives the autoencoder to produce reconstructions as close to the original inputs as possible, on average across the entire training set.</p>
+
+          <h3>4.3 Expressing MSE in Terms of $W$</h3>
+
+          <p>Substituting the tied-weight formulation:</p>
+
+          <p>$$\hat{X} = f\!\left(g(XW) \cdot W^T\right)$$</p>
+
+          <p>$$\mathcal{L}_{\text{MSE}} = \frac{1}{n} \sum_{i=1}^{n} \left\| X_i - f\!\left(g(X_i W) \cdot W^T\right) \right\|^2$$</p>
+
+          <p>The loss is expressed entirely in terms of the single weight matrix $W$ and the activation functions $f$ and $g$. The training objective is to find the $W$ that minimises this expression.</p>
+
+          <h2>5. Regularisation</h2>
+
+          <h3>5.1 Why Regularisation Is Needed</h3>
+
+          <p>Minimising $\mathcal{L}_{\text{MSE}}$ alone may yield a weight matrix $W$ with arbitrarily large or small entries. Large weights can reduce reconstruction error (by scaling the latent code), but they do not necessarily produce a meaningful or generalisable representation. Without constraint, the learned $W$ may overfit or produce representations that lack useful structure.</p>
+
+          <p>To ensure the weight matrix entries remain small, a regularisation term is added:</p>
+
+          <p>$$\mathcal{L}_{\text{reg}} = \mathcal{L}_{\text{MSE}} + \lambda \|W\|^2$$</p>
+
+          <p>where $\lambda$ is a small positive hyperparameter (e.g., $\lambda = 0.01$) and $\|W\|^2 = \sum_{i,j} w_{ij}^2$ is the squared Frobenius norm of $W$.</p>
+
+          <div class="key-concept">
+            <strong>Key idea.</strong> The penalty $\lambda \|W\|^2$ forces the overall magnitude of $W$ to shrink during optimisation, discouraging the optimiser from finding solutions with large weight values and promoting smoother, more generalisable representations.
+          </div>
+
+          <h3>5.2 Optimised Weight Matrix $W^*$</h3>
+
+          <p>After training completes, the optimisation process yields the optimised weight matrix $W^*$:</p>
+
+          <p>$$W^* = \arg\min_{W} \left[ \mathcal{L}_{\text{MSE}} + \lambda \|W\|^2 \right]$$</p>
+
+          <p>This $W^*$ simultaneously minimises reconstruction error and keeps weight magnitudes small. The consequences:</p>
+
+          <ul>
+            <li><strong>Optimised latent code:</strong> $h^* = g(X W^*)$ captures the most important features of $X$.</li>
+            <li><strong>Optimised reconstruction:</strong> $\hat{X}^* = f(h^* W^{*T}) = f\!\left(g(X W^*) \cdot W^{*T}\right)$ is a close approximation of $X$.</li>
+          </ul>
+
+          <h2>6. Reconstruction Loss: Binary Cross-Entropy (BCE)</h2>
+
+          <h3>6.1 Per-Sample BCE Loss</h3>
+
+          <p>When the input features are binary ($x_{ij} \in \{0, 1\}$), Mean Squared Error is inappropriate. Instead, <strong>Binary Cross-Entropy</strong> loss is used:</p>
+
+          <p>$$\ell_i = -\sum_{j=1}^{d} \big[ x_{ij} \log(\hat{x}_{ij}) + (1 - x_{ij}) \log(1 - \hat{x}_{ij}) \big]$$</p>
+
+          <p>where $x_{ij}$ is the original binary feature (0 or 1) and $\hat{x}_{ij}$ is the predicted probability (output of sigmoid, in $(0, 1)$).</p>
+
+          <h3>6.2 Why the Negative Sign</h3>
+
+          <p>The negative sign in BCE is necessary because the inner expression is always negative. Since $\hat{x}_{ij} \in (0, 1)$ (sigmoid output), $\log(\hat{x}_{ij}) < 0$ and $\log(1 - \hat{x}_{ij}) < 0$. Multiplying by $-1$ converts this into a positive loss, consistent with the optimisation convention that loss should be minimised toward zero.</p>
+
+          <h3>6.3 Average BCE Over All Samples</h3>
+
+          <p>The total BCE loss over $n$ training samples:</p>
+
+          <p>$$\mathcal{L}_{\text{BCE}} = -\frac{1}{n} \sum_{i=1}^{n} \sum_{j=1}^{d} \big[ x_{ij} \log(\hat{x}_{ij}) + (1 - x_{ij}) \log(1 - \hat{x}_{ij}) \big]$$</p>
+
+          <p>As with MSE, the regularisation term $\lambda \|W\|^2$ can be added to constrain weight magnitudes:</p>
+
+          <p>$$\mathcal{L}_{\text{BCE-reg}} = \mathcal{L}_{\text{BCE}} + \lambda \|W\|^2$$</p>
+
+          <p>The training objective is to find $W^* = \arg\min_W \mathcal{L}_{\text{BCE-reg}}$.</p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>MSE (Continuous)</th>
+                <th>BCE (Binary)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Feature type</td>
+                <td>Real-valued ($x \in \mathbb{R}$)</td>
+                <td>Binary ($x \in \{0, 1\}$)</td>
+              </tr>
+              <tr>
+                <td>Per-sample loss</td>
+                <td>$\|X_i - \hat{X}_i\|^2$</td>
+                <td>$-\sum_j [x_{ij}\log\hat{x}_{ij} + (1 - x_{ij})\log(1 - \hat{x}_{ij})]$</td>
+              </tr>
+              <tr>
+                <td>Output activation</td>
+                <td>Linear: $f(a) = a$</td>
+                <td>Sigmoid: $\sigma(a) = 1/(1 + e^{-a})$</td>
+              </tr>
+              <tr>
+                <td>Ensures positivity</td>
+                <td>Squaring</td>
+                <td>Negative sign (log of probability is negative)</td>
+              </tr>
+              <tr>
+                <td>Regularised objective</td>
+                <td>$\mathcal{L}_{\text{MSE}} + \lambda \|W\|^2$</td>
+                <td>$\mathcal{L}_{\text{BCE}} + \lambda \|W\|^2$</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2>7. Architecture Choice: MLP vs. CNN</h2>
+
+          <p>The autoencoder architecture depends on the input data type:</p>
+
+          <ul>
+            <li><strong>Tabulated (structured) data:</strong> Encoder and decoder use <strong>MLP</strong> — fully connected (dense) layers. The input is a flat feature vector $X \in \mathbb{R}^d$, and the network compresses and reconstructs through successive dense layers with nonlinear activations.</li>
+            <li><strong>Image data:</strong> Encoder and decoder use <strong>CNN</strong> layers. The encoder applies convolutional layers to extract spatial features, producing a compressed feature map. The decoder uses transposed convolution (upsampling) layers to reconstruct the image from the latent representation.</li>
+          </ul>
+
+          <div class="key-concept">
+            <strong>Summary.</strong> Tabulated data $\to$ MLP-based autoencoder (dense layers, flat vectors). Image data $\to$ CNN-based autoencoder (convolutional encoder, transposed-convolution decoder).
+          </div>
+
+          <h2>8. Summary of Key Concepts</h2>
+
+          <ul>
+            <li><strong>Encoder:</strong> $h = g(XW)$ — compresses input into latent code.</li>
+            <li><strong>Decoder:</strong> $\hat{X} = f(h W^T)$ — reconstructs input from latent code (tied weights).</li>
+            <li><strong>Weight dimensions:</strong> $W \in \mathbb{R}^{d \times k}$; $W^T \in \mathbb{R}^{k \times d}$.</li>
+            <li><strong>Tied weight assumption:</strong> $W_E = W$, $W_D = W^T$ — halves trainable parameters.</li>
+            <li><strong>Binary features:</strong> Sigmoid at output; BCE loss; $\hat{x}_{ij} \in (0, 1)$.</li>
+            <li><strong>Continuous features:</strong> Linear at output; MSE loss; $\hat{x}_{ij} \in \mathbb{R}$.</li>
+            <li><strong>Regularisation:</strong> $\lambda \|W\|^2$ ensures small weight values, prevents overfitting.</li>
+            <li><strong>Optimised weight:</strong> $W^* = \arg\min_W [\mathcal{L} + \lambda \|W\|^2]$; yields $h^*$ and $\hat{X}^* \approx X$.</li>
+            <li><strong>MLP</strong> for tabulated data; <strong>CNN</strong> for image data.</li>
+          </ul>
+
         </div>
       </div>
     </div>
