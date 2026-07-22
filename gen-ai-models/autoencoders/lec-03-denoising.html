@@ -20,20 +20,32 @@
     .ch-header h1 { font-size: 2rem; font-weight: 600; font-family: var(--font-serif); color: var(--text-color); margin-bottom: 0.8rem; line-height: 1.25; }
     .ch-header p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
     .ch-content { font-family: var(--font-serif); font-size: 1.08rem; line-height: 1.75; color: var(--text-color); max-width: 680px; margin: 0 auto; }
-    .ch-content h2 { font-size: 1.6rem; font-weight: 600; margin: 3rem 0 1.2rem 0; color: var(--text-color); }
-    .ch-content h3 { font-size: 1.3rem; font-weight: 600; margin: 2rem 0 0.8rem 0; color: var(--text-color); }
+    .ch-content h2 { font-size: 1.6rem; font-weight: 600; margin: 3rem 0 1.2rem 0; color: var(--text-color); font-family: var(--font-sans); }
+    .ch-content h3 { font-size: 1.3rem; font-weight: 600; margin: 2rem 0 0.8rem 0; color: var(--text-color); font-family: var(--font-sans); }
+    .ch-content h4 { font-size: 1.1rem; font-weight: 600; margin: 1.5rem 0 0.6rem 0; color: var(--text-color); }
     .ch-content p { margin-bottom: 1.6rem; }
-    .ch-content ul { margin: 0 0 1.6rem 1.8rem; }
+    .ch-content ul, .ch-content ol { margin: 0 0 1.6rem 1.8rem; }
     .ch-content li { margin-bottom: 0.5rem; }
+    .ch-content strong { font-weight: 600; }
     .ch-content em { font-style: italic; font-family: var(--font-serif); }
     .ch-content code { font-family: monospace; font-size: 0.9rem; background: var(--secondary-bg); padding: 0.15rem 0.35rem; border-radius: 4px; }
     .ch-content pre { background: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; overflow-x: auto; margin-bottom: 1.6rem; border: 1px solid rgba(170,170,170,0.12); }
     .ch-content blockquote { margin: 1.6rem auto; padding-left: 1.2rem; border-left: 2px solid var(--accent-color); color: var(--text-muted); font-style: italic; max-width: 680px; }
     .ch-content .MathJax_Display { margin: 1.6rem auto; text-align: center; max-width: 680px; }
+    .ch-content .key-concept { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-left: 3px solid var(--accent-color); border-radius: 4px; max-width: 680px; }
+    .ch-content .key-concept strong { color: var(--accent-color); }
+    .ch-content .imp { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-left: 3px solid #e74c3c; border-radius: 4px; max-width: 680px; }
+    .ch-content .imp strong { color: #e74c3c; }
+    .ch-content table { width: 100%; border-collapse: collapse; margin: 2rem auto; max-width: 680px; font-size: 0.95rem; }
+    .ch-content th, .ch-content td { border: 1px solid rgba(170,170,170,0.2); padding: 0.7rem; text-align: left; }
+    .ch-content th { background: var(--secondary-bg); font-weight: 600; font-family: var(--font-sans); }
+    .ch-content .defn { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-radius: 4px; max-width: 680px; }
+    .ch-content .defn strong:first-child { color: var(--accent-color); }
+    .ch-content .fig { margin: 1.6rem auto; max-width: 680px; text-align: center; }
+    .ch-content .fig img { max-width: 100%; height: auto; border: 1px solid rgba(170,170,170,0.15); border-radius: 4px; }
+    .ch-content .fig figcaption { margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted); font-style: italic; font-family: var(--font-sans); }
     footer { padding: 3rem 0; border-top: 1px solid rgba(170,170,170,0.1); margin-top: 3rem; }
     footer p { font-size: 0.78rem; color: var(--text-muted); }
-    .ch-placeholder { padding: 4rem 0; text-align: center; color: var(--text-muted); }
-    .ch-placeholder p { font-size: 1rem; }
     
     .doc-layout { display: flex; gap: 4rem; margin: 0 auto; max-width: 1080px; }
     .sidebar { flex: 0 0 220px; position: sticky; top: 6rem; align-self: start; max-height: calc(100vh - 8rem); overflow-y: auto; }
@@ -80,6 +92,7 @@
     <header class="ch-header">
       <span class="ch-num">3.3</span>
       <h1>Denoising Autoencoders</h1>
+      <p>Input corruption, noise models, neighborhood dependency, and how denoising provides regularisation.</p>
     </header>
 
     <div class="doc-layout">
@@ -98,9 +111,256 @@
 
       <div class="content-area">
         <div class="ch-content">
-          <div class="ch-placeholder">
-            <p>Content for this lecture is being prepared.</p>
+
+          <p>This session introduces the denoising autoencoder — the first of three regularised variants of autoencoders. We cover why regularisation is needed, how input corruption forces the model to learn meaningful features, the mathematics of different noise types, and the neighbourhood dependency that makes reconstruction possible.</p>
+
+          <h2>1. Why Regularisation Is Needed</h2>
+
+          <h3>1.1 The Overfitting Problem in Overcomplete Architectures</h3>
+
+          <p>In a standard autoencoder, the encoder maps input $x$ through a weight matrix $W$ and bias $b$ to a hidden representation $h$, followed by an activation function $g$:</p>
+
+          <p>$$h = g(Wx + b)$$</p>
+
+          <p>The decoder then reconstructs the input from $h$:</p>
+
+          <p>$$\hat{x} = g'(W' h + b')$$</p>
+
+          <div class="imp">
+            <strong>Identity mapping in overcomplete architectures.</strong> When the latent space dimensionality is larger than the input dimensionality, the model can learn an identity mapping — directly copying the input to the hidden layer and from the hidden layer to the output without learning any meaningful features. This results in no useful learning, overfitting, and poor feature extraction.
           </div>
+
+          <h3>1.2 The Need for Regularised Variants</h3>
+
+          <p>Regularisation restricts the freedom of the network's parameters, preventing trivial identity mappings and encouraging meaningful, generalisable features. Three important regularised variants exist:</p>
+
+          <ol>
+            <li><strong>Denoising autoencoder</strong> (this session)</li>
+            <li><strong>Sparse autoencoder</strong> (next session)</li>
+            <li><strong>Contractive autoencoder</strong></li>
+          </ol>
+
+          <p>The core principle is the same across all three: restrict the model's ability to trivially copy the input, forcing it to learn robust, generalisable representations.</p>
+
+          <h2>2. Architecture and Working Mechanism</h2>
+
+          <h3>2.1 Core Principle</h3>
+
+          <p>The denoising autoencoder (DAE) prevents overfitting by <strong>intentionally corrupting the input</strong> before passing it to the encoder, while requiring the decoder to reconstruct the <strong>original clean input</strong>. This forces the model to learn meaningful features rather than simply copying.</p>
+
+          <figure class="fig">
+            <img src="lec03-fig-01-dae-architecture.png" alt="Denoising autoencoder architecture">
+            <figcaption>Denoising autoencoder: clean input $x$ is corrupted to $\tilde{x}$ via a corruption function, then encoded to $h$ and decoded to $\hat{x}$. The reconstruction loss $L$ is computed between $\hat{x}$ and the original clean $x$.</figcaption>
+          </figure>
+
+          <h3>2.2 Step-by-Step Working Mechanism</h3>
+
+          <p><strong>Step 1 — Corrupt the input:</strong> Take the original clean input $x$ and randomly corrupt it using a probability-based rule, producing $\tilde{x}$. The corruption can be Gaussian noise, masking noise, salt-and-pepper noise, or other methods.</p>
+
+          <p><strong>Step 2 — Pass corrupted input to encoder:</strong> The corrupted input $\tilde{x}$ is fed to the encoder:</p>
+
+          <p>$$h = g(W \tilde{x} + b)$$</p>
+
+          <p><strong>Step 3 — Pass latent representation to decoder:</strong> The decoder reconstructs from $h$:</p>
+
+          <p>$$\hat{x} = g'(W' h + b')$$</p>
+
+          <p>Intermediate decoder layers use ReLU; the final layer uses an activation matching the input data type (sigmoid for $[0, 1]$-normalised data, linear for real-valued).</p>
+
+          <p><strong>Step 4 — Compute loss against original clean input:</strong> The reconstruction loss is computed between $\hat{x}$ and $x$ (the original clean input), <em>not</em> between $\hat{x}$ and $\tilde{x}$:</p>
+
+          <p>$$\mathcal{L} = \text{Loss}(x, \hat{x})$$</p>
+
+          <div class="key-concept">
+            <strong>Key idea.</strong> The reconstruction target is the <em>original clean input</em> $x$, not the corrupted version $\tilde{x}$. Because the model receives corrupted input but must produce clean output, it cannot relax by simply copying. It must actively learn to recover missing or corrupted information, forcing the extraction of meaningful features.
+          </div>
+
+          <h2>3. Input Corruption Methods</h2>
+
+          <h3>3.1 Gaussian Noise</h3>
+
+          <p>Gaussian noise adds random noise drawn from a normal distribution to each input feature:</p>
+
+          <div class="defn">
+            <strong>Gaussian noise corruption.</strong> For each input feature $x_i$, the corrupted value is $\tilde{x}_i = x_i + \varepsilon_i$, where $\varepsilon_i \sim \mathcal{N}(0, \sigma^2)$.
+          </div>
+
+          <p>The variance $\sigma^2$ controls the corruption intensity. Small $\sigma^2$ produces subtle perturbations; large $\sigma^2$ produces significant distortions. <strong>Example:</strong> Original $x = [0.50, 0.80, 0.20, 0.90]$ becomes $\tilde{x} = [0.51, 0.75, 0.23, 0.82]$. Each value is perturbed, but none are completely lost — this makes the model tolerate small, pervasive disturbances.</p>
+
+          <h3>3.2 Masking Noise</h3>
+
+          <p>Masking noise randomly sets individual input features to zero with a fixed probability $q$:</p>
+
+          <div class="defn">
+            <strong>Masking noise corruption.</strong> For each input feature $x_i$: $\tilde{x}_i = 0$ with probability $q$, and $\tilde{x}_i = x_i$ with probability $1 - q$.
+          </div>
+
+          <p>The parameter $q$ controls the fraction of dropped features. This is conceptually similar to dropout, but applied to the <em>input layer</em> rather than hidden layers. <strong>Example:</strong> Original $x = [0.80, 0.30, 0.90, 0.50, 0.20]$ with $q = 0.4$ might yield $\tilde{x} = [0.80, 0, 0.90, 0, 0.20]$.</p>
+
+          <h3>3.3 Salt and Pepper Noise</h3>
+
+          <p>Salt and pepper noise replaces random pixel values with extreme intensity values — either the minimum (pepper/black) or maximum (salt/white) value in the data range:</p>
+
+          <div class="defn">
+            <strong>Salt and pepper noise.</strong> For a pixel at position $(i, j)$: $\tilde{x}_{i,j} = x_{\min}$ with some probability, $x_{\max}$ with some probability, or unchanged otherwise.
+          </div>
+
+          <p>In a binary image (values 0 and 1), some 1s become 0 (pepper) and some 0s become 1 (salt). In a grayscale image (values 0–255), a pixel value of 128 might become 0, and a pixel value of 130 might become 255. The corrupted image exhibits scattered white and black dots resembling salt and pepper grains.</p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>Gaussian</th>
+                <th>Masking</th>
+                <th>Salt & Pepper</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Effect</td>
+                <td>Shifts all values slightly</td>
+                <td>Sets random features to zero</td>
+                <td>Replaces with extreme values</td>
+              </tr>
+              <tr>
+                <td>Distribution</td>
+                <td>$\mathcal{N}(0, \sigma^2)$</td>
+                <td>Bernoulli$(q)$</td>
+                <td>Random extreme values</td>
+              </tr>
+              <tr>
+                <td>Data loss</td>
+                <td>None (all perturbed)</td>
+                <td>Partial (some dropped)</td>
+                <td>Partial (some replaced)</td>
+              </tr>
+              <tr>
+                <td>Visual effect</td>
+                <td>Subtle blur</td>
+                <td>Missing patches</td>
+                <td>White/black dots</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2>4. Neighbouring Pixel Dependency</h2>
+
+          <h3>4.1 The Missing Value Problem</h3>
+
+          <p>When the input is corrupted, some pixel values are lost or altered. To reconstruct the original clean image, the model must recover these missing values. The fundamental question is: <em>how does the model know what value should fill each missing position?</em></p>
+
+          <p>The answer lies in the correlation between neighbouring pixels. In any natural image, pixels are not independent — they are highly correlated with their spatial neighbours. Regions belonging to the same object (a cat's tail, a digit's stroke, a person's face) have similar pixel intensities. This correlation means that if a pixel is missing, its value can be inferred from the surrounding pixels.</p>
+
+          <div class="key-concept">
+            <strong>Key idea.</strong> In an image, the value of pixel $x_{i,j}$ at position $(i, j)$ is not independent — it is highly correlated with its neighbours. If pixel $x_{i,j}$ belongs to a curved black stroke, its neighbouring pixels most likely belong to the same stroke. A corrupted or missing pixel can be inferred from its 8 surrounding neighbours.
+          </div>
+
+          <h3>4.2 Binary Image: Neighbourhood Estimation</h3>
+
+          <p>For a binary image (pixel values 0 and 1), a simple neighbourhood estimation counts the number of 0s and 1s among the 8 neighbours and assigns the majority value. Consider a $3 \times 3$ binary patch with the centre pixel missing:</p>
+
+          <p>$$\begin{bmatrix} 1 & 1 & 0 \\ 1 & ? & 1 \\ 0 & 1 & 1 \end{bmatrix}$$</p>
+
+          <p>Counting the 8 neighbours: 6 ones and 2 zeros. $P(\text{center}=1) = 6/8 = 0.75$. Since $0.75 > 0.25$, the missing pixel is estimated as 1.</p>
+
+          <h3>4.3 Grayscale Image: Neighbourhood Estimation</h3>
+
+          <p>For a grayscale image (continuous intensity values), the missing value is estimated as the <strong>mean</strong> of its neighbouring pixel intensities. Consider a grayscale patch with centre missing:</p>
+
+          <p>$$\begin{bmatrix} 120 & 125 & 130 \\ 123 & ? & 127 \\ 128 & 122 & 126 \end{bmatrix}$$</p>
+
+          <p>Mean of the 8 neighbours: $(120 + 125 + 130 + 123 + 127 + 128 + 122 + 126) / 8 = 124.625 \approx 125$.</p>
+
+          <div class="imp">
+            <strong>Important.</strong> These examples are illustrative only — they are not used in practical implementations. Real denoising autoencoders use convolutional filters (for images) or learned weight matrices (for tabular data) to capture neighbourhood dependencies in a data-driven manner.
+          </div>
+
+          <h3>4.4 CNN-Based Practical Implementation</h3>
+
+          <p>When the input is an image, the practical implementation uses convolutional filters to learn neighbourhood dependencies. When a $3 \times 3$ kernel slides across an image containing a missing pixel, the convolution operation multiplies the kernel weights with all 8 neighbouring values and the centre (possibly zero) value. The kernel's learned weights determine how much influence each neighbour has on the reconstructed value.</p>
+
+          <p>Implementation:</p>
+
+          <pre><code>Conv2D(32, (3, 3), activation='relu', padding='same')</code></pre>
+
+          <p>This applies 32 learnable $3 \times 3$ kernels with ReLU activation. Each kernel captures a specific pattern of neighbourhood dependency. The <code>padding="same"</code> preserves spatial dimensions, allowing the model to process every pixel position.</p>
+
+          <h2>5. How Denoising Provides Regularisation</h2>
+
+          <h3>5.1 Preventing the Shortcut of Direct Copying</h3>
+
+          <p>In a standard autoencoder, the model receives clean input $x$ and reconstructs $\hat{x}$, aiming to minimise loss between $x$ and $\hat{x}$. In an overcomplete architecture, the model can achieve zero loss by simply copying $x \to h \to \hat{x}$ without learning meaningful features.</p>
+
+          <p>In a denoising autoencoder, the model receives corrupted input $\tilde{x}$ and must reconstruct clean output $\hat{x}$ matching the original $x$. If the model attempted to copy the input directly, it would output a corrupted image — producing a large loss against the clean target. The model <strong>cannot</strong> achieve low loss by copying; it must actively learn to remove the noise and recover the original information.</p>
+
+          <div class="key-concept">
+            <strong>Regularisation mechanism.</strong> Denoising provides regularisation by removing the shortcut of direct copying. The corruption step ensures that even in an overcomplete architecture, the model cannot relax — passing corrupted input through unchanged would not minimise the loss. The model must infer missing values from context, forcing meaningful feature learning rather than trivial identity mapping.
+          </div>
+
+          <h3>5.2 Full Pipeline Summary</h3>
+
+          <ol>
+            <li><strong>Corrupt:</strong> $x \xrightarrow{\text{noise}} \tilde{x}$ (Gaussian, masking, or salt-and-pepper)</li>
+            <li><strong>Encode:</strong> $\tilde{x} \xrightarrow{W, b, g} h$ (latent representation)</li>
+            <li><strong>Decode:</strong> $h \xrightarrow{W', b', g'} \hat{x}$ (reconstructed output)</li>
+            <li><strong>Loss:</strong> Minimise $\mathcal{L}(x, \hat{x})$ — compare against original clean input, not corrupted input</li>
+            <li><strong>Neighbourhood:</strong> Missing values inferred from neighbouring pixel/feature dependencies via learned convolution or weight patterns</li>
+          </ol>
+
+          <h3>5.3 Comparison: Standard vs. Denoising Autoencoder</h3>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>Standard AE</th>
+                <th>Denoising AE</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Input to encoder</td>
+                <td>Clean $x$</td>
+                <td>Corrupted $\tilde{x}$</td>
+              </tr>
+              <tr>
+                <td>Reconstruction target</td>
+                <td>$x$</td>
+                <td>$x$ (original clean)</td>
+              </tr>
+              <tr>
+                <td>Overcomplete risk</td>
+                <td>Identity mapping / overfitting</td>
+                <td>Cannot copy — forced to learn</td>
+              </tr>
+              <tr>
+                <td>Regularisation</td>
+                <td>None</td>
+                <td>Corruption prevents copying</td>
+              </tr>
+              <tr>
+                <td>Loss computation</td>
+                <td>Loss$(x, \hat{x})$</td>
+                <td>Loss$(x, \hat{x})$</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>5.4 Primary and Hidden Training Objectives</h3>
+
+          <p>The <strong>primary training objective</strong> is to minimise the reconstruction loss between the clean input $x$ and the reconstructed output $\hat{x}$:</p>
+
+          <p>$$\mathcal{L} = \text{Loss}(x, \hat{x})$$</p>
+
+          <p>The <strong>hidden objective</strong> is neighbourhood dependency learning. The reconstructed pixel value at any location $(i, j)$ is obtained from its local neighbourhood context. The model learns that missing or corrupted values can be recovered by leveraging patterns and correlations in surrounding data — this is the fundamental insight that makes denoising autoencoders powerful, generalisable models.</p>
+
+          <h3>5.5 Application</h3>
+
+          <p>The denoising autoencoder is a powerful practical tool. Any scenario where data is inherently corrupted (noisy images, incomplete records, distorted signals) can benefit from a denoising autoencoder trained on intentionally corrupted clean data. During training, the model learns to remove noise and recover clean information; during testing, when genuinely corrupted data is presented, the model produces a clean reconstruction.</p>
+
+          <p>The next session covers the <strong>sparse autoencoder</strong>, the second regularised variant.</p>
+
         </div>
       </div>
     </div>
