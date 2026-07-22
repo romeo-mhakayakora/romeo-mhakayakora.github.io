@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Continuous Random Variables — Romeo Mhakayakora</title>
-  <meta name="description" content="Probability density functions, uniform, normal, exponential distributions, Poisson processes.">
+  <title>5.6 Poisson Processes — Romeo Mhakayakora</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400,600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=2">
+  <link rel="stylesheet" href="../style.css?v=2">
   <script>window.MathJax = {tex: {inlineMath: [['$','$'], ['\\(','\\)']], displayMath: [['$$','$$'], ['\\[','\\]']], processEscapes: true, processEnvironments: true}};</script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <style>
@@ -23,7 +22,6 @@
     .ch-content { font-family: var(--font-serif); font-size: 1.08rem; line-height: 1.75; color: var(--text-color); max-width: 680px; margin: 0 auto; }
     .ch-content h2 { font-size: 1.6rem; font-weight: 600; margin: 3rem 0 1.2rem 0; color: var(--text-color); font-family: var(--font-sans); }
     .ch-content h3 { font-size: 1.3rem; font-weight: 600; margin: 2rem 0 0.8rem 0; color: var(--text-color); font-family: var(--font-sans); }
-    .ch-content h4 { font-size: 1.1rem; font-weight: 600; margin: 1.5rem 0 0.6rem 0; color: var(--text-color); }
     .ch-content p { margin-bottom: 1.6rem; }
     .ch-content ul, .ch-content ol { margin: 0 0 1.6rem 1.8rem; }
     .ch-content li { margin-bottom: 0.5rem; }
@@ -42,9 +40,6 @@
     .ch-content th { background: var(--secondary-bg); font-weight: 600; font-family: var(--font-sans); }
     .ch-content .defn { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-radius: 4px; max-width: 680px; }
     .ch-content .defn strong:first-child { color: var(--accent-color); }
-    .ch-content .fig { margin: 1.6rem auto; max-width: 680px; text-align: center; }
-    .ch-content .fig img { max-width: 100%; height: auto; border: 1px solid rgba(170,170,170,0.15); border-radius: 4px; }
-    .ch-content .fig figcaption { margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted); font-style: italic; font-family: var(--font-sans); }
     footer { padding: 3rem 0; border-top: 1px solid rgba(170,170,170,0.1); margin-top: 3rem; }
     footer p { font-size: 0.78rem; color: var(--text-muted); }
 
@@ -66,33 +61,20 @@
       <a href="../index.html" class="logo">Romeo Mhakayakora <span class="logo-accent">/></span></a>
       <nav class="nav">
         <a href="../index.html" class="nav-link">Home</a>
-        <a href="../projects.html" class="nav-link">Projects</a>
-        <a href="../ai.html" class="nav-link">AI</a>
-        <a href="../mathematics.html" class="nav-link active">Mathematics</a>
-        <a href="../inference.html" class="nav-link">Inference</a>
-        <a href="../blogs.html" class="nav-link">Blogs</a>
-        <a href="../courses.html" class="nav-link">Courses</a>
-        <a href="../learning.html" class="nav-link">Learning</a>
-        <a href="../interesting.html" class="nav-link">Interesting</a>
-        <a href="../papers.html" class="nav-link">Papers</a>
-        <a href="../contact.html" class="nav-link">Contact</a>
-        <button id="theme-toggle" class="theme-btn" aria-label="Toggle dark mode">
-          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-        </button>
+        <a href="continuous-rv.html" class="nav-link active">Mathematics</a>
       </nav>
     </div>
   </header>
 
   <main class="container p-chapter">
     <nav class="ch-nav">
-      <a href="../mathematics.html">← back to Mathematics</a>
+      <a href="continuous-rv.html">← back to Continuous Random Variables</a>
     </nav>
 
     <header class="ch-header">
-      <span class="ch-num">5</span>
-      <h1>Continuous Random Variables</h1>
-      <p>Probability density functions, uniform, normal, exponential distributions, and Poisson processes.</p>
+      <span class="ch-num">5.6</span>
+      <h1>Poisson Processes</h1>
+      <p>Poisson processes: definition, properties, and applications.</p>
     </header>
 
     <div class="doc-layout">
@@ -104,36 +86,13 @@
           <li class="toc-item"><a href="lec-03-universality.html" class="toc-link"><span class="toc-num">5.3</span> Universality of the Uniform</a></li>
           <li class="toc-item"><a href="lec-04-normal.html" class="toc-link"><span class="toc-num">5.4</span> Normal</a></li>
           <li class="toc-item"><a href="lec-05-exponential.html" class="toc-link"><span class="toc-num">5.5</span> Exponential</a></li>
-          <li class="toc-item"><a href="lec-06-poisson.html" class="toc-link"><span class="toc-num">5.6</span> Poisson Processes</a></li>
+          <li class="toc-item"><a href="lec-06-poisson.html" class="toc-link active"><span class="toc-num">5.6</span> Poisson Processes</a></li>
         </ul>
       </aside>
 
       <div class="content-area">
         <div class="ch-content">
-
-          <p>This chapter develops the core continuous distributions and their applications. Each section below expands the key ideas in detail.</p>
-
-          <h2>5.1 Probability Density Functions</h2>
-          <p>A probability density function (PDF) describes the relative likelihood of a continuous random variable taking a given value. The probability that $X$ falls in $[a, b]$ is $\int_a^b f(x)\,dx$, with $\int_{-\infty}^\infty f(x)\,dx = 1$ and $f(x) \ge 0$.</p>
-
-          <h2>5.2 Uniform</h2>
-          <p>The uniform distribution assigns equal density over an interval $[a, b]$:</p>
-          <p>$$f(x) = \begin{cases} \frac{1}{b-a}, & a \le x \le b \\ 0, & \text{otherwise} \end{cases}$$</p>
-
-          <h2>5.3 Universality of the Uniform</h2>
-          <p>If $U \sim \text{Uniform}(0,1)$ and $F$ is any continuous CDF, then $X = F^{-1}(U)$ has CDF $F$. This gives a general recipe for sampling from arbitrary continuous distributions.</p>
-
-          <h2>5.4 Normal</h2>
-          <p>The normal distribution is characterised by mean $\mu$ and variance $\sigma^2$:</p>
-          <p>$$f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\!\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)$$</p>
-
-          <h2>5.5 Exponential</h2>
-          <p>The exponential distribution models waiting times with rate $\lambda > 0$:</p>
-          <p>$$f(x) = \lambda e^{-\lambda x}, \quad x \ge 0$$</p>
-          <p>It is memoryless: $P(X > s+t \mid X > s) = P(X > t)$.</p>
-
-          <h2>5.6 Poisson Processes</h2>
-
+          <p>Poisson processes model randomly arriving events over time or space.</p>
         </div>
       </div>
     </div>
@@ -148,23 +107,3 @@
   <script src="../script.js"></script>
 </body>
 </html>
-</parameter>
-<task_progress>
-- [x] Update nav bar on index.html
-- [x] Create mathematics.html
-- [x] Create ai.html
-- [x] Fix Language Models link
-- [x] Push to GitHub
-- [x] Create probability.html
-- [x] Link from mathematics.html
-- [x] Remove ML Concepts card from probability.html
-- [x] Rename Probability card to Probability Theory on mathematics.html
-- [x] Fix broken mathematics.html structure
-- [x] Remove stray task_progress artifact from mathematics.html
-- [x] Add Continuous Random Variables card to probability.html
-- [x] Remove "4 Probability Theory" from continuous-rv.html sidebar
-- [x] Convert continuous-rv.html into chapter index with sidebar
-- [ ] Create subsection pages 5.1-5.6
-- [ ] Push to GitHub
-</parameter>
-</write_to_file>
