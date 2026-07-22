@@ -23,6 +23,7 @@
     .ch-content { font-family: var(--font-serif); font-size: 1.08rem; line-height: 1.75; color: var(--text-color); max-width: 680px; margin: 0 auto; }
     .ch-content h2 { font-size: 1.6rem; font-weight: 600; margin: 3rem 0 1.2rem 0; color: var(--text-color); font-family: var(--font-sans); }
     .ch-content h3 { font-size: 1.3rem; font-weight: 600; margin: 2rem 0 0.8rem 0; color: var(--text-color); font-family: var(--font-sans); }
+    .ch-content h4 { font-size: 1.1rem; font-weight: 600; margin: 1.5rem 0 0.6rem 0; color: var(--text-color); }
     .ch-content p { margin-bottom: 1.6rem; }
     .ch-content ul, .ch-content ol { margin: 0 0 1.6rem 1.8rem; }
     .ch-content li { margin-bottom: 0.5rem; }
@@ -36,14 +37,20 @@
     .ch-content .key-concept strong { color: var(--accent-color); }
     .ch-content .imp { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-left: 3px solid #e74c3c; border-radius: 4px; max-width: 680px; }
     .ch-content .imp strong { color: #e74c3c; }
+    .ch-content .defn { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-left: 3px solid #2c3e50; border-radius: 4px; max-width: 680px; }
+    .ch-content .defn strong:first-child { color: var(--accent-color); }
     .ch-content table { width: 100%; border-collapse: collapse; margin: 2rem auto; max-width: 680px; font-size: 0.95rem; }
     .ch-content th, .ch-content td { border: 1px solid rgba(170,170,170,0.2); padding: 0.7rem; text-align: left; }
     .ch-content th { background: var(--secondary-bg); font-weight: 600; font-family: var(--font-sans); }
-    .ch-content .defn { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-radius: 4px; max-width: 680px; }
-    .ch-content .defn strong:first-child { color: var(--accent-color); }
+    .ch-content .fig-placeholder { margin: 2rem auto; padding: 1.5rem; background: var(--secondary-bg); border: 1px dashed rgba(170,170,170,0.3); border-radius: 6px; text-align: center; max-width: 680px; }
+    .ch-content .fig-placeholder .fig-label { font-size: 0.85rem; font-weight: 600; color: var(--accent-color); margin-bottom: 0.5rem; display: block; }
+    .ch-content .fig-placeholder .fig-desc { font-size: 0.85rem; color: var(--text-muted); font-style: italic; font-family: var(--font-sans); }
+    .ch-content .prop { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-left: 3px solid #8e44ad; border-radius: 4px; max-width: 680px; }
+    .ch-content .prop strong:first-child { color: #8e44ad; }
+    .ch-content .thm { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-left: 3px solid #e67e22; border-radius: 4px; max-width: 680px; }
+    .ch-content .thm strong:first-child { color: #e67e22; }
     footer { padding: 3rem 0; border-top: 1px solid rgba(170,170,170,0.1); margin-top: 3rem; }
     footer p { font-size: 0.78rem; color: var(--text-muted); }
-
     .doc-layout { display: flex; gap: 4rem; margin: 0 auto; max-width: 1080px; }
     .sidebar { flex: 0 0 220px; position: sticky; top: 6rem; align-self: start; max-height: calc(100vh - 8rem); overflow-y: auto; }
     .sidebar h3 { font-size: 0.85rem; font-family: var(--font-sans); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 1rem; }
@@ -54,12 +61,13 @@
     .toc-link.active { color: var(--accent-color); font-weight: 600; }
     .toc-num { color: var(--text-muted); font-size: 0.85rem; margin-right: 0.3rem; }
     .content-area { flex: 1; }
+    @media (max-width: 900px) { .doc-layout { flex-direction: column; gap: 2rem; } .sidebar { position: static; max-height: none; } }
   </style>
 </head>
 <body>
   <header class="header">
     <div class="header-inner">
-      <a href="../index.html" class="logo">Romeo Mhakayakora <span class="logo-accent">/></span></a>
+      <a href="index.html" class="logo">Romeo Mhakayakora <span class="logo-accent">/></span></a>
       <nav class="nav"><a href="index.html" class="nav-link">Home</a><a href="projects.html" class="nav-link">Projects</a><a href="ai.html" class="nav-link">AI</a><a href="mathematics.html" class="nav-link active">Mathematics</a><a href="inference.html" class="nav-link">Inference</a><a href="blogs.html" class="nav-link">Blogs</a><a href="courses.html" class="nav-link">Courses</a><a href="learning.html" class="nav-link">Learning</a><a href="interesting.html" class="nav-link">Interesting</a><a href="papers.html" class="nav-link">Papers</a><a href="contact.html" class="nav-link">Contact</a></nav>
     </div>
   </header>
@@ -79,7 +87,7 @@
       <aside class="sidebar">
         <h3>Contents</h3>
         <ul class="toc-list">
-          <li class="toc-item"><a href="lec-01-pdf.html" class="toc-link active"><span class="toc-num">5.1</span> Probability Density Functions</span></li>
+          <li class="toc-item"><a href="lec-01-pdf.html" class="toc-link active"><span class="toc-num">5.1</span> Probability Density Functions</a></li>
           <li class="toc-item"><a href="lec-02-uniform.html" class="toc-link"><span class="toc-num">5.2</span> Uniform</a></li>
           <li class="toc-item"><a href="lec-03-universality.html" class="toc-link"><span class="toc-num">5.3</span> Universality of the Uniform</a></li>
           <li class="toc-item"><a href="lec-04-normal.html" class="toc-link"><span class="toc-num">5.4</span> Normal</a></li>
@@ -90,7 +98,187 @@
 
       <div class="content-area">
         <div class="ch-content">
-          <p>A probability density function (PDF) describes the relative likelihood of a continuous random variable taking a given value. The probability that $X$ falls in $[a, b]$ is $\int_a^b f(x)\,dx$, with $\int_{-\infty}^\infty f(x)\,dx = 1$ and $f(x) \ge 0$.</p>
+
+          <p>So far we have been working with <strong>discrete random variables</strong>, whose possible values can be written down as a list. In this chapter we discuss <strong>continuous r.v.s</strong>, which can take on any real value in an interval (possibly of infinite length, such as $(0,\infty)$ or the entire real line). First we look at properties of continuous r.v.s in general. Then we introduce three famous continuous distributions — the Uniform, Normal, and Exponential — which, in addition to having important stories in their own right, serve as building blocks for many other useful continuous distributions.</p>
+
+          <h2>Core Idea</h2>
+          <p>A continuous random variable can assume any value in an interval of real numbers. Because the probability of hitting any exact value is zero, we describe its distribution using a <strong>probability density function (PDF)</strong> — the derivative of the cumulative distribution function (CDF). Probabilities are obtained by integrating the PDF over ranges, not by reading off individual heights.</p>
+
+          <h3>Discrete vs. Continuous Random Variables</h3>
+
+          <div class="defn">
+            <strong>Definition 5.1.1 (Continuous r.v.)</strong>. An r.v. has a <em>continuous distribution</em> if its CDF is differentiable. We also allow there to be endpoints (or finitely many points) where the CDF is continuous but not differentiable, as long as the CDF is differentiable everywhere else. A <em>continuous random variable</em> is a random variable with a continuous distribution.
+          </div>
+
+          <p>Recall that for a discrete r.v., the CDF jumps at every point in the support, and is flat everywhere else. In contrast, for a continuous r.v. the CDF increases smoothly.</p>
+
+          <div class="fig-placeholder">
+            <span class="fig-label">Figure 5.1 — Discrete vs. Continuous r.v.s</span>
+            <span class="fig-desc">[IMAGE PLACEHOLDER: Two-panel figure. Left panel: The CDF of a discrete r.v. has jumps at each point in the support, with open circles at the left of each jump and closed circles at the right. Right panel: The CDF of a continuous r.v. increases smoothly as a sigmoid-like curve with no jumps.]</span>
+          </div>
+
+          <p>For discrete r.v.s, the CDF is awkward to work with because of its jumpiness, and its derivative is almost useless since it's undefined at the jumps and 0 everywhere else. But for continuous r.v.s, the CDF is often convenient to work with, and its derivative is a very useful function, called the <strong>probability density function</strong>.</p>
+
+          <h3>The Probability Density Function (PDF)</h3>
+
+          <div class="defn">
+            <strong>Definition 5.1.2 (Probability density function)</strong>. For a continuous r.v. $X$ with CDF $F$, the <em>probability density function (PDF)</em> of $X$ is the derivative $f$ of the CDF, given by $f(x)=F'(x)$. The <em>support</em> of $X$, and of its distribution, is the set of all $x$ where $f(x)>0$.
+          </div>
+
+          <p>An important way in which continuous r.v.s differ from discrete r.v.s is that for a continuous r.v. $X$, $P(X=x)=0$ for all $x$. This is because $P(X=x)$ is the height of a jump in the CDF at $x$, but the CDF of $X$ has no jumps! Since the PMF of a continuous r.v. would just be 0 everywhere, we work with a PDF instead.</p>
+
+          <p>The PDF is analogous to the PMF in many ways, but there is a key difference: for a PDF $f$, the quantity $f(x)$ is <strong>not</strong> a probability, and in fact it is possible to have $f(x)>1$ for some values of $x$. To obtain a probability, we need to integrate the PDF. The fundamental theorem of calculus tells us how to get from the PDF back to the CDF.</p>
+
+          <div class="fig-placeholder">
+            <span class="fig-label">PDF-CDF Conversion Cycle</span>
+            <span class="fig-desc">[IMAGE PLACEHOLDER: A flowchart with two boxes. Left box labeled "CDF $F(x)$" and right box labeled "PDF $f(x)$". An arrow from CDF to PDF labeled "Differentiate: $f(x)=F'(x)$". An arrow from PDF to CDF labeled "Integrate: $F(x)=\int_{-\infty}^{x} f(t)\,dt$".]</span>
+          </div>
+
+          <h3>From PDF to CDF: The Fundamental Relationship</h3>
+
+          <div class="prop">
+            <strong>Proposition 5.1.3 (PDF to CDF)</strong>. Let $X$ be a continuous r.v. with PDF $f$. Then the CDF of $X$ is given by
+            $$F(x)=\int_{-\infty}^{x} f(t)\,dt.$$
+          </div>
+
+          <p><strong>Proof.</strong> By definition of PDF, $F$ is an antiderivative of $f$. So by the fundamental theorem of calculus,
+          $$\int_{-\infty}^{x} f(t)\,dt = F(x)-F(-\infty)=F(x).\qquad\square$$</p>
+
+          <p>The above result is analogous to how we obtained the value of a discrete CDF at $x$ by summing the PMF over all values less than or equal to $x$; here we integrate the PDF over all values up to $x$, so the CDF is the accumulated area under the PDF. Since we can freely convert between the PDF and the CDF using the inverse operations of integration and differentiation, both the PDF and CDF carry complete information about the distribution of a continuous r.v.</p>
+
+          <h3>Probability Over Intervals and Regions</h3>
+
+          <p>Since the PDF determines the distribution, we should be able to use it to find the probability of $X$ falling into an interval $(a,b)$. A handy fact is that we can include or exclude the endpoints as we wish without altering the probability, since the endpoints have probability 0:</p>
+
+          <div class="key-concept">
+            <strong>5.1.4 (Including or excluding endpoints).</strong> For continuous r.v.s,
+            $$P(a<X<b)=P(a<X\le b)=P(a\le X<b)=P(a\le X\le b).$$
+            We can be carefree about including or excluding endpoints for continuous r.v.s, but we must not be careless about this for discrete r.v.s.
+          </div>
+
+          <p>By definition of CDF and the fundamental theorem of calculus:
+          $$P(a<X\le b)=F(b)-F(a)=\int_{a}^{b} f(x)\,dx.$$</p>
+
+          <p>Therefore, to find the probability of $X$ falling in the interval $(a,b]$ (or $(a,b)$, $[a,b)$, or $[a,b]$) using the PDF, we simply integrate the PDF from $a$ to $b$. In general, for an arbitrary region $A\subseteq\mathbb{R}$:</p>
+          $$P(X\in A)=\int_A f(x)\,dx.$$
+
+          <p>In summary: <strong>To get a desired probability, integrate the PDF over the appropriate range.</strong></p>
+
+          <div class="fig-placeholder">
+            <span class="fig-label">Figure — Probability as Area Under the PDF</span>
+            <span class="fig-desc">[IMAGE PLACEHOLDER: A generic PDF curve plotted from $x=0$ to $x=10$, with a shaded rectangular region between $x=3$ and $x=6$. A vertical line from the $x$-axis up to the curve at some point $x$ within the shaded region, labeled $(x,y)$. Caption: Probability as area under the PDF: $P(X\in A)$ equals the integral of $f(x)$ over the region $A$.]</span>
+          </div>
+
+          <h3>Valid PDFs</h3>
+
+          <p>Just as a valid PMF must be nonnegative and sum to 1, a valid PDF must be nonnegative and integrate to 1.</p>
+
+          <div class="thm">
+            <strong>Theorem 5.1.5 (Valid PDFs)</strong>. The PDF $f$ of a continuous r.v. must satisfy the following two criteria:
+
+            <table>
+              <tr><th>Criterion</th><th>Statement</th></tr>
+              <tr><td>1. Nonnegative</td><td>$f(x)\ge 0$ for all $x$</td></tr>
+              <tr><td>2. Integrates to 1</td><td>$\displaystyle\int_{-\infty}^{\infty} f(x)\,dx = 1$</td></tr>
+            </table>
+          </div>
+
+          <p><strong>Proof.</strong> The first criterion is true because probability is nonnegative; if $f(x_0)$ were negative, then we could integrate over a tiny region around $x_0$ and get a negative probability. Alternatively, note that the PDF at $x_0$ is the slope of the CDF at $x_0$, so $f(x_0)<0$ would imply that the CDF is decreasing at $x_0$, which is not allowed. The second criterion is true since $\int_{-\infty}^{\infty} f(x)\,dx$ is the probability of $X$ falling somewhere on the real line, which is 1. $\square$</p>
+
+          <p>Conversely, any such function $f$ is the PDF of some r.v. This is because if $f$ satisfies these properties, we can integrate it as in Proposition 5.1.3 to get a function $F$ satisfying the properties of a CDF. Then a version of Universality of the Uniform, the main concept in Section 5.3, can be used to create an r.v. with CDF $F$.</p>
+
+          <div class="fig-placeholder">
+            <span class="fig-label">Diagram — Valid PDF Requirements</span>
+            <span class="fig-desc">[IMAGE PLACEHOLDER: A diagram with a title box "Theorem 5.1.5: Valid PDF Criteria" at top. Two side-by-side boxes below: left blue box "1. Nonnegative: $f(x)\ge 0$" with note "Probability cannot be negative"; right green box "2. Integrates to 1: $\int_{-\infty}^{\infty} f(x)\,dx=1$" with note "Total probability = 1". An arrow below pointing to text: "Converse: Any $f$ satisfying both criteria IS a PDF of some r.v."]</span>
+          </div>
+
+          <h3>Examples: Getting Comfortable with PDFs</h3>
+
+          <p>The two distributions in the following examples are named the Logistic and Rayleigh distributions, but we won't discuss their stories here; their appearance is intended mainly as a way of getting comfortable with PDFs.</p>
+
+          <h4>Example 5.1.6 (Logistic)</h4>
+          <p>The Logistic distribution has CDF:
+          $$F(x)=\frac{e^x}{1+e^x},\qquad x\in\mathbb{R}.$$</p>
+          <p>To get the PDF, we differentiate the CDF, which gives:
+          $$f(x)=\frac{e^x}{(1+e^x)^2},\qquad x\in\mathbb{R}.$$</p>
+          <p>Let $X\sim\text{Logistic}$. To find $P(-2<X<2)$, integrate the PDF from $-2$ to $2$:
+          $$P(-2<X<2)=\int_{-2}^{2} \frac{e^x}{(1+e^x)^2}\,dx = F(2)-F(-2)\approx 0.76.$$</p>
+          <p>The integral was easy to evaluate since we already knew that $F$ was an antiderivative for $f$, and we had a nice expression for $F$. Otherwise, we could have made the substitution $u=1+e^x$, so $du=e^x\,dx$, giving:
+          $$\int_{-2}^{2} \frac{e^x}{(1+e^x)^2}\,dx = \int_{1+e^{-2}}^{1+e^2} \frac{1}{u^2}\,du = \left(-\frac{1}{u}\right)\Big|_{1+e^{-2}}^{1+e^2} \approx 0.76.$$</p>
+
+          <div class="fig-placeholder">
+            <span class="fig-label">Figure 5.2 — Logistic PDF and CDF</span>
+            <span class="fig-desc">[IMAGE PLACEHOLDER: Two-panel figure. Left panel: Logistic PDF curve symmetric and bell-shaped, with the region between $x=-2$ and $x=2$ shaded in gray. Right panel: Logistic CDF as a smooth S-curve, with dashed vertical lines at $x=-2$ and $x=2$, and a curly brace indicating the vertical height difference $F(2)-F(-2)\approx 0.76$.]</span>
+          </div>
+
+          <h4>Example 5.1.7 (Rayleigh)</h4>
+          <p>The Rayleigh distribution has CDF:
+          $$F(x)=1-e^{-x^2/2},\qquad x>0.$$</p>
+          <p>To get the PDF, we differentiate the CDF, which gives:
+          $$f(x)=x e^{-x^2/2},\qquad x>0.$$</p>
+          <p>For $x\le 0$, both the CDF and the PDF are equal to 0.</p>
+          <p>Let $X\sim\text{Rayleigh}$. To find $P(X>2)$, we need to integrate the PDF from $2$ to $\infty$. We can do that by making the substitution $u=-x^2/2$, but since we already have the CDF in a nice form we know the integral is $F(\infty)-F(2)=1-F(2)$:
+          $$P(X>2)=\int_{2}^{\infty} x e^{-x^2/2}\,dx = 1-F(2)\approx 0.14.$$</p>
+
+          <div class="fig-placeholder">
+            <span class="fig-label">Figure 5.3 — Rayleigh PDF and CDF</span>
+            <span class="fig-desc">[IMAGE PLACEHOLDER: Two-panel figure. Left panel: Rayleigh PDF starting at 0, rising to a peak near $x=1$, then declining; the tail region from $x=2$ to $\infty$ is shaded in gray. Right panel: Rayleigh CDF starting at 0 and asymptotically approaching 1, with a dashed vertical line at $x=2$ and a curly brace showing the vertical height $1-F(2)\approx 0.14$.]</span>
+          </div>
+
+          <h3>Expectation of a Continuous Random Variable</h3>
+
+          <div class="defn">
+            <strong>Definition 5.1.10 (Expectation of a continuous r.v.)</strong>. The <em>expected value</em>, also called the <em>expectation</em> or <em>mean</em>, of a continuous r.v. $X$ with PDF $f$ is:
+            $$E(X)=\int_{-\infty}^{\infty} x\,f(x)\,dx.$$
+          </div>
+
+          <p>As in the discrete case, the expectation of a continuous r.v. may or may not exist. When discussing expectations, it would be very tedious to have to add "(if it exists)" after every mention of an expectation not yet shown to exist, so we will often leave this implicit.</p>
+
+          <p>The integral is taken over the entire real line, but if the support of $X$ is not the entire real line we can just integrate over the support. The units in this definition make sense: if $X$ is measured in centimeters, then so is $E(X)$, since $x f(x)\,dx$ has units of $\text{cm}\cdot\text{cm}^{-1}\cdot\text{cm}=\text{cm}$.</p>
+
+          <p>With this definition, the expected value retains its interpretation as a <strong>center of mass</strong>. As shown in Figure 5.5, using the Rayleigh PDF for illustrative purposes, the expected value is the balancing point of the PDF, just as it was the balancing point of the PMF in the discrete case.</p>
+
+          <div class="fig-placeholder">
+            <span class="fig-label">Figure 5.5 — Expected Value as Balancing Point</span>
+            <span class="fig-desc">[IMAGE PLACEHOLDER: The Rayleigh PDF curve plotted from $x=0$ to $x=5$, peaking near $x=1$ and declining toward zero. A vertical dashed line marks $E(X)=\sqrt{\pi/2}\approx 1.25$, with a triangular fulcrum ($\blacktriangle$) at the base indicating the balancing point.]</span>
+          </div>
+
+          <h3>LOTUS for Continuous Random Variables</h3>
+
+          <p>Linearity of expectation holds for continuous r.v.s, as it did for discrete r.v.s (we will show this later in Example 7.2.4). LOTUS also holds for continuous r.v.s, replacing the sum with an integral and the PMF with the PDF:</p>
+
+          <div class="thm">
+            <strong>Theorem 5.1.11 (LOTUS, continuous)</strong>. If $X$ is a continuous r.v. with PDF $f$ and $g$ is a function from $\mathbb{R}$ to $\mathbb{R}$, then
+            $$E(g(X))=\int_{-\infty}^{\infty} g(x)\,f(x)\,dx.$$
+          </div>
+
+          <p>We now have all the tools we need to tackle the named distributions of this chapter, starting with the Uniform distribution.</p>
+
+          <h3>Summary Comparison: Discrete vs. Continuous Random Variables</h3>
+
+          <table>
+            <tr><th>Property</th><th>Discrete r.v.</th><th>Continuous r.v.</th></tr>
+            <tr><td>Possible values</td><td>Finite or countably infinite list</td><td>Any real value in an interval (possibly infinite)</td></tr>
+            <tr><td>CDF behavior</td><td>Jumps at each point in support; flat elsewhere</td><td>Increases smoothly; no jumps</td></tr>
+            <tr><td>Probability at a point</td><td>$P(X=x)>0$ for $x$ in support</td><td>$P(X=x)=0$ for all $x$</td></tr>
+            <tr><td>Distribution descriptor</td><td>PMF: $p(x)=P(X=x)$</td><td>PDF: $f(x)=F'(x)$ (not a probability)</td></tr>
+            <tr><td>Probability formula</td><td>$P(X\in A)=\sum_{x\in A} p(x)$</td><td>$P(X\in A)=\int_A f(x)\,dx$</td></tr>
+            <tr><td>Expectation</td><td>$E(X)=\sum x\,p(x)$</td><td>$E(X)=\int x\,f(x)\,dx$</td></tr>
+          </table>
+
+          <h3>Quick Recap</h3>
+          <ul>
+            <li>A continuous r.v. has a continuous distribution: its CDF is differentiable (except possibly at finitely many points).</li>
+            <li>The PDF $f(x)=F'(x)$ describes the distribution, but $f(x)$ is <strong>NOT</strong> a probability — it can even exceed 1.</li>
+            <li>Probabilities are obtained by integrating the PDF: $P(a<X<b)=\int_a^b f(x)\,dx=F(b)-F(a)$.</li>
+            <li>For continuous r.v.s, endpoints don't matter: $P(a<X<b)=P(a\le X\le b)$ because $P(X=x)=0$ for all $x$.</li>
+            <li>A valid PDF must be nonnegative everywhere and integrate to 1 over the entire real line.</li>
+            <li>Conversely, any function satisfying the two valid-PDF criteria is the PDF of some r.v. (via CDF construction + Universality of the Uniform).</li>
+            <li>$E(X)=\int x f(x)\,dx$, interpreted as the center of mass / balancing point of the PDF.</li>
+            <li>LOTUS holds for continuous r.v.s: $E(g(X))=\int g(x) f(x)\,dx$.</li>
+            <li>Linearity of expectation holds for continuous r.v.s (proof deferred to Example 7.2.4).</li>
+          </ul>
+
         </div>
       </div>
     </div>
@@ -102,6 +290,6 @@
     </div>
   </footer>
 
-  <script src="../script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
