@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Autoencoders — Chapter 03</title>
+  <title>Types of Autoencoders: Architecture & Code-Level — Autoencoders</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400,600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../style.css?v=2">
+  <link rel="stylesheet" href="../../style.css?v=2">
   <script>window.MathJax = {tex: {inlineMath: [['$','$'], ['\\(','\\)']], displayMath: [['$$','$$'], ['\\[','\\]']], processEscapes: true, processEnvironments: true}};</script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <style>
@@ -35,7 +35,6 @@
     .ch-placeholder { padding: 4rem 0; text-align: center; color: var(--text-muted); }
     .ch-placeholder p { font-size: 1rem; }
     
-    /* Sidebar Styles */
     .doc-layout { display: flex; gap: 4rem; margin: 0 auto; max-width: 1080px; }
     .sidebar { flex: 0 0 220px; position: sticky; top: 6rem; align-self: start; max-height: calc(100vh - 8rem); overflow-y: auto; }
     .sidebar h3 { font-size: 0.85rem; font-family: var(--font-sans); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 1rem; }
@@ -51,20 +50,20 @@
 <body>
   <header class="header">
     <div class="header-inner">
-      <a href="../index.html" class="logo">Romeo Mhakayakora <span class="logo-accent">/></span></a>
+      <a href="../../index.html" class="logo">Romeo Mhakayakora <span class="logo-accent">/></span></a>
       <nav class="nav">
-        <a href="../index.html" class="nav-link">Home</a>
-        <a href="../projects.html" class="nav-link">Projects</a>
-        <a href="../rl.html" class="nav-link">RL</a>
-        <a href="../lm.html" class="nav-link active">Language Models</a>
-        <a href="../agentic-ai.html" class="nav-link">Agentic AI</a>
-        <a href="../inference.html" class="nav-link">Inference</a>
-        <a href="../blogs.html" class="nav-link">Blogs</a>
-        <a href="../courses.html" class="nav-link">Courses</a>
-        <a href="../learning.html" class="nav-link">Learning</a>
-        <a href="../ml-concepts.html" class="nav-link">ML Concepts</a>
-        <a href="../papers.html" class="nav-link">Papers</a>
-        <a href="../contact.html" class="nav-link">Contact</a>
+        <a href="../../index.html" class="nav-link">Home</a>
+        <a href="../../projects.html" class="nav-link">Projects</a>
+        <a href="../../rl.html" class="nav-link">RL</a>
+        <a href="../../lm.html" class="nav-link active">Language Models</a>
+        <a href="../../agentic-ai.html" class="nav-link">Agentic AI</a>
+        <a href="../../inference.html" class="nav-link">Inference</a>
+        <a href="../../blogs.html" class="nav-link">Blogs</a>
+        <a href="../../courses.html" class="nav-link">Courses</a>
+        <a href="../../learning.html" class="nav-link">Learning</a>
+        <a href="../../ml-concepts.html" class="nav-link">ML Concepts</a>
+        <a href="../../papers.html" class="nav-link">Papers</a>
+        <a href="../../contact.html" class="nav-link">Contact</a>
         <button id="theme-toggle" class="theme-btn" aria-label="Toggle dark mode">
           <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
           <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
@@ -75,60 +74,33 @@
 
   <main class="container p-chapter">
     <nav class="ch-nav">
-      <a href="index.html">← back to guide</a>
+      <a href="../chapter-3-autoencoders.html">← back to Autoencoders</a>
     </nav>
 
     <header class="ch-header">
-      <span class="ch-num">Chapter 3</span>
-      <h1>Autoencoders</h1>
-      <p>Learning compressed representations with encoder-decoder architectures.</p>
+      <span class="ch-num">3.2</span>
+      <h1>Types of Autoencoders: Architecture and Code-Level Understanding</h1>
     </header>
 
     <div class="doc-layout">
       <aside class="sidebar">
-        <h3>Lectures</h3>
+        <h3>Contents</h3>
         <ul class="toc-list">
-          <li class="toc-item">
-            <a href="autoencoders/lec-00-introduction.html" class="toc-link">
-              <span class="toc-num">3.0</span> Introduction to Autoencoder
-            </a>
-          </li>
-          <li class="toc-item">
-            <a href="autoencoders/lec-01-reconstruction-loss.html" class="toc-link">
-              <span class="toc-num">3.1</span> Training Objective: Reconstruction Loss
-            </a>
-          </li>
-          <li class="toc-item">
-            <a href="autoencoders/lec-02-types-architectures.html" class="toc-link">
-              <span class="toc-num">3.2</span> Types of Autoencoders: Architecture & Code-Level
-            </a>
-          </li>
-          <li class="toc-item">
-            <a href="autoencoders/lec-03-denoising.html" class="toc-link">
-              <span class="toc-num">3.3</span> Denoising Autoencoders
-            </a>
-          </li>
-          <li class="toc-item">
-            <a href="autoencoders/lec-04-sparse.html" class="toc-link">
-              <span class="toc-num">3.4</span> Sparse Autoencoders
-            </a>
-          </li>
-          <li class="toc-item">
-            <a href="autoencoders/lec-05-contractive.html" class="toc-link">
-              <span class="toc-num">3.5</span> Contractive Autoencoders
-            </a>
-          </li>
-          <li class="toc-item">
-            <a href="autoencoders/lec-06-limitations.html" class="toc-link">
-              <span class="toc-num">3.6</span> Numerical Example & Limitations
-            </a>
-          </li>
+          <li class="toc-item"><a href="lec-00-introduction.html" class="toc-link"><span class="toc-num">3.0</span> Introduction to Autoencoder</a></li>
+          <li class="toc-item"><a href="lec-01-reconstruction-loss.html" class="toc-link"><span class="toc-num">3.1</span> Training Objective: Reconstruction Loss</a></li>
+          <li class="toc-item"><a href="lec-02-types-architectures.html" class="toc-link active"><span class="toc-num">3.2</span> Types of Autoencoders: Architecture & Code-Level</a></li>
+          <li class="toc-item"><a href="lec-03-denoising.html" class="toc-link"><span class="toc-num">3.3</span> Denoising Autoencoders</a></li>
+          <li class="toc-item"><a href="lec-04-sparse.html" class="toc-link"><span class="toc-num">3.4</span> Sparse Autoencoders</a></li>
+          <li class="toc-item"><a href="lec-05-contractive.html" class="toc-link"><span class="toc-num">3.5</span> Contractive Autoencoders</a></li>
+          <li class="toc-item"><a href="lec-06-limitations.html" class="toc-link"><span class="toc-num">3.6</span> Numerical Example & Limitations</a></li>
         </ul>
       </aside>
 
       <div class="content-area">
         <div class="ch-content">
-          <p>This chapter covers autoencoders — from their basic architecture and training objective to regularized variants and their limitations.</p>
+          <div class="ch-placeholder">
+            <p>Content for this lecture is being prepared.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -140,6 +112,6 @@
     </div>
   </footer>
 
-  <script src="../script.js"></script>
+  <script src="../../script.js"></script>
 </body>
 </html>
