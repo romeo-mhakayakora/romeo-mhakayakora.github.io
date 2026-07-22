@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>5.5 Exponential — Romeo Mhakayakora</title>
+  <title>5.5 Exponential Distribution — Romeo Mhakayakora</title>
+  <meta name="description" content="Exponential distribution: memoryless property, rate parameter, scale transformation, and applications.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400,600&display=swap" rel="stylesheet">
@@ -22,6 +23,7 @@
     .ch-content { font-family: var(--font-serif); font-size: 1.08rem; line-height: 1.75; color: var(--text-color); max-width: 680px; margin: 0 auto; }
     .ch-content h2 { font-size: 1.6rem; font-weight: 600; margin: 3rem 0 1.2rem 0; color: var(--text-color); font-family: var(--font-sans); }
     .ch-content h3 { font-size: 1.3rem; font-weight: 600; margin: 2rem 0 0.8rem 0; color: var(--text-color); font-family: var(--font-sans); }
+    .ch-content h4 { font-size: 1.1rem; font-weight: 600; margin: 1.5rem 0 0.6rem 0; color: var(--text-color); }
     .ch-content p { margin-bottom: 1.6rem; }
     .ch-content ul, .ch-content ol { margin: 0 0 1.6rem 1.8rem; }
     .ch-content li { margin-bottom: 0.5rem; }
@@ -35,14 +37,22 @@
     .ch-content .key-concept strong { color: var(--accent-color); }
     .ch-content .imp { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-left: 3px solid #e74c3c; border-radius: 4px; max-width: 680px; }
     .ch-content .imp strong { color: #e74c3c; }
+    .ch-content .defn { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-left: 3px solid #2c3e50; border-radius: 4px; max-width: 680px; }
+    .ch-content .defn strong:first-child { color: var(--accent-color); }
+    .ch-content .thm { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-left: 3px solid #e67e22; border-radius: 4px; max-width: 680px; }
+    .ch-content .thm strong:first-child { color: #e67e22; }
+    .ch-content .prop { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-left: 3px solid #8e44ad; border-radius: 4px; max-width: 680px; }
+    .ch-content .prop strong:first-child { color: #8e44ad; }
     .ch-content table { width: 100%; border-collapse: collapse; margin: 2rem auto; max-width: 680px; font-size: 0.95rem; }
     .ch-content th, .ch-content td { border: 1px solid rgba(170,170,170,0.2); padding: 0.7rem; text-align: left; }
     .ch-content th { background: var(--secondary-bg); font-weight: 600; font-family: var(--font-sans); }
-    .ch-content .defn { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-radius: 4px; max-width: 680px; }
-    .ch-content .defn strong:first-child { color: var(--accent-color); }
+    .ch-content .fig-placeholder { margin: 2rem auto; padding: 1.5rem; background: var(--secondary-bg); border: 1px dashed rgba(170,170,170,0.3); border-radius: 6px; text-align: center; max-width: 680px; }
+    .ch-content .fig-placeholder .fig-label { font-size: 0.85rem; font-weight: 600; color: var(--accent-color); margin-bottom: 0.5rem; display: block; }
+    .ch-content .fig-placeholder .fig-desc { font-size: 0.85rem; color: var(--text-muted); font-style: italic; font-family: var(--font-sans); }
+    .ch-content .proof-box { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-left: 3px solid #16a085; border-radius: 4px; max-width: 680px; }
+    .ch-content .proof-box strong:first-child { color: #16a085; }
     footer { padding: 3rem 0; border-top: 1px solid rgba(170,170,170,0.1); margin-top: 3rem; }
     footer p { font-size: 0.78rem; color: var(--text-muted); }
-
     .doc-layout { display: flex; gap: 4rem; margin: 0 auto; max-width: 1080px; }
     .sidebar { flex: 0 0 220px; position: sticky; top: 6rem; align-self: start; max-height: calc(100vh - 8rem); overflow-y: auto; }
     .sidebar h3 { font-size: 0.85rem; font-family: var(--font-sans); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 1rem; }
@@ -53,6 +63,7 @@
     .toc-link.active { color: var(--accent-color); font-weight: 600; }
     .toc-num { color: var(--text-muted); font-size: 0.85rem; margin-right: 0.3rem; }
     .content-area { flex: 1; }
+    @media (max-width: 900px) { .doc-layout { flex-direction: column; gap: 2rem; } .sidebar { position: static; max-height: none; } }
   </style>
 </head>
 <body>
@@ -70,8 +81,8 @@
 
     <header class="ch-header">
       <span class="ch-num">5.5</span>
-      <h1>Exponential</h1>
-      <p>Exponential distribution: memoryless property, rate parameter, and applications.</p>
+      <h1>The Exponential Distribution</h1>
+      <p>Memoryless waiting times, rate parameter, scale transformation, and the connection to the Geometric distribution.</p>
     </header>
 
     <div class="doc-layout">
@@ -89,9 +100,146 @@
 
       <div class="content-area">
         <div class="ch-content">
-          <p>The exponential distribution models waiting times with rate $\lambda > 0$:</p>
-          <p>$$f(x) = \lambda e^{-\lambda x}, \quad x \ge 0$$</p>
-          <p>It is memoryless: $P(X > s+t \mid X > s) = P(X > t)$.</p>
+
+          <h2>Core Idea</h2>
+          <p>The Exponential distribution is the <strong>continuous counterpart to the Geometric distribution</strong>. While a Geometric random variable counts the number of failures before the first success in a sequence of Bernoulli trials, the Exponential distribution models the <strong>waiting time until the first arrival</strong> in continuous time, where successes arrive at a rate of $\lambda$ successes per unit of time. The average number of successes in a time interval of length $t$ is $\lambda t$, though the actual number varies randomly.</p>
+
+          <h2>Definition and Basic Properties</h2>
+
+          <div class="defn">
+            <strong>Definition 5.5.1 (Exponential distribution)</strong>. A continuous r.v. $X$ is said to have the <em>Exponential distribution</em> with parameter $\lambda$, where $\lambda>0$, if its PDF is
+            $$f(x)=\lambda e^{-\lambda x},\qquad x>0.$$
+            We denote this by $X\sim\text{Expo}(\lambda)$. The corresponding CDF is
+            $$F(x)=1-e^{-\lambda x},\qquad x>0.$$
+          </div>
+
+          <div class="fig-placeholder">
+            <span class="fig-label">Figure 5.12 — Expo(1) PDF and CDF</span>
+            <span class="fig-desc">[IMAGE PLACEHOLDER: Two-panel figure. Left panel: Exponential PDF $f(x)=e^{-x}$ starting at $f(0)=1$ and decaying exponentially toward zero. Right panel: Exponential CDF $F(x)=1-e^{-x}$ starting at 0 and asymptotically approaching 1. Note the resemblance to the Geometric PMF and CDF from Chapter 4.]</span>
+          </div>
+
+          <h2>Scale Transformation: From Expo(1) to Expo($\lambda$)</h2>
+          <p>We've seen how all Uniform and Normal distributions are related to one another via location-scale transformations, and we might wonder whether the Exponential distribution allows this too. Exponential r.v.s are defined to have support $(0,\infty)$, and shifting would change the left endpoint. But scale transformations work nicely, and we can use scaling to get from the simple $\text{Expo}(1)$ to the general $\text{Expo}(\lambda)$:</p>
+
+          <div class="prop">
+            <strong>Scale Transformation.</strong> If $X\sim\text{Expo}(1)$, then $Y=X/\lambda\sim\text{Expo}(\lambda)$. Conversely, if $Y\sim\text{Expo}(\lambda)$, then $\lambda Y\sim\text{Expo}(1)$.
+          </div>
+
+          <h2>Mean and Variance</h2>
+          <p>This means that just as we did for the Uniform and the Normal, we can get the mean and variance of the Exponential distribution by starting with $X\sim\text{Expo}(1)$. Both $E(X)$ and $\text{Var}(X)$ are obtained using standard integration by parts calculations. This gives:</p>
+          <p>$$E(X)=\int_0^\infty x e^{-x}\,dx = 1,\qquad E(X^2)=\int_0^\infty x^2 e^{-x}\,dx = 2,\qquad \text{Var}(X)=E(X^2)-(E(X))^2=1.$$</p>
+
+          <p>For $Y=X/\lambda\sim\text{Expo}(\lambda)$ we then have:</p>
+          <p>$$E(Y)=\frac{1}{\lambda}E(X)=\frac{1}{\lambda},\qquad \text{Var}(Y)=\frac{1}{\lambda^2}\text{Var}(X)=\frac{1}{\lambda^2}.$$</p>
+
+          <p>So the mean and variance of the $\text{Expo}(\lambda)$ distribution are $1/\lambda$ and $1/\lambda^2$, respectively. As we'd expect intuitively, <strong>the faster the rate of arrivals $\lambda$, the shorter the average waiting time</strong>.</p>
+
+          <h3>Geometric vs. Exponential Comparison</h3>
+
+          <table>
+            <tr><th>Property</th><th>Geometric (discrete)</th><th>Exponential (continuous)</th></tr>
+            <tr><td>Story</td><td>Count failures before first success in Bernoulli trials</td><td>Waiting time until first arrival in continuous time</td></tr>
+            <tr><td>Parameter</td><td>$p$ (success probability)</td><td>$\lambda$ (arrival rate per unit time)</td></tr>
+            <tr><td>Support</td><td>$\{0,1,2,\dots\}$</td><td>$(0,\infty)$</td></tr>
+            <tr><td>PMF / PDF</td><td>$p(x)=(1-p)^x p$</td><td>$f(x)=\lambda e^{-\lambda x}$</td></tr>
+            <tr><td>CDF</td><td>$F(x)=1-(1-p)^{x+1}$</td><td>$F(x)=1-e^{-\lambda x}$</td></tr>
+          </table>
+
+          <h2>The Memoryless Property</h2>
+
+          <p>The Exponential distribution has a very special property called the <strong>memoryless property</strong>, which says that even if you've waited for hours or days without success, the success isn't any more likely to arrive soon. In fact, you might as well have just started waiting 10 seconds ago.</p>
+
+          <div class="defn">
+            <strong>Definition 5.5.2 (Memoryless property)</strong>. A continuous distribution is said to have the <em>memoryless property</em> if a random variable $X$ from that distribution satisfies
+            $$P(X\ge s+t\mid X\ge s)=P(X\ge t)$$
+            for all $s,t\ge 0$.
+          </div>
+
+          <p>Here $s$ represents the time you've already spent waiting; the definition says that after you've waited $s$ minutes, the probability you'll have to wait another $t$ minutes is exactly the same as the probability of having to wait $t$ minutes with no previous waiting time under your belt.</p>
+
+          <p>Another way to state the memoryless property is that conditional on $X\ge s$, the additional waiting time $X-s$ is still distributed $\text{Expo}(\lambda)$. In particular, this implies:</p>
+          <p>$$E(X\mid X\ge s)=s+E(X)=s+\frac{1}{\lambda}.$$</p>
+
+          <h3>Why Care About the Exponential Distribution?</h3>
+          <p>Clearly, the memoryless property is not an appropriate description for human or machine lifetimes. Why then do we care about the Exponential distribution?</p>
+          <ol>
+            <li><strong>Some physical phenomena</strong>, such as radioactive decay, truly do exhibit the memoryless property, so the Exponential is an important model in its own right.</li>
+            <li><strong>The Exponential distribution is well-connected</strong> to other named distributions. In the next section, we'll see how the Exponential and Poisson distributions can be united by a shared story, and we'll discover many more connections in later chapters.</li>
+            <li><strong>The Exponential serves as a building block</strong> for more flexible distributions, such as the Weibull distribution, that allow for a wear-and-tear effect or a survival-of-the-fittest effect. To understand these distributions, we first have to understand the Exponential.</li>
+          </ol>
+
+          <h3>Uniqueness of the Memoryless Property</h3>
+
+          <div class="thm">
+            <strong>Theorem 5.5.3</strong>. If $X$ is a positive continuous random variable with the memoryless property, then $X$ has an Exponential distribution. The memoryless property is a very special property of the Exponential distribution: <strong>no other continuous distribution on $(0,\infty)$ is memoryless!</strong>
+          </div>
+
+          <p>The discrete analogue also holds: a discrete distribution is memoryless if $P(X\ge j+k\mid X\ge j)=P(X\ge k)$ for all nonnegative integers $j,k$. The Geometric distribution is the only memoryless discrete distribution taking values in $\{0,1,2,\dots\}$, and the Exponential is the only memoryless continuous distribution taking values in $(0,\infty)$.</p>
+
+          <h2>Example 5.5.4: Blissville and Blotchville</h2>
+
+          <p>As practice with the memoryless property, the following example chronicles the adventures of Fred, who experiences firsthand the frustrations of the memoryless property after moving to a town with a memoryless public transportation system.</p>
+
+          <p><strong>(a)</strong> Fred lives in Blissville, where buses always arrive exactly on time, with the time between successive buses fixed at 10 minutes. Having lost his watch, he arrives at the bus stop at a uniformly random time on a certain day (assume that buses run 24 hours a day, every day, and that the time that Fred arrives is independent of the bus arrival process). What is the distribution of how long Fred has to wait for the next bus? What is the average time that Fred has to wait?</p>
+
+          <p><em>Solution:</em> The distribution is Uniform on $(0,10)$, so the mean is 5 minutes.</p>
+
+          <p><strong>(b)</strong> Given that the bus has not yet arrived after 6 minutes, what is the probability that Fred will have to wait at least 3 more minutes?</p>
+
+          <p><em>Solution:</em> Let $T$ be the waiting time. Then:</p>
+          <p>$$P(T\ge 6+3\mid T>6)=\frac{P(T\ge 9,T>6)}{P(T>6)}=\frac{P(T\ge 9)}{P(T>6)}=\frac{1/10}{4/10}=\frac14.$$</p>
+
+          <p>In particular, Fred's waiting time in Blissville is <strong>not memoryless</strong>; conditional on having waited 6 minutes already, there's only a $1/4$ chance that he'll have to wait at least another 3 minutes, whereas if he had just showed up, there would be a $P(T\ge 3)=7/10$ chance of having to wait at least 3 minutes.</p>
+
+          <p><strong>(c)</strong> Fred moves to Blotchville, a city with inferior urban planning and where buses are much more erratic. Now, when any bus arrives, the time until the next bus arrives is an Exponential random variable with mean 10 minutes. Fred arrives at the bus stop at a random time (assume that Blotchville has followed and will follow this system for all of eternity, and that the time that Fred arrives is independent of the bus arrival process). What is the distribution of Fred's waiting time for the next bus? What is the average time that Fred has to wait?</p>
+
+          <p><em>Solution:</em> By the memoryless property, the distribution is Exponential with parameter $1/10$ (and mean 10 minutes) regardless of when Fred arrives; how much longer the next bus will take to arrive is independent of how long ago the previous bus arrived. The average time that Fred has to wait is <strong>10 minutes</strong>.</p>
+
+          <p><strong>(d)</strong> When Fred complains to a friend how much worse transportation is in Blotchville, the friend says: "Stop whining so much! You arrive at a uniform instant between the previous bus arrival and the next bus arrival. The average length of that interval between buses is 10 minutes, but since you are equally likely to arrive at any time in that interval, your average waiting time is only 5 minutes." Fred disagrees, both from experience and from solving Part (c) while waiting for the bus. Explain what is wrong with the friend's reasoning.</p>
+
+          <p><em>Solution:</em> Fred's friend is making the mistake of replacing a random variable (the time between buses) by its expectation (10 minutes), thereby ignoring the variability in interarrival times. The average length of a time interval between two buses is 10 minutes, but Fred is <strong>not equally likely to arrive at any of these intervals</strong>: Fred is more likely to arrive during a <em>long</em> interval between buses than to arrive during a <em>short</em> interval between buses. For example, if one interval between buses is 50 minutes and another interval is 5 minutes, then Fred is 10 times more likely to arrive during the 50-minute interval.</p>
+
+          <p>This phenomenon is known as <strong>length-biased sampling</strong>, and it comes up in many real-life situations. For example, asking randomly chosen mothers how many children they have yields a different distribution from asking randomly chosen people how many siblings they have, including themselves. Asking students the sizes of their classes and averaging those results may give a much higher value than taking a list of classes and averaging the sizes of each; this is called the <strong>class size paradox</strong>.</p>
+
+          <h2>Proofs</h2>
+
+          <div class="proof-box">
+            <strong>Proof 1: Scale Transformation (Expo(1) to Expo($\lambda$))</strong><br>
+            <em>Intuition.</em> If $X$ measures waiting time in units where the average wait is 1, then dividing by $\lambda$ stretches or shrinks the time scale so that events happen $\lambda$ times faster. If the original rate was 1 arrival per unit time, the new rate is $\lambda$ arrivals per unit time, so the waiting time should be $1/\lambda$ on average.<br><br>
+            <em>Proof.</em> Let $X\sim\text{Expo}(1)$ and define $Y=X/\lambda$. For $y>0$:
+            $$P(Y\le y)=P(X/\lambda\le y)=P(X\le\lambda y)=1-e^{-\lambda y}.$$
+            This is exactly the CDF of an $\text{Expo}(\lambda)$ distribution. Therefore $Y\sim\text{Expo}(\lambda)$. Conversely, if $Y\sim\text{Expo}(\lambda)$, then $\lambda Y$ has CDF $P(\lambda Y\le y)=P(Y\le y/\lambda)=1-e^{-\lambda(y/\lambda)}=1-e^{-y}$, so $\lambda Y\sim\text{Expo}(1)$. $\square$
+          </div>
+
+          <div class="proof-box">
+            <strong>Proof 2: The Exponential Distribution Has the Memoryless Property</strong><br>
+            <em>Intuition.</em> The survival function of an Exponential is $G(x)=e^{-\lambda x}$, which has the special property that $e^{-\lambda(s+t)}=e^{-\lambda s}\cdot e^{-\lambda t}$. This means the probability of surviving $s+t$ hours equals the probability of surviving $s$ hours times the probability of surviving $t$ hours. When we condition on having already survived $s$ hours, the $e^{-\lambda s}$ terms cancel, leaving only $e^{-\lambda t}$.<br><br>
+            <em>Proof.</em> Let $X\sim\text{Expo}(\lambda)$. By definition of conditional probability, for all $s,t\ge0$:
+            $$P(X\ge s+t\mid X\ge s)=\frac{P(X\ge s+t)}{P(X\ge s)}.$$
+            For an Exponential r.v., the survival function is $P(X\ge x)=e^{-\lambda x}$. Substituting:
+            $$P(X\ge s+t\mid X\ge s)=\frac{e^{-\lambda(s+t)}}{e^{-\lambda s}}=\frac{e^{-\lambda s}\cdot e^{-\lambda t}}{e^{-\lambda s}}=e^{-\lambda t}=P(X\ge t).$$
+            This is exactly the memoryless property. $\square$
+          </div>
+
+          <div class="proof-box">
+            <strong>Proof 3: Theorem 5.5.3 — Only the Exponential is Memoryless on $(0,\infty)$</strong><br>
+            <em>Intuition.</em> The memoryless property says that the survival function $G(x)=P(X>x)$ satisfies $G(s+t)=G(s)G(t)$. This functional equation is the same one satisfied by exponential functions: $e^{s+t}=e^s\cdot e^t$. The proof shows that any function satisfying this multiplicative-over-addition rule must be an exponential function.<br><br>
+            <em>Proof.</em> Suppose $X$ is a positive continuous r.v. with the memoryless property. Let $F$ be the CDF of $X$ and $G$ be the survival function, $G(x)=1-F(x)$. The memoryless property says $G(s+t)=G(s)G(t)$ for all $s,t\ge0$. Putting $s=t$, we have $G(2t)=G(t)^2$, so $G(3t)=G(2t+t)=G(2t)G(t)=G(t)^3$, $G(4t)=G(t)^4$, etc. Thus $G(mt)=G(t)^m$ for $m$ a positive integer.<br><br>
+            Replacing $t$ by $t/2$ gives $G(t/2)=G(t)^{1/2}$. Similarly $G(t/n)=G(t)^{1/n}$ for any positive integer $n$. It follows that $G((m/n)t)=G(t/n)^m=G(t)^{m/n}$ for any positive integers $m,n$, so $G(xt)=G(t)^x$ for all positive rational numbers $x$. Any positive real number can be written as a limit of positive rational numbers so, using the continuity of $G$, the equation holds for all $x>0$. Taking $t=1$, we have $G(x)=G(1)^x=e^{-\lambda x}$ where $\lambda=-\log(G(1))>0$. This is exactly the form we wanted, so $X$ has an Exponential distribution. $\square$
+          </div>
+
+          <h2>Quick Recap</h2>
+          <ul>
+            <li>The Exponential distribution is the continuous analogue of the Geometric distribution, modeling waiting time until the first arrival at rate $\lambda$.</li>
+            <li>PDF: $f(x)=\lambda e^{-\lambda x}$ for $x>0$; CDF: $F(x)=1-e^{-\lambda x}$ for $x>0$.</li>
+            <li>Scale transformation: if $X\sim\text{Expo}(1)$, then $X/\lambda\sim\text{Expo}(\lambda)$; conversely, if $Y\sim\text{Expo}(\lambda)$, then $\lambda Y\sim\text{Expo}(1)$.</li>
+            <li>Mean of $\text{Expo}(\lambda)$ is $1/\lambda$; variance is $1/\lambda^2$. Higher $\lambda$ means shorter average waiting time.</li>
+            <li>Memoryless property: $P(X\ge s+t\mid X\ge s)=P(X\ge t)$. The additional waiting time $X-s$, conditional on $X\ge s$, is still $\text{Expo}(\lambda)$.</li>
+            <li>The Exponential is the <strong>only</strong> continuous distribution on $(0,\infty)$ with the memoryless property (Theorem 5.5.3).</li>
+            <li>The Geometric is the only discrete distribution on $\{0,1,2,\dots\}$ with the memoryless property.</li>
+            <li>Length-biased sampling explains why Fred's average wait in Blotchville is 10 minutes, not 5: longer intervals are more likely to be sampled.</li>
+          </ul>
+
         </div>
       </div>
     </div>
