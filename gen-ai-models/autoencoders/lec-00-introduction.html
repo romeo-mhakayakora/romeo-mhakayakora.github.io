@@ -38,6 +38,9 @@
     .ch-content th { background: var(--secondary-bg); font-weight: 600; font-family: var(--font-sans); }
     .ch-content .defn { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-radius: 4px; max-width: 680px; }
     .ch-content .defn strong:first-child { color: var(--accent-color); }
+    .ch-content .fig { margin: 1.6rem auto; max-width: 680px; text-align: center; }
+    .ch-content .fig img { max-width: 100%; height: auto; border: 1px solid rgba(170,170,170,0.15); border-radius: 4px; }
+    .ch-content .fig figcaption { margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted); font-style: italic; font-family: var(--font-sans); }
     footer { padding: 3rem 0; border-top: 1px solid rgba(170,170,170,0.1); margin-top: 3rem; }
     footer p { font-size: 0.78rem; color: var(--text-muted); }
     
@@ -114,6 +117,11 @@
           <p>Most familiar deep learning architectures — feedforward networks, CNNs, RNNs — are designed for <strong>supervised</strong> learning. Each input $X$ is paired with a label $Y$, and the model learns the mapping $X \to Y$. The objective is to minimise prediction error relative to known labels, and the model generalises from labelled examples to unseen data.</p>
 
           <p>But labels are expensive. In many real-world settings, we have plenty of raw data and almost no annotations. This brings us to <strong>unsupervised</strong> learning: the model receives only input $X$, without any associated labels. Rather than learning a specific input-output mapping, it must discover hidden patterns, correlations between features, and the intrinsic structure of the data on its own.</p>
+
+          <figure class="fig">
+            <img src="fig-01-supervised-vs-unsupervised.png" alt="Supervised vs unsupervised learning diagram">
+            <figcaption>Supervised learning uses labelled data (input $X$ + label $Y$) and learns the mapping $X \to Y$. Unsupervised learning uses only unlabelled data $X$ and discovers hidden patterns and structure.</figcaption>
+          </figure>
 
           <table>
             <thead>
@@ -199,6 +207,11 @@
 
           <p>$$X \xrightarrow{\text{encoder}} h \xrightarrow{\text{decoder}} \hat{X}$$</p>
 
+          <figure class="fig">
+            <img src="fig-02-ae-architecture.png" alt="Autoencoder architecture overview">
+            <figcaption>Autoencoder architecture overview: Input $X$ passes through the Encoder (orange trapezoid, narrowing), producing a compressed Latent Code $h$ (green), which is then expanded by the Decoder (blue trapezoid, widening) to produce the reconstructed Output $\hat{X}$. The trapezoid shapes visually represent the dimensionality reduction and expansion.</figcaption>
+          </figure>
+
           <p>The latent representation $h$ plays the central role. Its dimensionality relative to $X$ has profound implications for what the model learns — we will examine this in Section 7.</p>
 
           <div class="key-concept">
@@ -216,6 +229,16 @@
           <p>$$\dim(X) = 100 \xrightarrow{H_1} 75 \xrightarrow{H_2} 25 = \dim(h)$$</p>
 
           <p>where $H_1$ is the first hidden layer with 75 neurons (fully connected to all 100 inputs), $H_2$ is the second hidden layer with 25 neurons (fully connected to all 75 outputs from $H_1$), and $h$ is the latent representation with 25 features.</p>
+
+          <figure class="fig">
+            <img src="fig-03-encoder-compression.png" alt="Encoder compression diagram">
+            <figcaption>Encoder compression: the input layer (100 features) is progressively reduced through hidden layers (75 neurons, then 25 neurons) to produce the latent representation $h$. The height of each bar represents the relative number of neurons/dimensions at that stage.</figcaption>
+          </figure>
+
+          <figure class="fig">
+            <img src="fig-04-encoder-lecture.png" alt="Encoder architecture lecture slide">
+            <figcaption>Encoder architecture: Input (blue, 100 features) $\to$ Encoder H1 (75 neurons) $\to$ Encoder H2 (25 neurons) $\to$ Latent representation (green, 25 features labelled $h$). The dimension reduction path $100 \to 75 \to 25$ is annotated.</figcaption>
+          </figure>
 
           <div class="key-concept">
             <strong>Key idea.</strong> No data is <em>deleted</em> during compression. All input features reach every neuron at each hidden layer via the fully-connected architecture. The network <em>compresses</em> by reducing the number of output dimensions, forcing it to learn which features are most important for reconstruction.
@@ -237,6 +260,16 @@
 
           <p>where decoder $H_1$ has 75 neurons (fully connected to all 25 latent values), and decoder $H_2$ is the output layer with 100 neurons (fully connected to all 75 outputs from $H_1$).</p>
 
+          <figure class="fig">
+            <img src="fig-05-decoder-expansion.png" alt="Decoder expansion diagram">
+            <figcaption>Decoder expansion: the latent representation (25 features) is progressively expanded through hidden layers (75 neurons, then 100 neurons) to produce the reconstructed output $\hat{X}$. The height of each bar represents the relative number of neurons/dimensions at that stage.</figcaption>
+          </figure>
+
+          <figure class="fig">
+            <img src="fig-06-decoder-lecture.png" alt="Decoder architecture lecture slide">
+            <figcaption>Full decoder architecture: Latent (25) $\to$ Decoder H1 (75 neurons) $\to$ Decoder H2 (100 neurons) $\to$ Output $\hat{X}$ (100). The expansion path $25 \to 75 \to 100$ is annotated.</figcaption>
+          </figure>
+
           <p>The expansion is systematic: each output neuron produces a value that is a weighted combination of all inputs from the previous layer (plus bias and activation). No data is <em>added</em> or <em>copied</em> — the decoder reconstructs from the compressed information alone. If the latent code $h$ has captured the essential structure, the decoder can produce $\hat{X} \approx X$ despite starting from only 25 dimensions.</p>
 
           <div class="key-concept">
@@ -250,6 +283,16 @@
           <p>The complete data flow and its objectives are:</p>
 
           <p>$$X \xrightarrow{\text{Enc}} h \xrightarrow{\text{Dec}} \hat{X}, \qquad \text{with goal } \hat{X} \approx X$$</p>
+
+          <figure class="fig">
+            <img src="fig-07-complete-ae-network.png" alt="Complete autoencoder network diagram">
+            <figcaption>Complete autoencoder network architecture: Input nodes $x_i$ (left) $\to$ encoder hidden layers $\to$ bottleneck $h$ (2 teal nodes in red oval) $\to$ decoder hidden layers $\to$ output nodes $\hat{x}_i$ (right). The red oval highlights the critical bottleneck layer.</figcaption>
+          </figure>
+
+          <figure class="fig">
+            <img src="fig-08-full-ae-lecture.png" alt="Full autoencoder lecture slide">
+            <figcaption>Full autoencoder architecture with labelled components: input nodes $x_i$, encoder hidden layers, bottleneck $h$ (2 nodes in red oval), decoder hidden layers, and output nodes $\hat{x}_i$. The red curved arrow from $h$ to $\hat{x}_i$ emphasises the reconstruction relationship.</figcaption>
+          </figure>
 
           <ul>
             <li><strong>Objective 1 (Representation learning):</strong> The encoder learns $h = \text{Enc}(X)$, a compact representation of $X$.</li>
@@ -285,6 +328,11 @@
           <p>When $\dim(h) \geq \dim(X)$, the autoencoder risks learning a <strong>trivial identity mapping</strong>. With enough capacity, the encoder can simply copy input values directly into the latent space, fill remaining dimensions with zeros, and the decoder extracts the original values — no meaningful learning occurs. This is sometimes called <em>trivial learning</em> because no useful representation is formed.</p>
 
           <p>For example, if $\dim(X) = 4$ and $\dim(h) = 6$, the encoder could copy the 4 input values into 4 of the 6 latent dimensions and set the remaining 2 to zero. The decoder reads out the original 4 values, producing $\hat{X} = X$ without any compression or feature extraction. This is pure memorisation through identity mapping.</p>
+
+          <figure class="fig">
+            <img src="fig-09-under-vs-overcomplete.png" alt="Undercomplete vs overcomplete comparison">
+            <figcaption>Comparison of undercomplete and overcomplete autoencoder architectures. Left (undercomplete): $\dim(h) < \dim(X)$, the network is forced to learn essential features. Right (overcomplete): $\dim(h) \geq \dim(X)$, the network risks trivial identity mapping (the red "copy" arrow illustrates this).</figcaption>
+          </figure>
 
           <table>
             <thead>
