@@ -20,20 +20,26 @@
     .ch-header h1 { font-size: 2rem; font-weight: 600; font-family: var(--font-serif); color: var(--text-color); margin-bottom: 0.8rem; line-height: 1.25; }
     .ch-header p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
     .ch-content { font-family: var(--font-serif); font-size: 1.08rem; line-height: 1.75; color: var(--text-color); max-width: 680px; margin: 0 auto; }
-    .ch-content h2 { font-size: 1.6rem; font-weight: 600; margin: 3rem 0 1.2rem 0; color: var(--text-color); }
-    .ch-content h3 { font-size: 1.3rem; font-weight: 600; margin: 2rem 0 0.8rem 0; color: var(--text-color); }
+    .ch-content h2 { font-size: 1.6rem; font-weight: 600; margin: 3rem 0 1.2rem 0; color: var(--text-color); font-family: var(--font-sans); }
+    .ch-content h3 { font-size: 1.3rem; font-weight: 600; margin: 2rem 0 0.8rem 0; color: var(--text-color); font-family: var(--font-sans); }
     .ch-content p { margin-bottom: 1.6rem; }
-    .ch-content ul { margin: 0 0 1.6rem 1.8rem; }
+    .ch-content ul, .ch-content ol { margin: 0 0 1.6rem 1.8rem; }
     .ch-content li { margin-bottom: 0.5rem; }
+    .ch-content strong { font-weight: 600; }
     .ch-content em { font-style: italic; font-family: var(--font-serif); }
     .ch-content code { font-family: monospace; font-size: 0.9rem; background: var(--secondary-bg); padding: 0.15rem 0.35rem; border-radius: 4px; }
     .ch-content pre { background: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; overflow-x: auto; margin-bottom: 1.6rem; border: 1px solid rgba(170,170,170,0.12); }
     .ch-content blockquote { margin: 1.6rem auto; padding-left: 1.2rem; border-left: 2px solid var(--accent-color); color: var(--text-muted); font-style: italic; max-width: 680px; }
     .ch-content .MathJax_Display { margin: 1.6rem auto; text-align: center; max-width: 680px; }
+    .ch-content .key-concept { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-left: 3px solid var(--accent-color); border-radius: 4px; max-width: 680px; }
+    .ch-content .key-concept strong { color: var(--accent-color); }
+    .ch-content table { width: 100%; border-collapse: collapse; margin: 2rem auto; max-width: 680px; font-size: 0.95rem; }
+    .ch-content th, .ch-content td { border: 1px solid rgba(170,170,170,0.2); padding: 0.7rem; text-align: left; }
+    .ch-content th { background: var(--secondary-bg); font-weight: 600; font-family: var(--font-sans); }
+    .ch-content .defn { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-radius: 4px; max-width: 680px; }
+    .ch-content .defn strong:first-child { color: var(--accent-color); }
     footer { padding: 3rem 0; border-top: 1px solid rgba(170,170,170,0.1); margin-top: 3rem; }
     footer p { font-size: 0.78rem; color: var(--text-muted); }
-    .ch-placeholder { padding: 4rem 0; text-align: center; color: var(--text-muted); }
-    .ch-placeholder p { font-size: 1rem; }
     
     /* Sidebar Styles */
     .doc-layout { display: flex; gap: 4rem; margin: 0 auto; max-width: 1080px; }
@@ -81,6 +87,7 @@
     <header class="ch-header">
       <span class="ch-num">3.0</span>
       <h1>Introduction to Autoencoder</h1>
+      <p>Architecture, encoder-decoder mechanics, undercomplete vs. overcomplete autoencoders, and the representation learning paradigm.</p>
     </header>
 
     <div class="doc-layout">
@@ -99,9 +106,236 @@
 
       <div class="content-area">
         <div class="ch-content">
-          <div class="ch-placeholder">
-            <p>Content for this lecture is being prepared.</p>
+
+          <p>Autoencoders are among the most conceptually elegant models in unsupervised deep learning. They learn to compress data into compact representations and then reconstruct it — all without requiring a single label. This chapter walks through the architecture from the ground up, the mechanics of the encoder and decoder, what happens when the bottleneck is too small or too large, and where this all leads.</p>
+
+          <h2>1. Supervised vs. Unsupervised Learning</h2>
+
+          <p>Most familiar deep learning architectures — feedforward networks, CNNs, RNNs — are designed for <strong>supervised</strong> learning. Each input $X$ is paired with a label $Y$, and the model learns the mapping $X \to Y$. The objective is to minimise prediction error relative to known labels, and the model generalises from labelled examples to unseen data.</p>
+
+          <p>But labels are expensive. In many real-world settings, we have plenty of raw data and almost no annotations. This brings us to <strong>unsupervised</strong> learning: the model receives only input $X$, without any associated labels. Rather than learning a specific input-output mapping, it must discover hidden patterns, correlations between features, and the intrinsic structure of the data on its own.</p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Aspect</th>
+                <th>Supervised Learning</th>
+                <th>Unsupervised Learning</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Input</td>
+                <td>$X$ paired with label $Y$</td>
+                <td>$X$ only (no labels)</td>
+              </tr>
+              <tr>
+                <td>Objective</td>
+                <td>Learn mapping $X \to Y$</td>
+                <td>Discover patterns / structure in $X$</td>
+              </tr>
+              <tr>
+                <td>Examples</td>
+                <td>Classification, regression</td>
+                <td>Clustering, dimensionality reduction</td>
+              </tr>
+              <tr>
+                <td>Data requirement</td>
+                <td>Labeled dataset required</td>
+                <td>Unlabeled data sufficient</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>A special category of unsupervised models aims to learn a <strong>meaningful representation</strong> of the data — a compressed, informative encoding that captures the essential characteristics of the input. This is the core objective of autoencoders.</p>
+
+          <h2>2. Definition and Purpose</h2>
+
+          <div class="defn">
+            <strong>Autoencoder.</strong> An autoencoder is an unsupervised deep learning model that learns a compact, meaningful representation of input data so that it can reconstruct its own inputs from that representation.
           </div>
+
+          <p>The model serves two intertwined objectives:</p>
+
+          <ol>
+            <li><strong>Representation learning:</strong> Learn a compact, informative representation $h$ of the input $X$.</li>
+            <li><strong>Reconstruction learning:</strong> Reconstruct $\hat{X}$ from $h$ such that $\hat{X} \approx X$.</li>
+          </ol>
+
+          <p>These objectives are not independent. The quality of reconstruction depends entirely on the quality of the learned representation. If $h$ captures the essential structure of $X$, the decoder can reconstruct $\hat{X} \approx X$ from $h$ alone. Conversely, poor representation leads to poor reconstruction, providing a natural feedback signal for training.</p>
+
+          <h2>3. Architecture</h2>
+
+          <p>The autoencoder consists of three primary components:</p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Component</th>
+                <th>Symbol</th>
+                <th>Role</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Encoder</td>
+                <td>$\text{Enc}(X)$</td>
+                <td>Maps input $X$ to a compact latent representation $h$</td>
+              </tr>
+              <tr>
+                <td>Latent code</td>
+                <td>$h$</td>
+                <td>The compressed internal representation of $X$</td>
+              </tr>
+              <tr>
+                <td>Decoder</td>
+                <td>$\text{Dec}(h)$</td>
+                <td>Reconstructs $\hat{X}$ from latent representation $h$</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>The overall data flow is:</p>
+
+          <p>$$X \xrightarrow{\text{encoder}} h \xrightarrow{\text{decoder}} \hat{X}$$</p>
+
+          <p>The latent representation $h$ plays the central role. Its dimensionality relative to $X$ has profound implications for what the model learns — we will examine this in Section 7.</p>
+
+          <div class="key-concept">
+            <strong>Key idea.</strong> The autoencoder first learns to represent: $X \to h$. Then it learns to reconstruct: $h \to \hat{X}$. The latent code $h$ is the pivotal element — its quality governs the quality of reconstruction.
+          </div>
+
+          <h2>4. Encoder: Representation Learning</h2>
+
+          <p>The encoder maps the input $X$ to a lower-dimensional latent representation $h$ by progressively reducing the number of neurons in hidden layers. Each neuron computes a weighted sum of all inputs plus a bias term, passed through an activation function — the standard fully-connected operation.</p>
+
+          <h3>4.1 Compression Process</h3>
+
+          <p>Consider a tabular example with 100 input features. The encoder reduces dimensionality step by step:</p>
+
+          <p>$$\dim(X) = 100 \xrightarrow{H_1} 75 \xrightarrow{H_2} 25 = \dim(h)$$</p>
+
+          <p>where $H_1$ is the first hidden layer with 75 neurons (fully connected to all 100 inputs), $H_2$ is the second hidden layer with 25 neurons (fully connected to all 75 outputs from $H_1$), and $h$ is the latent representation with 25 features.</p>
+
+          <div class="key-concept">
+            <strong>Key idea.</strong> No data is <em>deleted</em> during compression. All input features reach every neuron at each hidden layer via the fully-connected architecture. The network <em>compresses</em> by reducing the number of output dimensions, forcing it to learn which features are most important for reconstruction.
+          </div>
+
+          <p>The reduction from 100 to 75, then from 75 to 25, enforces a constraint on the network. Since the target is only 25 dimensions, the encoder must capture only the most important features, discarding redundant or less informative aspects. This forced constraint is what makes the latent representation meaningful — it contains only essential information.</p>
+
+          <p>The dimension of $h$ is a <strong>hyperparameter</strong>. Smaller latent dimensions impose stronger constraints, forcing more aggressive compression but potentially losing important information; larger dimensions allow more information through but may reduce the quality of the learned representation.</p>
+
+          <h2>5. Decoder: Reconstruction Learning</h2>
+
+          <p>The decoder takes the latent representation $h$ as input and progressively expands it back to the original input dimension through hidden layers with increasing numbers of neurons. Like the encoder, it is a fully-connected network — but it operates in reverse, expanding rather than compressing.</p>
+
+          <h3>5.1 Expansion Process</h3>
+
+          <p>Continuing the example with a 25-dimensional latent code $h$, the decoder expands as follows:</p>
+
+          <p>$$\dim(h) = 25 \xrightarrow{H_1} 75 \xrightarrow{H_2} 100 = \dim(\hat{X})$$</p>
+
+          <p>where decoder $H_1$ has 75 neurons (fully connected to all 25 latent values), and decoder $H_2$ is the output layer with 100 neurons (fully connected to all 75 outputs from $H_1$).</p>
+
+          <p>The expansion is systematic: each output neuron produces a value that is a weighted combination of all inputs from the previous layer (plus bias and activation). No data is <em>added</em> or <em>copied</em> — the decoder reconstructs from the compressed information alone. If the latent code $h$ has captured the essential structure, the decoder can produce $\hat{X} \approx X$ despite starting from only 25 dimensions.</p>
+
+          <div class="key-concept">
+            <strong>Key idea.</strong> The decoder does not simply recover the original input by copying values. It reconstructs $\hat{X}$ from the compressed latent code $h$ through systematic expansion. If $h$ is a good representation, then $\hat{X} \approx X$.
+          </div>
+
+          <h2>6. Complete Autoencoder Network</h2>
+
+          <p>The full autoencoder combines encoder and decoder into a single network with a bottleneck at the latent representation $h$. The encoder compresses the input into a lower-dimensional bottleneck, and the decoder expands it back to the original dimension.</p>
+
+          <p>The complete data flow and its objectives are:</p>
+
+          <p>$$X \xrightarrow{\text{Enc}} h \xrightarrow{\text{Dec}} \hat{X}, \qquad \text{with goal } \hat{X} \approx X$$</p>
+
+          <ul>
+            <li><strong>Objective 1 (Representation learning):</strong> The encoder learns $h = \text{Enc}(X)$, a compact representation of $X$.</li>
+            <li><strong>Objective 2 (Reconstruction learning):</strong> The decoder reconstructs $\hat{X} = \text{Dec}(h)$ from $h$, aiming for $\hat{X} \approx X$.</li>
+          </ul>
+
+          <p>These are achieved simultaneously during training — minimising reconstruction error $\|X - \hat{X}\|$ implicitly forces the encoder to learn a good representation and the decoder to learn a good reconstruction function.</p>
+
+          <h2>7. Undercomplete vs. Overcomplete Autoencoders</h2>
+
+          <p>The relationship between $\dim(h)$ and $\dim(X)$ fundamentally determines the behaviour of the autoencoder. Two distinct categories arise.</p>
+
+          <h3>7.1 Undercomplete Autoencoder</h3>
+
+          <div class="defn">
+            <strong>Undercomplete autoencoder.</strong> An undercomplete autoencoder has $\dim(h) < \dim(X)$: the latent dimension is strictly smaller than the input dimension.
+          </div>
+
+          <p>When $\dim(h) < \dim(X)$, the encoder is constrained — it cannot simply copy all input information. It must learn to prioritise the most important features and discard redundant or less informative ones. This forced constraint ensures meaningful representation learning.</p>
+
+          <p>If the decoder can successfully reconstruct $\hat{X} \approx X$ from a lower-dimensional $h$, then $h$ must contain the essential information. This implies $h$ is an effective, nearly loss-free encoding of the input.</p>
+
+          <div class="key-concept">
+            <strong>Key idea.</strong> In an undercomplete autoencoder, the constraint $\dim(h) < \dim(X)$ forces the encoder to learn the most important features. Successful reconstruction from a smaller $h$ implies $h$ is a loss-free encoding of the input.
+          </div>
+
+          <h3>7.2 Overcomplete Autoencoder</h3>
+
+          <div class="defn">
+            <strong>Overcomplete autoencoder.</strong> An overcomplete autoencoder has $\dim(h) \geq \dim(X)$, meaning the latent dimension is greater than or equal to the input dimension.
+          </div>
+
+          <p>When $\dim(h) \geq \dim(X)$, the autoencoder risks learning a <strong>trivial identity mapping</strong>. With enough capacity, the encoder can simply copy input values directly into the latent space, fill remaining dimensions with zeros, and the decoder extracts the original values — no meaningful learning occurs. This is sometimes called <em>trivial learning</em> because no useful representation is formed.</p>
+
+          <p>For example, if $\dim(X) = 4$ and $\dim(h) = 6$, the encoder could copy the 4 input values into 4 of the 6 latent dimensions and set the remaining 2 to zero. The decoder reads out the original 4 values, producing $\hat{X} = X$ without any compression or feature extraction. This is pure memorisation through identity mapping.</p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>Undercomplete</th>
+                <th>Overcomplete</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Latent dimension</td>
+                <td>$\dim(h) < \dim(X)$</td>
+                <td>$\dim(h) \geq \dim(X)$</td>
+              </tr>
+              <tr>
+                <td>Learning behaviour</td>
+                <td>Forced to learn essential features</td>
+                <td>May learn trivial identity mapping</td>
+              </tr>
+              <tr>
+                <td>Representation quality</td>
+                <td>Meaningful, compact</td>
+                <td>Potentially meaningless</td>
+              </tr>
+              <tr>
+                <td>Practical use</td>
+                <td>Preferred for real applications</td>
+                <td>Avoided without regularisation</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="key-concept">
+            <strong>Key idea.</strong> In practice, always use an undercomplete architecture where $\dim(h) < \dim(X)$. The bottleneck constraint drives meaningful representation learning. Without it, the autoencoder may learn nothing useful.
+          </div>
+
+          <h2>8. Loss Function Preview: Reconstruction Loss</h2>
+
+          <p>The loss function for autoencoders is <strong>reconstruction loss</strong>, which measures how far the reconstructed output $\hat{X}$ deviates from the original input $X$. This is natural: the network should reconstruct its own input as accurately as possible.</p>
+
+          <p>In its simplest form:</p>
+
+          <p>$$\mathcal{L}_{\text{recon}} = \|X - \hat{X}\|^2 = \|X - \text{Dec}(\text{Enc}(X))\|^2$$</p>
+
+          <p>where $\mathcal{L}_{\text{recon}}$ is the reconstruction loss, $X$ is the original input, $\hat{X} = \text{Dec}(\text{Enc}(X))$ is the reconstructed output, and $\|\cdot\|^2$ denotes the squared norm (mean squared error, in this case).</p>
+
+          <p>Minimising this loss simultaneously optimises both objectives: the encoder learns to produce representations that preserve the most reconstruction-relevant information, and the decoder learns to map those representations back to the original input space as accurately as possible.</p>
+
+          <p>The detailed formulation and variants of reconstruction loss — including mean squared error and binary cross-entropy — are covered in the next lecture.</p>
+
         </div>
       </div>
     </div>
