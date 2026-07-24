@@ -1,1 +1,211 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>REINFORCE — Module 02</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400,600&display=swap" rel="stylesheet"><link rel="stylesheet" href="../style.css?v=2"><style>.container.p-chapter{max-width:680px;}.ch-nav{padding:2rem 0 1rem 0;}.ch-nav a{font-size:0.8rem;color:var(--text-muted);text-decoration:none;display:inline-flex;align-items:center;gap:0.3rem;transition:color 0.15s;}.ch-nav a:hover{color:var(--accent-color);}.ch-header{padding:3rem 0 2rem 0;}.ch-header .ch-num{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;font-weight:600;color:var(--accent-color);display:block;margin-bottom:0.4rem;}.ch-header h1{font-size:2rem;font-weight:600;font-family:var(--font-serif);color:var(--text-color);margin-bottom:0.8rem;line-height:1.25;}.ch-header p{font-size:0.95rem;color:var(--text-muted);line-height:1.6;}.ch-placeholder{padding:4rem 0;text-align:center;color:var(--text-muted);}.ch-placeholder p{font-size:1rem;}.ch-placeholder .icon{font-size:2.5rem;margin-bottom:1rem;display:block;}footer{padding:3rem 0;border-top:1px solid rgba(170,170,170,0.1);margin-top:3rem;}footer p{font-size:0.78rem;color:var(--text-muted);}</style></head><body><header class="header"><div class="header-inner"><a href="../index.html" class="logo">Romeo Mhakayakora <span class="logo-accent">/></span></a><nav class="nav"><a href="../index.html" class="nav-link">Home</a><a href="../projects.html" class="nav-link">Projects</a><a href="../ai.html" class="nav-link">AI</a><a href="../mathematics.html" class="nav-link">Mathematics</a><a href="../inference.html" class="nav-link">Inference</a><a href="../blogs.html" class="nav-link">Blogs</a><a href="../courses.html" class="nav-link">Courses</a><a href="../learning.html" class="nav-link">Learning</a><a href="../interesting.html" class="nav-link">Interesting</a><a href="../papers.html" class="nav-link">Papers</a><a href="../contact.html" class="nav-link">Contact</a><button id="theme-toggle" class="theme-btn" aria-label="Toggle dark mode"><svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button></nav></div></header><main class="container p-chapter"><nav class="ch-nav"><a href="module-2-policy-gradients.html">← back to Module 02</a></nav><header class="ch-header"><span class="ch-num">Module 02</span><h1>REINFORCE</h1><p><!-- placeholder subtitle --></p></header><div class="ch-placeholder"><span class="icon">✎</span><p>Content coming soon. I'm working through this module now.</p></div></main><footer><div class="container p-chapter"><p>&copy; 2026 Romeo Mhakayakora. Built with an editorial aesthetic.</p></div></footer><script src="../script.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The REINFORCE Algorithm — Module 02</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css?v=2">
+  <script>window.MathJax = {tex: {inlineMath: [['$','$'], ['\\(','\\)']], displayMath: [['$$','$$'], ['\\[','\\]']], processEscapes: true, processEnvironments: true}};</script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    .container.p-chapter { max-width: 1080px; }
+    .ch-nav { padding: 2rem 0 1rem 0; }
+    .ch-nav a { font-size: 0.8rem; color: var(--text-muted); text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem; transition: color 0.15s; }
+    .ch-nav a:hover { color: var(--accent-color); }
+    .ch-header { padding: 3rem 0 2rem 0; }
+    .ch-header .ch-num { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; color: var(--accent-color); display: block; margin-bottom: 0.4rem; }
+    .ch-header h1 { font-size: 2rem; font-weight: 600; font-family: var(--font-serif); color: var(--text-color); margin-bottom: 0.8rem; line-height: 1.25; }
+    .ch-header p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
+    .ch-content { font-family: var(--font-serif); font-size: 1.08rem; line-height: 1.75; color: var(--text-color); max-width: 680px; margin: 0 auto; }
+    .ch-content h2 { font-size: 1.6rem; font-weight: 600; margin: 3rem 0 1.2rem 0; color: var(--text-color); font-family: var(--font-sans); }
+    .ch-content h3 { font-size: 1.3rem; font-weight: 600; margin: 2rem 0 0.8rem 0; color: var(--text-color); font-family: var(--font-sans); }
+    .ch-content h4 { font-size: 1.1rem; font-weight: 600; margin: 1.5rem 0 0.6rem 0; color: var(--text-color); }
+    .ch-content p { margin-bottom: 1.6rem; }
+    .ch-content ul, .ch-content ol { margin: 0 0 1.6rem 1.8rem; }
+    .ch-content li { margin-bottom: 0.5rem; }
+    .ch-content strong { font-weight: 600; }
+    .ch-content em { font-style: italic; font-family: var(--font-serif); }
+    .ch-content code { font-family: monospace; font-size: 0.9rem; background: var(--secondary-bg); padding: 0.15rem 0.35rem; border-radius: 4px; }
+    .ch-content pre { background: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; overflow-x: auto; margin-bottom: 1.6rem; border: 1px solid rgba(170,170,170,0.12); font-family: monospace; font-size: 0.9rem; line-height: 1.55; }
+    .ch-content .MathJax_Display { margin: 1.6rem auto; text-align: center; max-width: 680px; }
+    .ch-content .key-concept { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-left: 3px solid var(--accent-color); border-radius: 4px; max-width: 680px; }
+    .ch-content .key-concept strong, .ch-content .key-concept .label { color: var(--accent-color); }
+    .ch-content .imp { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-left: 3px solid #e74c3c; border-radius: 4px; max-width: 680px; }
+    .ch-content .imp strong { color: #e74c3c; }
+    .ch-content .defn { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-left: 3px solid #2c3e50; border-radius: 4px; max-width: 680px; }
+    .ch-content .defn strong:first-child, .ch-content .defn .label { color: var(--accent-color); }
+    .ch-content table { width: 100%; border-collapse: collapse; margin: 2rem auto; max-width: 680px; font-size: 0.95rem; font-family: var(--font-sans); }
+    .ch-content th, .ch-content td { border: 1px solid rgba(170,170,170,0.2); padding: 0.7rem; text-align: left; }
+    .ch-content th { background: var(--secondary-bg); font-weight: 600; }
+    .ch-content .fig-placeholder { margin: 2rem auto; padding: 1.5rem; background: var(--secondary-bg); border: 1px dashed rgba(170,170,170,0.3); border-radius: 6px; text-align: center; max-width: 680px; }
+    .ch-content .fig-placeholder .fig-label { font-size: 0.85rem; font-weight: 600; color: var(--accent-color); margin-bottom: 0.5rem; display: block; }
+    .ch-content .fig-placeholder .fig-desc { font-size: 0.85rem; color: var(--text-muted); font-style: italic; font-family: var(--font-sans); }
+    footer { padding: 3rem 0; border-top: 1px solid rgba(170,170,170,0.1); margin-top: 3rem; }
+    footer p { font-size: 0.78rem; color: var(--text-muted); }
+    .doc-layout { display: flex; gap: 4rem; margin: 0 auto; max-width: 1080px; }
+    .sidebar { flex: 0 0 220px; position: sticky; top: 6rem; align-self: start; max-height: calc(100vh - 8rem); overflow-y: auto; }
+    .sidebar h3 { font-size: 0.85rem; font-family: var(--font-sans); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 1rem; }
+    .toc-list { list-style: none; padding: 0; margin: 0; }
+    .toc-item { margin-bottom: 0.8rem; }
+    .toc-link { display: block; text-decoration: none; font-family: var(--font-serif); font-size: 0.95rem; color: var(--text-color); transition: color 0.15s; }
+    .toc-link:hover { color: var(--accent-color); }
+    .toc-link.active { color: var(--accent-color); font-weight: 600; }
+    .toc-num { color: var(--text-muted); font-size: 0.85rem; margin-right: 0.3rem; }
+    .content-area { flex: 1; }
+    .algo-box { margin: 1.6rem auto; padding: 1.2rem; background: var(--secondary-bg); border-radius: 6px; max-width: 680px; font-family: monospace; font-size: 0.9rem; line-height: 1.7; border: 1px solid rgba(170,170,170,0.15); }
+    .algo-box .algo-title { font-family: var(--font-sans); font-weight: 600; font-size: 0.95rem; margin-bottom: 0.8rem; color: var(--accent-color); }
+    .algo-box .algo-line { display: block; white-space: pre; }
+    .algo-box .algo-cmt { color: var(--text-muted); font-style: italic; }
+    @media (max-width: 900px) { .doc-layout { flex-direction: column; gap: 2rem; } .sidebar { position: static; max-height: none; } }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="../index.html" class="logo">Romeo Mhakayakora <span class="logo-accent">/></span></a>
+      <nav class="nav"><a href="../index.html" class="nav-link">Home</a><a href="../projects.html" class="nav-link">Projects</a><a href="../ai.html" class="nav-link">AI</a><a href="../mathematics.html" class="nav-link">Mathematics</a><a href="../inference.html" class="nav-link">Inference</a><a href="../blogs.html" class="nav-link">Blogs</a><a href="../courses.html" class="nav-link">Courses</a><a href="../learning.html" class="nav-link">Learning</a><a href="../interesting.html" class="nav-link">Interesting</a><a href="../papers.html" class="nav-link">Papers</a><a href="../contact.html" class="nav-link">Contact</a><button id="theme-toggle" class="theme-btn" aria-label="Toggle dark mode">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button></nav>
+    </div>
+  </header>
+
+  <main class="container p-chapter">
+    <nav class="ch-nav">
+      <a href="module-2-policy-gradients.html">← back to Module 02</a>
+    </nav>
+
+    <header class="ch-header">
+      <span class="ch-num">Module 02</span>
+      <h1>The REINFORCE Algorithm</h1>
+      <p>Monte Carlo policy gradient: algorithm, variance reduction via baselines, and implementation on CartPole.</p>
+    </header>
+
+    <div class="doc-layout">
+      <aside class="sidebar">
+        <h3>Contents</h3>
+        <ul class="toc-list">
+          <li class="toc-item"><a href="module-2-policy-gradient.html" class="toc-link"><span class="toc-num">02.1</span> Policy Gradient</a></li>
+          <li class="toc-item"><a href="module-2-policy-gradient-derivation.html" class="toc-link"><span class="toc-num">02.2</span> Policy Gradient Derivation</a></li>
+          <li class="toc-item"><a href="module-2-reinforce.html" class="toc-link active"><span class="toc-num">02.3</span> REINFORCE</a></li>
+          <li class="toc-item"><a href="module-2-policy-gradients.html" class="toc-link"><span class="toc-num">02.4</span> Reference</a></li>
+        </ul>
+      </aside>
+
+      <div class="content-area">
+        <div class="ch-content">
+
+          <h2>Algorithm</h2>
+
+          <p>REINFORCE is an <strong>on-policy</strong> algorithm (see On-Policy note below).</p>
+
+          <p><strong>Setup:</strong></p>
+          <ul>
+            <li>Initialize learning rate $\alpha$.</li>
+            <li>Construct a policy network $\pi_\theta$ with randomly initialized weights $\theta$.</li>
+          </ul>
+
+          <p><strong>Per episode:</strong></p>
+          <ol>
+            <li>Use $\pi_\theta$ to generate a trajectory $\tau = s_0, a_0, r_0, \ldots, s_T, a_T, r_T$.</li>
+            <li>For each time step $t$ in the trajectory, compute the return $R_t(\tau)$.</li>
+            <li>Use $R_t(\tau)$ to estimate the policy gradient at each time step, and sum the policy gradients across all time steps.</li>
+            <li>Use the summed result to update the policy network parameters $\theta$.</li>
+          </ol>
+
+          <h3>Algorithm 2 — REINFORCE algorithm (pseudocode)</h3>
+
+          <div class="algo-box">
+            <div class="algo-title">Algorithm 2: REINFORCE</div>
+            <span class="algo-line">1:  Initialize learning rate $\alpha$</span>
+            <span class="algo-line">2:  Initialize weights $\theta$ of a policy network $\pi_\theta$</span>
+            <span class="algo-line">3:  <strong>for</strong> episode = 0, ..., MAX_EPISODE <strong>do</strong></span>
+            <span class="algo-line">4:      Sample a trajectory $\tau = s_0, a_0, r_0, \ldots, s_T, a_T, r_T$</span>
+            <span class="algo-line">5:      Set $\nabla_\theta J(\pi_\theta) = 0$</span>
+            <span class="algo-line">6:      <strong>for</strong> $t = 0, \ldots, T$ <strong>do</strong></span>
+            <span class="algo-line">7:          $R_t(\tau) = \sum_{t'=t}^{T} \gamma^{t'-t} r_{t'}$</span>
+            <span class="algo-line">8:          $\nabla_\theta J(\pi_\theta) \mathrel{+}= R_t(\tau) \nabla_\theta \log \pi_\theta(a_t \mid s_t)$</span>
+            <span class="algo-line">9:      <strong>end for</strong></span>
+            <span class="algo-line">10:     $\theta = \theta + \alpha \nabla_\theta J(\pi_\theta)$</span>
+            <span class="algo-line">11: <strong>end for</strong></span>
+          </div>
+
+          <h3>On-policy nature of REINFORCE</h3>
+
+          <div class="imp">
+            <strong>Key point:</strong> A trajectory <strong>must be discarded after each parameter update</strong> — it cannot be reused.
+          </div>
+
+          <p><strong>Reason:</strong> REINFORCE is an <strong>on-policy</strong> algorithm — the parameter update equation depends on the <em>current</em> policy.</p>
+
+          <p>Evidence in Line 8: the policy gradient directly depends on action probabilities $\pi_\theta(a_t\mid s_t)$ generated by the <strong>current</strong> policy $\pi_\theta$ — not some past policy $\pi_{\theta'}$. Correspondingly, the return $R_t(\tau)$ (where $\tau \sim \pi_\theta$) must also be generated from the current $\pi_\theta$ — otherwise action probabilities would get adjusted based on returns they didn't actually generate.</p>
+
+          <hr style="border: none; border-top: 1px solid rgba(170,170,170,0.12); margin: 3rem auto; max-width: 680px;">
+
+          <h2>Improving REINFORCE</h2>
+
+          <h3>The variance problem</h3>
+
+          <p>REINFORCE estimates the policy gradient using <strong>Monte Carlo sampling with a single trajectory</strong>. This estimate is <strong>unbiased</strong>, but has <strong>high variance</strong> — returns can vary significantly from trajectory to trajectory.</p>
+
+          <p><strong>Three sources of this variance:</strong></p>
+          <ol>
+            <li>Actions have randomness (sampled from a probability distribution).</li>
+            <li>The starting state may vary per episode.</li>
+            <li>The environment's transition function may be stochastic.</li>
+          </ol>
+
+          <h3>Baseline (variance reduction)</h3>
+
+          <p>One way to reduce variance: modify the returns by subtracting a suitable <strong>action-independent baseline</strong> $b(s_t)$:</p>
+
+          <p>$$\nabla_\theta J(\pi_\theta) \approx \sum_{t=0}^{T} \big(R_t(\tau) - b(s_t)\big)\nabla_\theta \log \pi_\theta(a_t\mid s_t) \tag{1.24}$$</p>
+
+          <p><strong>Option 1 — Value function baseline:</strong> $b = V^\pi$ (the value function). This choice motivates the <strong>Actor-Critic</strong> algorithm (covered separately).</p>
+
+          <p><strong>Option 2 — Mean return baseline:</strong></p>
+
+          <p>$$b = \frac{1}{T}\sum_{t=0}^{T} R_t(\tau)$$</p>
+
+          <ul>
+            <li>This is a <strong>constant baseline per trajectory</strong> — it does not vary with state $s_t$.</li>
+            <li>Effect: centers the returns for each trajectory around 0.</li>
+            <li>Result: for each trajectory, the best 50% of actions get encouraged, and the rest get discouraged, on average.</li>
+          </ul>
+
+          <h3>Why this matters — the all-negative/all-positive reward case</h3>
+
+          <p><strong>All-negative-reward environments:</strong> without a baseline, even a very good action gets discouraged, because returns are always negative.</p>
+          <ul>
+            <li>Over time this can still yield good policies, since worse actions get discouraged even more — indirectly increasing the relative probability of better actions.</li>
+            <li>Downside: slower learning, since probability adjustments can only be made in a single direction (down).</li>
+          </ul>
+
+          <p><strong>All-positive-reward environments:</strong> the converse problem happens.</p>
+
+          <p><strong>More effective approach:</strong> directly both increase and decrease action probabilities — this requires having both positive <em>and</em> negative returns, which is exactly what the baseline (via mean-centering) achieves.</p>
+
+          <hr style="border: none; border-top: 1px solid rgba(170,170,170,0.12); margin: 3rem auto; max-width: 680px;">
+
+          <h2>Implementation</h2>
+
+          <p>REINFORCE implemented on CartPole:</p>
+          <p><a href="https://colab.research.google.com/drive/1oNDBNf1vGdarKoaKUvXsQXieT3gtc8OD" target="_blank" rel="noopener" style="color: var(--accent-color); font-weight: 600;">REINFORCE on CartPole — Colab</a></p>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container p-chapter">
+      <p>&copy; 2026 Romeo Mhakayakora. Built with an editorial aesthetic.</p>
+    </div>
+  </footer>
+
+  <script src="../script.js"></script>
+</body>
+</html>
