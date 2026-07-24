@@ -120,7 +120,7 @@
 
           <p>It's common to learn the <strong>advantage function</strong> as the reinforcing signal:</p>
 
-          <p>$$A^\pi(s,a) = Q^\pi(s,a) - V^\pi(s) \tag{3.3}$$</p>
+          <p>$$A^\pi(s,a) = Q^\pi(s,a) - V^\pi(s)$$</p>
 
           <p>Key idea: it's better to select an action based on how it performs <em>relative to the other actions available in a particular state</em>, instead of using the absolute value of that action (as measured by the Q-function).</p>
 
@@ -216,6 +216,165 @@
           <p>Schulman et al. present a similar interpretation in their paper <em>"Generalized Advantage Estimation."</em></p>
 
           <p>Having established why $A^\pi(s,a)$ is a good reinforcing signal, the next step is to look at two ways of <strong>estimating</strong> it: n-step returns and Generalized Advantage Estimation (GAE).</p>
+
+          <hr style="border: none; border-top: 1px solid rgba(170,170,170,0.12); margin: 3rem auto; max-width: 680px;">
+
+          <h2>Estimating $Q^\pi$ from $V^\pi$</h2>
+
+          <p>To calculate $A^\pi$, we need estimates of both $Q^\pi$ and $V^\pi$.</p>
+
+          <p><strong>Option considered but rejected:</strong> learn $Q^\pi$ and $V^\pi$ separately with two different networks. Two disadvantages:</p>
+          <ol>
+            <li>Care is needed to ensure the two estimates stay consistent with each other.</li>
+            <li>It's less efficient to learn.</li>
+          </ol>
+
+          <p><strong>Preferred approach:</strong> learn just $V^\pi$, and combine it with rewards from a trajectory to estimate $Q^\pi$.</p>
+
+          <p><strong>Why $V^\pi$ is preferred over $Q^\pi$:</strong></p>
+          <ol>
+            <li>$Q^\pi$ is a more complex function and may require more samples to learn well — particularly problematic when actor and critic are trained jointly.</li>
+            <li>Computing $V^\pi$ from $Q^\pi$ is more expensive: it requires computing $Q^\pi(s,a)$ for <em>all</em> possible actions in a state, then taking the action-probability-weighted average. This is also difficult for environments with continuous action spaces.</li>
+          </ol>
+
+          <h3>Rewriting $Q^\pi$ using $V^\pi$ (n-step return)</h3>
+
+          <p>If we assume a perfect estimate of $V^\pi(s)$ is available, $Q^\pi$ can be rewritten as a mix of expected rewards for $n$ time steps, followed by $V^\pi(s_{t+n+1})$:</p>
+
+          <p>$$Q^\pi(s_t,a_t) = \mathbb{E}\big[r_t + \gamma r_{t+1} + \cdots + \gamma^n r_{t+n} + \gamma^{n+1}V^\pi(s_{t+n+1})\big] \tag{3.6}$$</p>
+
+          <p>To make this tractable to estimate, substitute a single sampled trajectory of rewards $(r_t, \ldots, r_{t+n})$ in place of the expectation, and substitute in $V^\pi(s_{t+n+1})$ learned by the critic. This is the <strong>n-step return</strong>:</p>
+
+          <p>$$Q^\pi(s_t,a_t) \approx r_t + \gamma r_{t+1} + \cdots + \gamma^n r_{t+n} + \gamma^{n+1}V^\pi(s_{t+n+1}) \tag{3.7}$$</p>
+
+          <p><strong>Bias–variance trade-off made explicit by Eq. 3.7:</strong></p>
+          <ul>
+            <li>The $n$-step sum of actual rewards is <strong>unbiased</strong>, but has <strong>high variance</strong> (comes from just one trajectory).</li>
+            <li>$V^\pi(s_{t+n+1})$ has <strong>lower variance</strong> (reflects an expectation over all trajectories seen so far), but is <strong>biased</strong> (estimated via a function approximator).</li>
+            <li>Close to $t$: benefit of using unbiased real rewards typically outweighs the variance they introduce.</li>
+            <li>As $n$ increases: variance from real rewards becomes problematic → switching to the lower-variance, biased value estimate becomes preferable.</li>
+            <li><strong>$n$ = the knob controlling this bias–variance trade-off.</strong></li>
+          </ul>
+
+          <h2>Generalized Advantage Estimation (GAE)</h2>
+
+          <p>GAE (Schulman et al.) improves on the n-step return estimate for the advantage function. It solves the problem of having to explicitly pick a single value of $n$.</p>
+
+          <p><strong>Main idea:</strong> instead of picking one $n$, mix multiple values $n = 1, 2, 3, \ldots, k$.</p>
+
+          <p><strong>Purpose:</strong> significantly reduce estimator variance while keeping the introduced bias as low as possible.</p>
+
+          <p>GAE is defined as an <strong>exponentially weighted average of all the n-step forward return advantage estimators</strong>:</p>
+
+          <p>$$A^\pi_{\text{GAE}}(s_t,a_t) = \sum_{\ell=0}^{\infty} (\gamma\lambda)^\ell \delta_{t+\ell} \tag{3.10}$$</p>
+
+          <p>$$\text{where} \quad \delta_t = r_t + \gamma V^\pi(s_{t+1}) - V^\pi(s_t) \tag{3.11}$$</p>
+
+          <p>Intuitively: GAE takes a <strong>weighted average of many different advantage estimates</strong>, each with different bias/variance.</p>
+          <ul>
+            <li>It starts from the high-bias, low-variance 1-step estimator.</li>
+            <li>It adds contributions from lower-bias, higher-variance estimators using 2, 3, ..., $n$ steps.</li>
+            <li>Each contribution's weight <strong>decays exponentially</strong> as the number of steps increases; the decay rate is controlled by $\lambda$.</li>
+            <li><strong>Larger $\lambda$ → higher variance</strong> (more weight on longer, higher-variance estimators).</li>
+          </ul>
+
+          <p>Full derivation of Eq. 3.10 (starting from the raw n-step estimators, including the telescoping-cancellation proof) is in a separate file: <strong>GAE_Derivation.md</strong>.</p>
+
+          <h3>GAE vs. n-step: why $\lambda$ is a "softer" knob than $n$</h3>
+
+          <ul>
+            <li>Both $n$ and $\lambda$ control the same underlying bias–variance trade-off.</li>
+            <li>$n$ is a <strong>hard choice</strong> — it precisely determines the exact point where high-variance real rewards are swapped out for the low-variance value-function estimate.</li>
+            <li>$\lambda$ is a <strong>soft choice</strong> — smaller $\lambda$ weights the $V$-function baseline more heavily; larger $\lambda$ weights the actual rewards more heavily. The transition is smooth/blended rather than a hard cutoff.</li>
+          </ul>
+
+          <hr style="border: none; border-top: 1px solid rgba(170,170,170,0.12); margin: 3rem auto; max-width: 680px;">
+
+          <h2>Learning the Advantage Function (in practice)</h2>
+
+          <p>Both estimation methods (n-step, GAE) assume access to an estimate $\hat{V}^\pi$:</p>
+
+          <p>$$A^\pi_{\text{NSTEP}}(s_t,a_t) \approx r_t + \gamma r_{t+1} + \cdots + \gamma^n r_{t+n} + \gamma^{n+1}\hat{V}^\pi(s_{t+n+1}) - \hat{V}^\pi(s_t) \tag{3.18}$$</p>
+
+          <p>$$A^\pi_{\text{GAE}}(s_t,a_t) \approx \sum_{\ell=0}^{\infty}(\gamma\lambda)^\ell \hat{\delta}_{t+\ell}, \quad \text{where} \quad \hat{\delta}_t = r_t + \gamma\hat{V}^\pi(s_{t+1}) - \hat{V}^\pi(s_t) \tag{3.19}$$</p>
+
+          <p>(The hats denote <em>estimates</em>, not the true value function.)</p>
+
+          <h3>The circular dependency</h3>
+
+          <p>Both advantage estimators depend on having a good $\hat{V}^\pi$. But $\hat{V}^\pi$ is itself <strong>learned</strong> — and the way it's learned (via TD targets) can itself depend on advantage-related quantities.</p>
+
+          <p><strong>This is resolved in practice</strong> (e.g. in PPO and similar actor-critic methods) by breaking the circularity within each update:</p>
+          <ol>
+            <li>Run the policy to collect a batch of experience.</li>
+            <li>Use the <strong>current</strong> $\hat{V}^\pi$ to compute GAE advantages for that batch.</li>
+            <li>Use those advantages (and/or returns) to update the policy.</li>
+            <li>Simultaneously update $\hat{V}^\pi$ — but the value <em>targets</em> used for this update are computed with the <strong>fixed (old)</strong> value estimates, not the one being updated.</li>
+          </ol>
+
+          <p>In one sentence: GAE gives a good advantage estimate given a value function; TD learning gives a good value function given experience — the two are trained <strong>jointly</strong>, with old estimates used to break the circularity within a given update step.</p>
+
+          <h3>$V^\pi$ is learned with TD learning</h3>
+
+          <p>Same idea as how DQN learns $Q^\pi$, but applied to $V^\pi$ instead.</p>
+
+          <p><strong>Process:</strong></p>
+          <ol>
+            <li>Parametrize $V^\pi$ with neural network weights $\theta$: $\hat{V}^\pi(s;\theta)$.</li>
+            <li>Generate a target value $V^\pi_{\text{tar}}$ from experience.</li>
+            <li>Minimize a regression loss (e.g. MSE) between $\hat{V}^\pi(s;\theta)$ and $V^\pi_{\text{tar}}$.</li>
+            <li>Repeat, updating $\theta$ each time.</li>
+          </ol>
+
+          <p><strong>Loss:</strong></p>
+          <p>$$L(\theta) = \mathbb{E}\Big[\big(\hat{V}^\pi(s;\theta) - V^\pi_{\text{tar}}\big)^2\Big]$$</p>
+
+          <p><strong>Three ways to construct $V^\pi_{\text{tar}}$:</strong></p>
+
+          <ol>
+            <li>
+              <p><strong>1-step TD target:</strong></p>
+              <p>$$V^\pi_{\text{tar}} = r_t + \gamma\hat{V}^\pi(s_{t+1};\theta_{\text{old}}) \tag{3.20}$$</p>
+            </li>
+            <li>
+              <p><strong>Monte Carlo estimate:</strong></p>
+              <p>$$V^\pi_{\text{tar}}(s_t) = \sum_{t'=t}^{T} \gamma^{t'-t} r_{t'} \tag{3.21}$$</p>
+            </li>
+            <li>
+              <p><strong>Using the n-step advantage estimator itself:</strong></p>
+              <p>$$V^\pi_{\text{tar}}(s_t) = A^\pi_{\text{NSTEP}}(s_t,a_t) + V^\pi(s_t) \tag{3.22}$$</p>
+            </li>
+          </ol>
+
+          <p>In practice, the choice of $V^\pi_{\text{tar}}$ is usually tied to the method used to estimate the advantage — e.g. Eq. 3.20 when estimating with n-step returns, or GAE-based targets when using GAE. It's also possible to use more advanced optimization procedures to learn $V^\pi$ — e.g. a trust-region method.</p>
+
+          <hr style="border: none; border-top: 1px solid rgba(170,170,170,0.12); margin: 3rem auto; max-width: 680px;">
+
+          <h2>Plain-English intuition: what an n-step advantage really is</h2>
+
+          <ul>
+            <li><strong>A 2-step advantage is just the 1-step advantage (TD error) at time $t$, plus a discounted 1-step advantage at time $t+1$:</strong></li>
+          </ul>
+
+          <p>$$A_t^\pi(2) = \underbrace{\delta_t}_{\text{advantage now}} + \underbrace{\gamma\delta_{t+1}}_{\text{advantage next step, discounted}}$$</p>
+
+          <ul>
+            <li>More generally: <strong>an n-step advantage is a sum of 1-step advantages (TD errors), each discounted by $\gamma$ according to how far into the future it is:</strong></li>
+          </ul>
+
+          <p>$$A_t^\pi(n) = \sum_{i=0}^{n-1}\gamma^i \delta_{t+i}$$</p>
+
+          <ul>
+            <li><strong>Why this works (telescoping):</strong> each $\delta_{t+i}$ "hands off" its next-state value estimate to the following $\delta$, and that next $\delta$ "returns" it by using it as its own current-state value. All the intermediate value terms $V^\pi(s_{t+1}), V^\pi(s_{t+2}), \ldots, V^\pi(s_{t+n-1})$ cancel out in pairs (telescope away), leaving only:
+              <ul>
+                <li>the initial value estimate $V^\pi(s_t)$ (negative),</li>
+                <li>the final bootstrapped value $\gamma^n V^\pi(s_{t+n})$,</li>
+                <li>and all the rewards in between.</li>
+              </ul>
+            </li>
+            <li><strong>Interpretation:</strong> each $\delta_{t+i}$ tells you "how much better or worse did things go than expected at that specific step." The n-step advantage simply accumulates these step-by-step surprises, discounting future surprises since they're less certain and farther away.</li>
+            <li>This is why the $\delta$-formulation (GAE) is powerful: it turns a messy expression involving nested value functions into a simple sum of independent TD errors — clean and efficient to implement.</li>
+          </ul>
 
         </div>
       </div>
