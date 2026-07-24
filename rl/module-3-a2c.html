@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A2C Algorithm — Module 03</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css?v=2">
+  <script>window.MathJax = {tex: {inlineMath: [['$','$'], ['\\(','\\)']], displayMath: [['$$','$$'], ['\\[','\\]']], processEscapes: true, processEnvironments: true}};</script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    .container.p-chapter { max-width: 1080px; }
+    .ch-nav { padding: 2rem 0 1rem 0; }
+    .ch-nav a { font-size: 0.8rem; color: var(--text-muted); text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem; transition: color 0.15s; }
+    .ch-nav a:hover { color: var(--accent-color); }
+    .ch-header { padding: 3rem 0 2rem 0; }
+    .ch-header .ch-num { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; color: var(--accent-color); display: block; margin-bottom: 0.4rem; }
+    .ch-header h1 { font-size: 2rem; font-weight: 600; font-family: var(--font-serif); color: var(--text-color); margin-bottom: 0.8rem; line-height: 1.25; }
+    .ch-header p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
+    .ch-content { font-family: var(--font-serif); font-size: 1.08rem; line-height: 1.75; color: var(--text-color); max-width: 680px; margin: 0 auto; }
+    .ch-content h2 { font-size: 1.6rem; font-weight: 600; margin: 3rem 0 1.2rem 0; color: var(--text-color); font-family: var(--font-sans); }
+    .ch-content h3 { font-size: 1.3rem; font-weight: 600; margin: 2rem 0 0.8rem 0; color: var(--text-color); font-family: var(--font-sans); }
+    .ch-content p { margin-bottom: 1.6rem; }
+    .ch-content ul, .ch-content ol { margin: 0 0 1.6rem 1.8rem; }
+    .ch-content li { margin-bottom: 0.5rem; }
+    .ch-content strong { font-weight: 600; }
+    .ch-content em { font-style: italic; font-family: var(--font-serif); }
+    .ch-content .MathJax_Display { margin: 1.6rem auto; text-align: center; max-width: 680px; }
+    .ch-content .key-concept { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-left: 3px solid var(--accent-color); border-radius: 4px; max-width: 680px; }
+    .ch-content .key-concept strong { color: var(--accent-color); }
+    .ch-content .imp { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-left: 3px solid #e74c3c; border-radius: 4px; max-width: 680px; }
+    .ch-content .imp strong { color: #e74c3c; }
+    .ch-content .algo-box { margin: 1.6rem auto; padding: 1.2rem; background: var(--secondary-bg); border-radius: 6px; max-width: 680px; font-family: monospace; font-size: 0.9rem; line-height: 1.7; border: 1px solid rgba(170,170,170,0.15); }
+    .ch-content .algo-box .algo-title { font-family: var(--font-sans); font-weight: 600; font-size: 0.95rem; margin-bottom: 0.8rem; color: var(--accent-color); }
+    .ch-content .algo-box .algo-line { display: block; white-space: pre; }
+    footer { padding: 3rem 0; border-top: 1px solid rgba(170,170,170,0.1); margin-top: 3rem; }
+    footer p { font-size: 0.78rem; color: var(--text-muted); }
+    .doc-layout { display: flex; gap: 4rem; margin: 0 auto; max-width: 1080px; }
+    .sidebar { flex: 0 0 220px; position: sticky; top: 6rem; align-self: start; max-height: calc(100vh - 8rem); overflow-y: auto; }
+    .sidebar h3 { font-size: 0.85rem; font-family: var(--font-sans); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 1rem; }
+    .toc-list { list-style: none; padding: 0; margin: 0; }
+    .toc-item { margin-bottom: 0.8rem; }
+    .toc-link { display: block; text-decoration: none; font-family: var(--font-serif); font-size: 0.95rem; color: var(--text-color); transition: color 0.15s; }
+    .toc-link:hover { color: var(--accent-color); }
+    .toc-link.active { color: var(--accent-color); font-weight: 600; }
+    .content-area { flex: 1; }
+    @media (max-width: 900px) { .doc-layout { flex-direction: column; gap: 2rem; } .sidebar { position: static; max-height: none; } }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="../index.html" class="logo">Romeo Mhakayakora <span class="logo-accent">/></span></a>
+      <nav class="nav"><a href="../index.html" class="nav-link">Home</a><a href="../projects.html" class="nav-link">Projects</a><a href="../ai.html" class="nav-link">AI</a><a href="../mathematics.html" class="nav-link">Mathematics</a><a href="../inference.html" class="nav-link">Inference</a><a href="../blogs.html" class="nav-link">Blogs</a><a href="../courses.html" class="nav-link">Courses</a><a href="../learning.html" class="nav-link">Learning</a><a href="../interesting.html" class="nav-link">Interesting</a><a href="../papers.html" class="nav-link">Papers</a><a href="../contact.html" class="nav-link">Contact</a><button id="theme-toggle" class="theme-btn" aria-label="Toggle dark mode">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button></nav>
+    </div>
+  </header>
+
+  <main class="container p-chapter">
+    <nav class="ch-nav">
+      <a href="module-3-actor-critic.html">← back to Module 03</a>
+    </nav>
+
+    <header class="ch-header">
+      <span class="ch-num">Module 03</span>
+      <h1>A2C Algorithm</h1>
+      <p>Synchronous Advantage Actor-Critic: algorithm, pseudocode, and implementation details.</p>
+    </header>
+
+    <div class="doc-layout">
+      <aside class="sidebar">
+        <h3>Contents</h3>
+        <ul class="toc-list">
+          <li class="toc-item"><a href="module-3-introduction.html" class="toc-link"><span class="toc-num">03.1</span> Introduction</a></li>
+          <li class="toc-item"><a href="module-3-advantage.html" class="toc-link"><span class="toc-num">03.2</span> Estimating Advantage</a></li>
+          <li class="toc-item"><a href="module-3-a2c.html" class="toc-link active"><span class="toc-num">03.3</span> A2C Algorithm</a></li>
+        </ul>
+      </aside>
+
+      <div class="content-area">
+        <div class="ch-content">
+
+          <h2>Overview</h2>
+
+          <p><strong>A2C (Advantage Actor-Critic)</strong> is a synchronous, on-policy algorithm that combines the actor-critic architecture with advantage estimation. It is the synchronous version of A3C (Asynchronous Advantage Actor-Critic), where multiple parallel workers collect experience and update a shared model synchronously.</p>
+
+          <div class="key-concept">
+            <strong>Key idea:</strong> A2C maintains both a policy network (actor) and a value network (critic). The actor is updated using the advantage estimate, and the critic is updated to minimize the TD error. Multiple parallel workers collect experience simultaneously, and gradients are accumulated synchronously before updating.
+          </div>
+
+          <h2>Architecture</h2>
+
+          <ul>
+            <li><strong>Actor ($\pi_\theta$):</strong> maps states to action probabilities.</li>
+            <li><strong>Critic ($V_\phi$):</strong> maps states to value estimates.</li>
+            <li><strong>Advantage estimator:</strong> typically uses $n$-step returns or GAE.</li>
+            <li><strong>Parallel workers:</strong> $N$ independent environments run in parallel, each collecting $T$ steps of experience before a synchronized update.</li>
+          </ul>
+
+          <h2>Algorithm Pseudocode</h2>
+
+          <div class="algo-box">
+            <div class="algo-title">Algorithm 3: A2C (Synchronous Advantage Actor-Critic)</div>
+            <span class="algo-line">1:  Initialize actor $\pi_\theta$ and critic $V_\phi$ with random weights</span>
+            <span class="algo-line">2:  Initialize learning rates $\alpha_\pi$, $\alpha_V$</span>
+            <span class="algo-line">3:  <strong>for</strong> episode = 0, ..., MAX_EPISODE <strong>do</strong></span>
+            <span class="algo-line">4:      Reset all $N$ parallel environments</span>
+            <span class="algo-line">5:      <strong>for</strong> step = 0, ..., $T-1$ <strong>do</strong></span>
+            <span class="algo-line">6:          <strong>for</strong> each worker $i$ in parallel <strong>do</strong></span>
+            <span class="algo-line">7:              Sample $a_t^{(i)} \sim \pi_\theta(\cdot\mid s_t^{(i)})$</span>
+            <span class="algo-line">8:              Execute $a_t^{(i)}$, observe $r_t^{(i)}$, $s_{t+1}^{(i)}$</span>
+            <span class="algo-line">9:          <strong>end for</strong></span>
+            <span class="algo-line">10:     <strong>end for</strong></span>
+            <span class="algo-line">11:     Compute advantages $\hat{A}_t^{(i)}$ for each worker $i$ and step $t$</span>
+            <span class="algo-line">12:     $\mathcal{L}_\pi = -\frac{1}{NT}\sum_{i=1}^{N}\sum_{t=0}^{T-1} \hat{A}_t^{(i)} \log \pi_\theta(a_t^{(i)}\mid s_t^{(i)})$</span>
+            <span class="algo-line">13:     $\mathcal{L}_V = \frac{1}{NT}\sum_{i=1}^{N}\sum_{t=0}^{T-1} \big(\hat{A}_t^{(i)}\big)^2$</span>
+            <span class="algo-line">14:     $\theta \leftarrow \theta - \alpha_\pi \nabla_\theta \mathcal{L}_\pi$</span>
+            <span class="algo-line">15:     $\phi \leftarrow \phi - \alpha_V \nabla_\phi \mathcal{L}_V$</span>
+            <span class="algo-line">16: <strong>end for</strong></span>
+          </div>
+
+          <h2>Loss Functions</h2>
+
+          <h3>Actor Loss</h3>
+          <p>The actor is trained to maximize the expected advantage. This is equivalent to minimizing the negative log-probability weighted by the advantage:</p>
+          <p>$$\mathcal{L}_\pi = -\frac{1}{NT}\sum_{i=1}^{N}\sum_{t=0}^{T-1} \hat{A}_t^{(i)} \log \pi_\theta(a_t^{(i)}\mid s_t^{(i)})$$</p>
+          <p>This is the same policy gradient objective as REINFORCE, but with the advantage replacing the Monte Carlo return.</p>
+
+          <h3>Critic Loss</h3>
+          <p>The critic is trained to minimize the squared TD error (or equivalently, the squared advantage, since $\hat{A}_t$ is the TD error):</p>
+          <p>$$\mathcal{L}_V = \frac{1}{NT}\sum_{i=1}^{N}\sum_{t=0}^{T-1} \big(\hat{A}_t^{(i)}\big)^2$$</p>
+          <p>This is the mean squared error between the target value $r_t + \gamma V_\phi(s_{t+1})$ and the current estimate $V_\phi(s_t)$.</p>
+
+          <h2>Advantage Computation</h2>
+
+          <p>A2C typically uses $n$-step returns for advantage estimation. For each worker $i$ at time step $t$:</p>
+
+          <p>$$\hat{A}_t^{(i)} = \sum_{k=0}^{n-1} \gamma^k r_{t+k}^{(i)} + \gamma^n V_\phi(s_{t+n}^{(i)}) - V_\phi(s_t^{(i)})$$</p>
+
+          <p>where $n$ is the number of steps collected before bootstrapping (often $n=5$ or $n=20$). This provides a good bias-variance trade-off.</p>
+
+          <h2>A2C vs. A3C</h2>
+
+          <table>
+            <tr><th>Property</th><th>A2C</th><th>A3C</th></tr>
+            <tr><td>Update style</td><td>Synchronous</td><td>Asynchronous</td></tr>
+            <tr><td>Workers</td><td>Collect experience, then update together</td><td>Each worker updates independently</td></tr>
+            <tr><td>Gradient accumulation</td><td>Accumulated, then applied once</td><td>Each worker applies gradients immediately</td></tr>
+            <tr><td>Hardware efficiency</td><td>Better GPU utilization</td><td>More CPU-efficient</td></tr>
+            <tr><td>Determinism</td><td>Deterministic (same seed → same result)</td><td>Non-deterministic (race conditions)</td></tr>
+          </table>
+
+          <div class="imp">
+            <strong>Note:</strong> In practice, A2C often performs as well as or better than A3C, while being simpler to implement and debug. The synchronous update eliminates the race conditions inherent in A3C's asynchronous updates.
+          </div>
+
+          <h2>Entropy Bonus</h2>
+
+          <p>To encourage exploration and prevent premature convergence to deterministic policies, A2C often adds an <strong>entropy bonus</strong> to the actor loss:</p>
+
+          <p>$$\mathcal{L}_\pi = -\frac{1}{NT}\sum_{i=1}^{N}\sum_{t=0}^{T-1} \hat{A}_t^{(i)} \log \pi_\theta(a_t^{(i)}\mid s_t^{(i)}) - \beta H(\pi_\theta(\cdot\mid s_t^{(i)}))$$</p>
+
+          <p>where $H(\pi_\theta(\cdot\mid s)) = -\sum_a \pi_\theta(a\mid s) \log \pi_\theta(a\mid s)$ is the policy entropy, and $\beta$ is a small coefficient (e.g., $\beta=0.01$). The entropy bonus penalizes overly confident policies, encouraging the agent to keep exploring.</p>
+
+          <h2>Implementation Notes</h2>
+
+          <ul>
+            <li><strong>Parameter sharing:</strong> The actor and critic can share lower-level layers (e.g., convolutional layers for image inputs) with separate output heads for the policy and value.</li>
+            <li><strong>Normalization:</strong> Advantages are often normalized across the batch (subtract mean, divide by standard deviation) to stabilize training.</li>
+            <li><strong>Learning rates:</strong> Typically $\alpha_\pi = \alpha_V = 3\times 10^{-4}$ for Adam optimizer.</li>
+            <li><strong>Number of workers:</strong> Common choices are $N=8$ or $N=16$ parallel environments.</li>
+            <li><strong>Rollout length:</strong> $T=5$ to $T=20$ steps before each update.</li>
+          </ul>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container p-chapter">
+      <p>&copy; 2026 Romeo Mhakayakora. Built with an editorial aesthetic.</p>
+    </div>
+  </footer>
+
+  <script src="../script.js"></script>
+</body>
+</html>

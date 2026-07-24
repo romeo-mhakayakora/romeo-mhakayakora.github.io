@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estimating Advantage — Module 03</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css?v=2">
+  <script>window.MathJax = {tex: {inlineMath: [['$','$'], ['\\(','\\)']], displayMath: [['$$','$$'], ['\\[','\\]']], processEscapes: true, processEnvironments: true}};</script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    .container.p-chapter { max-width: 1080px; }
+    .ch-nav { padding: 2rem 0 1rem 0; }
+    .ch-nav a { font-size: 0.8rem; color: var(--text-muted); text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem; transition: color 0.15s; }
+    .ch-nav a:hover { color: var(--accent-color); }
+    .ch-header { padding: 3rem 0 2rem 0; }
+    .ch-header .ch-num { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; color: var(--accent-color); display: block; margin-bottom: 0.4rem; }
+    .ch-header h1 { font-size: 2rem; font-weight: 600; font-family: var(--font-serif); color: var(--text-color); margin-bottom: 0.8rem; line-height: 1.25; }
+    .ch-header p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
+    .ch-content { font-family: var(--font-serif); font-size: 1.08rem; line-height: 1.75; color: var(--text-color); max-width: 680px; margin: 0 auto; }
+    .ch-content h2 { font-size: 1.6rem; font-weight: 600; margin: 3rem 0 1.2rem 0; color: var(--text-color); font-family: var(--font-sans); }
+    .ch-content h3 { font-size: 1.3rem; font-weight: 600; margin: 2rem 0 0.8rem 0; color: var(--text-color); font-family: var(--font-sans); }
+    .ch-content p { margin-bottom: 1.6rem; }
+    .ch-content ul, .ch-content ol { margin: 0 0 1.6rem 1.8rem; }
+    .ch-content li { margin-bottom: 0.5rem; }
+    .ch-content strong { font-weight: 600; }
+    .ch-content em { font-style: italic; font-family: var(--font-serif); }
+    .ch-content .MathJax_Display { margin: 1.6rem auto; text-align: center; max-width: 680px; }
+    .ch-content .key-concept { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-left: 3px solid var(--accent-color); border-radius: 4px; max-width: 680px; }
+    .ch-content .key-concept strong { color: var(--accent-color); }
+    .ch-content .imp { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-left: 3px solid #e74c3c; border-radius: 4px; max-width: 680px; }
+    .ch-content .imp strong { color: #e74c3c; }
+    .ch-content table { width: 100%; border-collapse: collapse; margin: 2rem auto; max-width: 680px; font-size: 0.95rem; }
+    .ch-content th, .ch-content td { border: 1px solid rgba(170,170,170,0.2); padding: 0.7rem; text-align: left; }
+    .ch-content th { background: var(--secondary-bg); font-weight: 600; font-family: var(--font-sans); }
+    .ch-content .algo-box { margin: 1.6rem auto; padding: 1.2rem; background: var(--secondary-bg); border-radius: 6px; max-width: 680px; font-family: monospace; font-size: 0.9rem; line-height: 1.7; border: 1px solid rgba(170,170,170,0.15); }
+    .ch-content .algo-box .algo-title { font-family: var(--font-sans); font-weight: 600; font-size: 0.95rem; margin-bottom: 0.8rem; color: var(--accent-color); }
+    .ch-content .algo-box .algo-line { display: block; white-space: pre; }
+    footer { padding: 3rem 0; border-top: 1px solid rgba(170,170,170,0.1); margin-top: 3rem; }
+    footer p { font-size: 0.78rem; color: var(--text-muted); }
+    .doc-layout { display: flex; gap: 4rem; margin: 0 auto; max-width: 1080px; }
+    .sidebar { flex: 0 0 220px; position: sticky; top: 6rem; align-self: start; max-height: calc(100vh - 8rem); overflow-y: auto; }
+    .sidebar h3 { font-size: 0.85rem; font-family: var(--font-sans); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 1rem; }
+    .toc-list { list-style: none; padding: 0; margin: 0; }
+    .toc-item { margin-bottom: 0.8rem; }
+    .toc-link { display: block; text-decoration: none; font-family: var(--font-serif); font-size: 0.95rem; color: var(--text-color); transition: color 0.15s; }
+    .toc-link:hover { color: var(--accent-color); }
+    .toc-link.active { color: var(--accent-color); font-weight: 600; }
+    .content-area { flex: 1; }
+    @media (max-width: 900px) { .doc-layout { flex-direction: column; gap: 2rem; } .sidebar { position: static; max-height: none; } }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="../index.html" class="logo">Romeo Mhakayakora <span class="logo-accent">/></span></a>
+      <nav class="nav"><a href="../index.html" class="nav-link">Home</a><a href="../projects.html" class="nav-link">Projects</a><a href="../ai.html" class="nav-link">AI</a><a href="../mathematics.html" class="nav-link">Mathematics</a><a href="../inference.html" class="nav-link">Inference</a><a href="../blogs.html" class="nav-link">Blogs</a><a href="../courses.html" class="nav-link">Courses</a><a href="../learning.html" class="nav-link">Learning</a><a href="../interesting.html" class="nav-link">Interesting</a><a href="../papers.html" class="nav-link">Papers</a><a href="../contact.html" class="nav-link">Contact</a><button id="theme-toggle" class="theme-btn" aria-label="Toggle dark mode">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button></nav>
+    </div>
+  </header>
+
+  <main class="container p-chapter">
+    <nav class="ch-nav">
+      <a href="module-3-actor-critic.html">← back to Module 03</a>
+    </nav>
+
+    <header class="ch-header">
+      <span class="ch-num">Module 03</span>
+      <h1>Estimating Advantage</h1>
+      <p>Advantage functions, TD-error as an advantage estimator, and Generalized Advantage Estimation (GAE).</p>
+    </header>
+
+    <div class="doc-layout">
+      <aside class="sidebar">
+        <h3>Contents</h3>
+        <ul class="toc-list">
+          <li class="toc-item"><a href="module-3-introduction.html" class="toc-link"><span class="toc-num">03.1</span> Introduction</a></li>
+          <li class="toc-item"><a href="module-3-advantage.html" class="toc-link active"><span class="toc-num">03.2</span> Estimating Advantage</a></li>
+          <li class="toc-item"><a href="module-3-a2c.html" class="toc-link"><span class="toc-num">03.3</span> A2C Algorithm</a></li>
+        </ul>
+      </aside>
+
+      <div class="content-area">
+        <div class="ch-content">
+
+          <h2>The Advantage Function</h2>
+
+          <p>The <strong>advantage function</strong> measures how much better an action $a$ is compared to the average action in state $s$:</p>
+
+          <p>$$A^\pi(s,a) = Q^\pi(s,a) - V^\pi(s)$$</p>
+
+          <p>If $A^\pi(s,a) > 0$, the action is better than average; if $A^\pi(s,a) < 0$, it is worse than average. Using the advantage as the coefficient in the policy gradient update naturally centers the returns, providing an action-dependent baseline.</p>
+
+          <h2>Why Use Advantage?</h2>
+
+          <p>Recall from REINFORCE that without a baseline, the policy gradient update is:</p>
+
+          <p>$$\nabla_\theta J(\pi_\theta) \approx \sum_{t=0}^{T} R_t(\tau) \nabla_\theta \log \pi_\theta(a_t\mid s_t)$$</p>
+
+          <p>The return $R_t(\tau)$ is always positive for typical environments (or always negative for costs). This means all actions in a trajectory get encouraged or discouraged uniformly, even though some actions may have been good and others bad.</p>
+
+          <div class="imp">
+            <strong>With advantage:</strong> actions that are better than average get positive weight; actions that are worse than average get negative weight. This aligns the gradient update with the relative quality of each action, not just the absolute magnitude of the return.
+          </div>
+
+          <h2>Estimating Advantage with TD Error</h2>
+
+          <p>The simplest advantage estimate is the <strong>TD error</strong>:</p>
+
+          <p>$$\hat{A}_t = \delta_t = r_t + \gamma V_\phi(s_{t+1}) - V_\phi(s_t)$$</p>
+
+          <p>This is a <strong>biased</strong> estimator of the advantage function because it relies on the critic's estimate $V_\phi$, which may be inaccurate. However, the bias decreases as the critic becomes more accurate, and the variance is much lower than using Monte Carlo returns.</p>
+
+          <h3>Why TD-error is an advantage estimate</h3>
+
+          <p>Recall that $Q^\pi(s_t,a_t) = r_t + \gamma V^\pi(s_{t+1})$. Substituting into the advantage definition:</p>
+
+          <p>$$A^\pi(s_t,a_t) = r_t + \gamma V^\pi(s_{t+1}) - V^\pi(s_t)$$</p>
+
+          <p>When we approximate $V^\pi$ with $V_\phi$, we get exactly $\delta_t$. So TD error is an unbiased estimate of the advantage <em>if</em> we had the true value function. With a learned critic, it is biased but low-variance.</p>
+
+          <h2>$n$-step Returns</h2>
+
+          <p>We can trade off bias and variance by using $n$-step returns instead of 1-step TD:</p>
+
+          <ul>
+            <li><strong>1-step return ($n=1$):</strong> $\delta_t = r_t + \gamma V(s_{t+1}) - V(s_t)$ — low variance, higher bias.</li>
+            <li><strong>$n$-step return:</strong> $\hat{A}_t^{(n)} = \sum_{k=0}^{n-1} \gamma^k r_{t+k} + \gamma^n V(s_{t+n}) - V(s_t)$ — more variance, less bias.</li>
+            <li><strong>Monte Carlo return ($n=\infty$):</strong> $\hat{A}_t^{(\infty)} = R_t(\tau) - V(s_t)$ — highest variance, unbiased.</li>
+          </ul>
+
+          <h2>Generalized Advantage Estimation (GAE)</h2>
+
+          <p>GAE combines all $n$-step returns in an exponentially weighted average, controlled by a parameter $\lambda \in [0,1]$:</p>
+
+          <p>$$\hat{A}_t^{\text{GAE}(\gamma,\lambda)} = \sum_{k=0}^{\infty} (\gamma\lambda)^k \delta_{t+k}$$</p>
+
+          <p>where $\delta_{t+k} = r_{t+k} + \gamma V_\phi(s_{t+k+1}) - V_\phi(s_{t+k})$ are the 1-step TD errors.</p>
+
+          <table>
+            <tr><th>$\lambda$</th><th>Behavior</th><th>Bias</th><th>Variance</th></tr>
+            <tr><td>$\lambda=0$</td><td>1-step TD advantage</td><td>Higher</td><td>Lower</td></tr>
+            <tr><td>$\lambda=0.5$</td><td>Balanced mix</td><td>Moderate</td><td>Moderate</td></tr>
+            <tr><td>$\lambda=1$</td><td>Monte Carlo advantage</td><td>Low</td><td>High</td></tr>
+          </table>
+
+          <div class="key-concept">
+            <strong>GAE insight:</strong> GAE smoothly interpolates between low-variance (but high-bias) 1-step advantage estimates and high-variance (but low-bias) Monte Carlo advantage estimates. The $\lambda$ parameter lets practitioners control this trade-off directly.
+          </div>
+
+          <h2>Summary of Advantage Estimators</h2>
+
+          <table>
+            <tr><th>Estimator</th><th>Formula</th><th>Bias</th><th>Variance</th></tr>
+            <tr><td>Monte Carlo</td><td>$R_t(\tau) - V(s_t)$</td><td>Low</td><td>High</td></tr>
+            <tr><td>1-step TD</td><td>$r_t + \gamma V(s_{t+1}) - V(s_t)$</td><td>Higher</td><td>Low</td></tr>
+            <tr><td>$n$-step</td><td>$\sum_{k=0}^{n-1} \gamma^k r_{t+k} + \gamma^n V(s_{t+n}) - V(s_t)$</td><td>Moderate</td><td>Moderate</td></tr>
+            <tr><td>GAE($\lambda$)</td><td>$\sum_{k=0}^{\infty} (\gamma\lambda)^k \delta_{t+k}$</td><td>Tunable</td><td>Tunable</td></tr>
+          </table>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container p-chapter">
+      <p>&copy; 2026 Romeo Mhakayakora. Built with an editorial aesthetic.</p>
+    </div>
+  </footer>
+
+  <script src="../script.js"></script>
+</body>
+</html>
