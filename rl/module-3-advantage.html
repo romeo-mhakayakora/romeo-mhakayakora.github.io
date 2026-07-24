@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Estimating Advantage — Module 03</title>
+  <title>Derivation of GAE — Module 03</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400,600&display=swap" rel="stylesheet">
@@ -22,6 +22,7 @@
     .ch-content { font-family: var(--font-serif); font-size: 1.08rem; line-height: 1.75; color: var(--text-color); max-width: 680px; margin: 0 auto; }
     .ch-content h2 { font-size: 1.6rem; font-weight: 600; margin: 3rem 0 1.2rem 0; color: var(--text-color); font-family: var(--font-sans); }
     .ch-content h3 { font-size: 1.3rem; font-weight: 600; margin: 2rem 0 0.8rem 0; color: var(--text-color); font-family: var(--font-sans); }
+    .ch-content h4 { font-size: 1.1rem; font-weight: 600; margin: 1.5rem 0 0.6rem 0; color: var(--text-color); }
     .ch-content p { margin-bottom: 1.6rem; }
     .ch-content ul, .ch-content ol { margin: 0 0 1.6rem 1.8rem; }
     .ch-content li { margin-bottom: 0.5rem; }
@@ -35,9 +36,11 @@
     .ch-content table { width: 100%; border-collapse: collapse; margin: 2rem auto; max-width: 680px; font-size: 0.95rem; }
     .ch-content th, .ch-content td { border: 1px solid rgba(170,170,170,0.2); padding: 0.7rem; text-align: left; }
     .ch-content th { background: var(--secondary-bg); font-weight: 600; font-family: var(--font-sans); }
-    .ch-content .algo-box { margin: 1.6rem auto; padding: 1.2rem; background: var(--secondary-bg); border-radius: 6px; max-width: 680px; font-family: monospace; font-size: 0.9rem; line-height: 1.7; border: 1px solid rgba(170,170,170,0.15); }
-    .ch-content .algo-box .algo-title { font-family: var(--font-sans); font-weight: 600; font-size: 0.95rem; margin-bottom: 0.8rem; color: var(--accent-color); }
-    .ch-content .algo-box .algo-line { display: block; white-space: pre; }
+    .ch-content .deriv-box { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-left: 3px solid #8e44ad; border-radius: 4px; max-width: 680px; font-family: var(--font-serif); font-size: 0.95rem; line-height: 1.65; }
+    .ch-content .deriv-box strong:first-child { color: #8e44ad; }
+    .ch-content .deriv-table { width: 100%; border-collapse: collapse; margin: 1.6rem auto; max-width: 680px; font-family: var(--font-serif); font-size: 0.9rem; }
+    .ch-content .deriv-table th, .ch-content .deriv-table td { border: 1px solid rgba(170,170,170,0.2); padding: 0.6rem 0.8rem; text-align: left; vertical-align: top; }
+    .ch-content .deriv-table th { background: var(--secondary-bg); font-family: var(--font-sans); font-weight: 600; }
     footer { padding: 3rem 0; border-top: 1px solid rgba(170,170,170,0.1); margin-top: 3rem; }
     footer p { font-size: 0.78rem; color: var(--text-muted); }
     .doc-layout { display: flex; gap: 4rem; margin: 0 auto; max-width: 1080px; }
@@ -48,8 +51,10 @@
     .toc-link { display: block; text-decoration: none; font-family: var(--font-serif); font-size: 0.95rem; color: var(--text-color); transition: color 0.15s; }
     .toc-link:hover { color: var(--accent-color); }
     .toc-link.active { color: var(--accent-color); font-weight: 600; }
+    .toc-num { color: var(--text-muted); font-size: 0.85rem; margin-right: 0.3rem; }
     .content-area { flex: 1; }
     @media (max-width: 900px) { .doc-layout { flex-direction: column; gap: 2rem; } .sidebar { position: static; max-height: none; } }
+    .ch-content .cancel { color: #e74c3c; text-decoration: line-through; }
   </style>
 </head>
 <body>
@@ -70,16 +75,16 @@
 
     <header class="ch-header">
       <span class="ch-num">Module 03</span>
-      <h1>Estimating Advantage</h1>
-      <p>Advantage functions, TD-error as an advantage estimator, and Generalized Advantage Estimation (GAE).</p>
+      <h1>Derivation of Generalized Advantage Estimation (GAE)</h1>
+      <p>From n-step advantage estimators to the clean, efficient GAE form via telescoping cancellation of TD errors.</p>
     </header>
 
     <div class="doc-layout">
       <aside class="sidebar">
         <h3>Contents</h3>
         <ul class="toc-list">
-          <li class="toc-item"><a href="module-3-introduction.html" class="toc-link"><span class="toc-num">03.1</span> Introduction</a></li>
-          <li class="toc-item"><a href="module-3-advantage.html" class="toc-link active"><span class="toc-num">03.2</span> Estimating Advantage</a></li>
+          <li class="toc-item"><a href="module-3-introduction.html" class="toc-link"><span class="toc-num">03.1</span> A2C Introduction</a></li>
+          <li class="toc-item"><a href="module-3-advantage.html" class="toc-link active"><span class="toc-num">03.2</span> Derivation of GAE</a></li>
           <li class="toc-item"><a href="module-3-a2c.html" class="toc-link"><span class="toc-num">03.3</span> A2C Algorithm</a></li>
         </ul>
       </aside>
@@ -87,80 +92,130 @@
       <div class="content-area">
         <div class="ch-content">
 
-          <h2>The Advantage Function</h2>
+          <p>The derivation shows how GAE arrives at its final, simple form. It starts from the raw n-step advantage estimators and ends with a clean weighted sum of TD errors.</p>
 
-          <p>The <strong>advantage function</strong> measures how much better an action $a$ is compared to the average action in state $s$:</p>
+          <hr style="border: none; border-top: 1px solid rgba(170,170,170,0.12); margin: 3rem auto; max-width: 680px;">
 
-          <p>$$A^\pi(s,a) = Q^\pi(s,a) - V^\pi(s)$$</p>
+          <h2>N-step advantage estimator</h2>
 
-          <p>If $A^\pi(s,a) > 0$, the action is better than average; if $A^\pi(s,a) < 0$, it is worse than average. Using the advantage as the coefficient in the policy gradient update naturally centers the returns, providing an action-dependent baseline.</p>
+          <p>Combining the n-step estimate for $Q^\pi$ with $V^\pi(s_t)$:</p>
 
-          <h2>Why Use Advantage?</h2>
+          <p>$$A^\pi_{\text{NSTEP}}(s_t,a_t) = Q^\pi(s_t,a_t) - V^\pi(s_t) \tag{3.8}$$</p>
 
-          <p>Recall from REINFORCE that without a baseline, the policy gradient update is:</p>
-
-          <p>$$\nabla_\theta J(\pi_\theta) \approx \sum_{t=0}^{T} R_t(\tau) \nabla_\theta \log \pi_\theta(a_t\mid s_t)$$</p>
-
-          <p>The return $R_t(\tau)$ is always positive for typical environments (or always negative for costs). This means all actions in a trajectory get encouraged or discouraged uniformly, even though some actions may have been good and others bad.</p>
-
-          <div class="imp">
-            <strong>With advantage:</strong> actions that are better than average get positive weight; actions that are worse than average get negative weight. This aligns the gradient update with the relative quality of each action, not just the absolute magnitude of the return.
-          </div>
-
-          <h2>Estimating Advantage with TD Error</h2>
-
-          <p>The simplest advantage estimate is the <strong>TD error</strong>:</p>
-
-          <p>$$\hat{A}_t = \delta_t = r_t + \gamma V_\phi(s_{t+1}) - V_\phi(s_t)$$</p>
-
-          <p>This is a <strong>biased</strong> estimator of the advantage function because it relies on the critic's estimate $V_\phi$, which may be inaccurate. However, the bias decreases as the critic becomes more accurate, and the variance is much lower than using Monte Carlo returns.</p>
-
-          <h3>Why TD-error is an advantage estimate</h3>
-
-          <p>Recall that $Q^\pi(s_t,a_t) = r_t + \gamma V^\pi(s_{t+1})$. Substituting into the advantage definition:</p>
-
-          <p>$$A^\pi(s_t,a_t) = r_t + \gamma V^\pi(s_{t+1}) - V^\pi(s_t)$$</p>
-
-          <p>When we approximate $V^\pi$ with $V_\phi$, we get exactly $\delta_t$. So TD error is an unbiased estimate of the advantage <em>if</em> we had the true value function. With a learned critic, it is biased but low-variance.</p>
-
-          <h2>$n$-step Returns</h2>
-
-          <p>We can trade off bias and variance by using $n$-step returns instead of 1-step TD:</p>
+          <p>$$\approx r_t + \gamma r_{t+1} + \cdots + \gamma^n r_{t+n} + \gamma^{n+1}V^\pi(s_{t+n+1}) - V^\pi(s_t) \tag{3.9}$$</p>
 
           <ul>
-            <li><strong>1-step return ($n=1$):</strong> $\delta_t = r_t + \gamma V(s_{t+1}) - V(s_t)$ — low variance, higher bias.</li>
-            <li><strong>$n$-step return:</strong> $\hat{A}_t^{(n)} = \sum_{k=0}^{n-1} \gamma^k r_{t+k} + \gamma^n V(s_{t+n}) - V(s_t)$ — more variance, less bias.</li>
-            <li><strong>Monte Carlo return ($n=\infty$):</strong> $\hat{A}_t^{(\infty)} = R_t(\tau) - V(s_t)$ — highest variance, unbiased.</li>
+            <li>$n$ = number of steps of actual rewards used; controls the amount of variance in the advantage estimate; a hyperparameter that must be tuned.</li>
+            <li><strong>Small $n$</strong> → lower variance, higher bias. <strong>Large $n$</strong> → higher variance, lower bias.</li>
           </ul>
 
-          <h2>Generalized Advantage Estimation (GAE)</h2>
+          <h2>Step 1 — Define the n-step advantage estimator</h2>
 
-          <p>GAE combines all $n$-step returns in an exponentially weighted average, controlled by a parameter $\lambda \in [0,1]$:</p>
+          <p>$A_t^\pi(n)$ denotes the advantage estimate calculated using n-step forward returns:</p>
 
-          <p>$$\hat{A}_t^{\text{GAE}(\gamma,\lambda)} = \sum_{k=0}^{\infty} (\gamma\lambda)^k \delta_{t+k}$$</p>
+          <p>$$A_t^\pi(1) = r_t + \gamma V^\pi(s_{t+1}) - V^\pi(s_t)$$</p>
+          <p>$$A_t^\pi(2) = r_t + \gamma r_{t+1} + \gamma^2 V^\pi(s_{t+2}) - V^\pi(s_t)$$</p>
+          <p>$$A_t^\pi(3) = r_t + \gamma r_{t+1} + \gamma^2 r_{t+2} + \gamma^3 V^\pi(s_{t+3}) - V^\pi(s_t) \tag{3.12}$$</p>
 
-          <p>where $\delta_{t+k} = r_{t+k} + \gamma V_\phi(s_{t+k+1}) - V_\phi(s_{t+k})$ are the 1-step TD errors.</p>
+          <h2>Step 2 — The raw GAE definition is hard to work with</h2>
 
-          <table>
-            <tr><th>$\lambda$</th><th>Behavior</th><th>Bias</th><th>Variance</th></tr>
-            <tr><td>$\lambda=0$</td><td>1-step TD advantage</td><td>Higher</td><td>Lower</td></tr>
-            <tr><td>$\lambda=0.5$</td><td>Balanced mix</td><td>Moderate</td><td>Moderate</td></tr>
-            <tr><td>$\lambda=1$</td><td>Monte Carlo advantage</td><td>Low</td><td>High</td></tr>
-          </table>
+          <p>GAE is defined as an exponentially weighted average of <em>all</em> n-step forward return advantage estimators, $n = 1, 2, 3, \ldots$:</p>
 
-          <div class="key-concept">
-            <strong>GAE insight:</strong> GAE smoothly interpolates between low-variance (but high-bias) 1-step advantage estimates and high-variance (but low-bias) Monte Carlo advantage estimates. The $\lambda$ parameter lets practitioners control this trade-off directly.
+          <p>$$A^\pi_{\text{GAE}}(s_t,a_t) = (1-\lambda)\big(A_t^\pi(1) + \lambda A_t^\pi(2) + \lambda^2 A_t^\pi(3) + \cdots\big), \quad \lambda \in [0,1] \tag{3.13}$$</p>
+
+          <ul>
+            <li>This is mathematically correct, but not practical: it involves an infinite sum of n-step terms, each of which is itself a growing expression involving many value-function terms.</li>
+          </ul>
+
+          <h2>Step 3 — Introduce the TD error $\delta_t$</h2>
+
+          <p>Schulman et al. introduce a variable $\delta$ to simplify this:</p>
+
+          <p>$$\delta_t = r_t + \gamma V^\pi(s_{t+1}) - V^\pi(s_t) \tag{3.14}$$</p>
+
+          <ul>
+            <li>Notice $r_t + \gamma V^\pi(s_{t+1})$ is exactly the 1-step estimator for $Q^\pi(s_t,a_t)$.</li>
+            <li>So $\delta_t$ is exactly the <strong>1-step advantage estimator</strong>: $\delta_t = A_t^\pi(1)$.</li>
+            <li>$\delta_t$ represents the immediate advantage at time step $t$, computed using only a 1-step return.</li>
+            <li><strong>Plain English:</strong> $\delta_t$ is just the 1-step advantage/TD error <em>at that individual timestep</em> — a fresh "how surprising was this one step" measurement computed independently at every $t$. The n-step advantage is then built by stacking these individual per-timestep measurements together with discounting.</li>
+          </ul>
+
+          <h2>Step 4 — Rewrite the n-step advantages using $\delta$</h2>
+
+          <p>$$A_t^\pi(1) = \delta_t$$</p>
+          <p>$$A_t^\pi(2) = \delta_t + \gamma\delta_{t+1}$$</p>
+          <p>$$A_t^\pi(3) = \delta_t + \gamma\delta_{t+1} + \gamma^2\delta_{t+2} \tag{3.15–3.16}$$</p>
+
+          <h3>Why this works — the telescoping cancellation (worked example for n=2)</h3>
+
+          <p><strong>Start</strong> with the 2-step estimator (Eq. 3.12):</p>
+          <p>$$A_t^\pi(2) = r_t + \gamma r_{t+1} + \gamma^2 V^\pi(s_{t+2}) - V^\pi(s_t)$$</p>
+
+          <p><strong>Expand</strong> using the definitions of $\delta_t$ and $\delta_{t+1}$:</p>
+          <p>$$\delta_t = r_t + \gamma V^\pi(s_{t+1}) - V^\pi(s_t)$$</p>
+          <p>$$\delta_{t+1} = r_{t+1} + \gamma V^\pi(s_{t+2}) - V^\pi(s_{t+1})$$</p>
+
+          <p><strong>Compute</strong> $\delta_t + \gamma\delta_{t+1}$:</p>
+
+          <div class="deriv-box">
+            <strong>Expansion:</strong><br>
+            $\delta_t + \gamma\delta_{t+1} = \big[r_t + \gamma V^\pi(s_{t+1}) - V^\pi(s_t)\big] + \gamma\big[r_{t+1} + \gamma V^\pi(s_{t+2}) - V^\pi(s_{t+1})\big]$
           </div>
 
-          <h2>Summary of Advantage Estimators</h2>
+          <p><strong>Distribute:</strong></p>
+          <p>$$= r_t + \gamma V^\pi(s_{t+1}) - V^\pi(s_t) + \gamma r_{t+1} + \gamma^2 V^\pi(s_{t+2}) - \gamma V^\pi(s_{t+1})$$</p>
 
-          <table>
-            <tr><th>Estimator</th><th>Formula</th><th>Bias</th><th>Variance</th></tr>
-            <tr><td>Monte Carlo</td><td>$R_t(\tau) - V(s_t)$</td><td>Low</td><td>High</td></tr>
-            <tr><td>1-step TD</td><td>$r_t + \gamma V(s_{t+1}) - V(s_t)$</td><td>Higher</td><td>Low</td></tr>
-            <tr><td>$n$-step</td><td>$\sum_{k=0}^{n-1} \gamma^k r_{t+k} + \gamma^n V(s_{t+n}) - V(s_t)$</td><td>Moderate</td><td>Moderate</td></tr>
-            <tr><td>GAE($\lambda$)</td><td>$\sum_{k=0}^{\infty} (\gamma\lambda)^k \delta_{t+k}$</td><td>Tunable</td><td>Tunable</td></tr>
+          <p><strong>Cancel:</strong> $+\gamma V^\pi(s_{t+1})$ and $-\gamma V^\pi(s_{t+1})$ cancel each other:</p>
+          <p>$$= r_t + \gamma r_{t+1} + \gamma^2 V^\pi(s_{t+2}) - V^\pi(s_t)$$</p>
+
+          <p>This is exactly $A_t^\pi(2)$ from Eq. 3.12. ✓</p>
+
+          <h3>The same pattern for n=3</h3>
+
+          <p>Expand $\delta_t + \gamma\delta_{t+1} + \gamma^2\delta_{t+2}$:</p>
+
+          <table class="deriv-table">
+            <tr><th>Term</th><th>Expansion</th></tr>
+            <tr><td>$\delta_t$</td><td>$r_t + \gamma V^\pi(s_{t+1}) - V^\pi(s_t)$</td></tr>
+            <tr><td>$\gamma\delta_{t+1}$</td><td>$\gamma r_{t+1} + \gamma^2 V^\pi(s_{t+2}) - \gamma V^\pi(s_{t+1})$</td></tr>
+            <tr><td>$\gamma^2\delta_{t+2}$</td><td>$\gamma^2 r_{t+2} + \gamma^3 V^\pi(s_{t+3}) - \gamma^2 V^\pi(s_{t+2})$</td></tr>
           </table>
+
+          <p><strong>Cancellations:</strong></p>
+          <ul>
+            <li>$\gamma V^\pi(s_{t+1})$ cancels with $-\gamma V^\pi(s_{t+1})$</li>
+            <li>$\gamma^2 V^\pi(s_{t+2})$ cancels with $-\gamma^2 V^\pi(s_{t+2})$</li>
+          </ul>
+
+          <p><strong>What remains:</strong></p>
+          <p>$$r_t + \gamma r_{t+1} + \gamma^2 r_{t+2} + \gamma^3 V^\pi(s_{t+3}) - V^\pi(s_t) = A_t^\pi(3) \checkmark$$</p>
+
+          <h3>The general pattern</h3>
+
+          <p>For any $n$:</p>
+
+          <p>$$A_t^\pi(n) = \sum_{i=0}^{n-1} \gamma^i \delta_{t+i}$$</p>
+
+          <ul>
+            <li>The intermediate value estimates $V^\pi(s_{t+1}), V^\pi(s_{t+2}), \ldots, V^\pi(s_{t+n-1})$ all <strong>telescope away</strong> (cancel in pairs).</li>
+            <li>What's left: the initial value estimate $-V^\pi(s_t)$, the final bootstrapped value $\gamma^n V^\pi(s_{t+n})$, and all the rewards in between.</li>
+            <li><strong>Plain-English version:</strong> an n-step advantage is a sum of 1-step advantages (TD errors), each discounted by $\gamma$ according to how far into the future it is. Each $\delta_{t+i}$ "hands off" its value estimate to the next $\delta$, and that next $\delta$ "returns" it — so the intermediate $V^\pi$ terms wash out, leaving only the step-by-step "surprises," stacked and discounted.</li>
+            <li>This is why the $\delta$-formulation is powerful: it turns a messy expression with nested value functions into a simple sum of independent TD errors.</li>
+          </ul>
+
+          <h2>Step 5 — Substitute back into GAE and simplify</h2>
+
+          <p>Writing the advantage function in the $\delta$-form (Eq. 3.15–3.16) shows it consists of multiple 1-step advantages, weighted exponentially by $\gamma$ as the time step increases.</p>
+
+          <p>Substituting $A_t^\pi(n) = \sum_{i=0}^{n-1}\gamma^i\delta_{t+i}$ into the raw GAE definition (Eq. 3.13) and simplifying yields the final, elegant form:</p>
+
+          <p>$$A^\pi_{\text{GAE}}(s_t,a_t) = \sum_{\ell=0}^{\infty} (\gamma\lambda)^\ell \delta_{t+\ell} \tag{3.17}$$</p>
+
+          <ul>
+            <li>Both GAE and the n-step advantage estimator include the discount factor $\gamma$ (controls how much later rewards are discounted).</li>
+            <li>Both also have a parameter controlling the bias–variance trade-off: $n$ for the n-step advantage estimator, $\lambda$ for GAE.</li>
+            <li><strong>What's gained with GAE:</strong> $n$ is a <em>hard</em> choice (it precisely determines the exact cutoff point between real rewards and the value-function estimate). $\lambda$ is a <em>soft</em> choice — smaller $\lambda$ weights the $V$-function baseline more heavily, larger $\lambda$ weights the actual rewards more heavily; the transition is smooth rather than a hard cutoff.</li>
+          </ul>
 
         </div>
       </div>
