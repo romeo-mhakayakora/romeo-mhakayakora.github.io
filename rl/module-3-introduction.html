@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Introduction to Actor-Critic — Module 03</title>
+  <title>Advantage Actor-Critic (A2C) — Module 03</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400,600&display=swap" rel="stylesheet">
@@ -28,13 +28,16 @@
     .ch-content li { margin-bottom: 0.5rem; }
     .ch-content strong { font-weight: 600; }
     .ch-content em { font-style: italic; font-family: var(--font-serif); }
-    .ch-content code { font-family: monospace; font-size: 0.9rem; background: var(--secondary-bg); padding: 0.15rem 0.35rem; border-radius: 4px; }
-    .ch-content pre { background: var(--secondary-bg); padding: 1.2rem; border-radius: 6px; overflow-x: auto; margin-bottom: 1.6rem; border: 1px solid rgba(170,170,170,0.12); font-family: monospace; font-size: 0.9rem; line-height: 1.55; }
     .ch-content .MathJax_Display { margin: 1.6rem auto; text-align: center; max-width: 680px; }
     .ch-content .key-concept { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-left: 3px solid var(--accent-color); border-radius: 4px; max-width: 680px; }
     .ch-content .key-concept strong { color: var(--accent-color); }
     .ch-content .imp { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-left: 3px solid #e74c3c; border-radius: 4px; max-width: 680px; }
     .ch-content .imp strong { color: #e74c3c; }
+    .ch-content .cond { margin: 1.6rem auto; padding: 1rem 1.2rem; background: var(--secondary-bg); border-left: 3px solid #3498db; border-radius: 4px; max-width: 680px; }
+    .ch-content .cond strong { color: #3498db; }
+    .ch-content table { width: 100%; border-collapse: collapse; margin: 2rem auto; max-width: 680px; font-size: 0.95rem; }
+    .ch-content th, .ch-content td { border: 1px solid rgba(170,170,170,0.2); padding: 0.7rem; text-align: left; }
+    .ch-content th { background: var(--secondary-bg); font-weight: 600; font-family: var(--font-sans); }
     footer { padding: 3rem 0; border-top: 1px solid rgba(170,170,170,0.1); margin-top: 3rem; }
     footer p { font-size: 0.78rem; color: var(--text-muted); }
     .doc-layout { display: flex; gap: 4rem; margin: 0 auto; max-width: 1080px; }
@@ -48,6 +51,8 @@
     .toc-num { color: var(--text-muted); font-size: 0.85rem; margin-right: 0.3rem; }
     .content-area { flex: 1; }
     @media (max-width: 900px) { .doc-layout { flex-direction: column; gap: 2rem; } .sidebar { position: static; max-height: none; } }
+    .ch-content .eq-block { margin: 2rem auto; padding: 1rem; background: var(--secondary-bg); border-radius: 4px; max-width: 680px; text-align: center; }
+    .ch-content .eq-block .eq-label { display: block; font-family: var(--font-sans); font-size: 0.78rem; color: var(--text-muted); margin-top: 0.5rem; }
   </style>
 </head>
 <body>
@@ -68,15 +73,15 @@
 
     <header class="ch-header">
       <span class="ch-num">Module 03</span>
-      <h1>Introduction to Actor-Critic</h1>
-      <p>From REINFORCE to Actor-Critic: combining policy gradients with value-based learning.</p>
+      <h1>Advantage Actor-Critic (A2C)</h1>
+      <p>Combining policy gradients with a learned value function: the actor-critic architecture, the advantage function, and how it improves learning.</p>
     </header>
 
     <div class="doc-layout">
       <aside class="sidebar">
         <h3>Contents</h3>
         <ul class="toc-list">
-          <li class="toc-item"><a href="module-3-introduction.html" class="toc-link active"><span class="toc-num">03.1</span> Introduction</a></li>
+          <li class="toc-item"><a href="module-3-introduction.html" class="toc-link active"><span class="toc-num">03.1</span> A2C Introduction</a></li>
           <li class="toc-item"><a href="module-3-advantage.html" class="toc-link"><span class="toc-num">03.2</span> Estimating Advantage</a></li>
           <li class="toc-item"><a href="module-3-a2c.html" class="toc-link"><span class="toc-num">03.3</span> A2C Algorithm</a></li>
         </ul>
@@ -85,61 +90,132 @@
       <div class="content-area">
         <div class="ch-content">
 
-          <h2>Motivation</h2>
-
-          <p>REINFORCE is an <strong>unbiased</strong> estimator of the policy gradient, but it suffers from <strong>high variance</strong> because it uses Monte Carlo returns from a single trajectory. The high variance makes learning slow and sample-inefficient.</p>
-
-          <p>Actor-Critic methods address this by introducing a <strong>critic</strong> — a value function that is learned alongside the policy (the <strong>actor</strong>) — to reduce variance while maintaining a reasonable bias.</p>
-
-          <h2>The Actor-Critic Architecture</h2>
+          <h2>Overview</h2>
 
           <ul>
-            <li><strong>Actor ($\pi_\theta$)</strong>: the policy network that decides which actions to take.</li>
-            <li><strong>Critic ($V_\phi$ or $Q_\phi$)</strong>: a value network that estimates the value function, providing a baseline or advantage estimate for the actor's updates.</li>
+            <li>Actor-Critic algorithms combine <strong>policy gradient</strong> + a <strong>learned value function</strong>.</li>
+            <li>A policy is reinforced with a <strong>learned reinforcing signal</strong> generated using a learned value function.</li>
+            <li>Contrast with REINFORCE: REINFORCE uses a high-variance Monte Carlo estimate of the return to reinforce the policy.</li>
+            <li><strong>Two components, learned jointly:</strong>
+              <ul>
+                <li><strong>Actor</strong> — learns a parameterized policy.</li>
+                <li><strong>Critic</strong> — learns a value function to evaluate state-action pairs; provides the reinforcing signal to the actor.</li>
+              </ul>
+            </li>
           </ul>
 
-          <div class="key-concept">
-            <strong>Key idea:</strong> The critic bootstraps — it estimates the value of the current state using its own learned parameters, rather than waiting for the full Monte Carlo return. This introduces some bias but <strong>dramatically reduces variance</strong>, and the bias can be controlled by the choice of advantage estimator.
+          <h3>Motivation</h3>
+
+          <ul>
+            <li>A learned reinforcing signal can be more informative for a policy than the raw rewards available from an environment.
+              <ul>
+                <li>Example: it can transform a <em>sparse reward</em> (e.g. agent only gets +1 upon success) into a <em>dense</em> reinforcing signal.</li>
+              </ul>
+            </li>
+            <li>Learned value functions typically have <strong>lower variance</strong> than Monte Carlo estimates of the return → reduces uncertainty under which a policy learns → makes learning easier.</li>
+            <li><strong>Trade-off:</strong> training becomes more complex. Learning the policy now depends on the quality of the value function estimate, which is being learned simultaneously. Until the value function generates reasonable signals, learning good actions is challenging.</li>
+          </ul>
+
+          <h3>The advantage function as the reinforcing signal</h3>
+
+          <p>It's common to learn the <strong>advantage function</strong> as the reinforcing signal:</p>
+
+          <p>$$A^\pi(s,a) = Q^\pi(s,a) - V^\pi(s) \tag{3.3}$$</p>
+
+          <p>Key idea: it's better to select an action based on how it performs <em>relative to the other actions available in a particular state</em>, instead of using the absolute value of that action (as measured by the Q-function).</p>
+
+          <p>The advantage quantifies <strong>how much better or worse an action is than the average available action</strong>.</p>
+
+          <p>Actor-Critic algorithms that learn the advantage function are known as <strong>Advantage Actor-Critic (A2C)</strong> algorithms.</p>
+
+          <h3>Chapter roadmap</h3>
+          <ul>
+            <li><strong>The Actor</strong> — brief, since it's similar to REINFORCE.</li>
+            <li><strong>The Critic</strong> — the advantage function, plus two methods for estimating it: n-step returns and Generalized Advantage Estimation (GAE).</li>
+            <li><strong>The Actor-Critic algorithm</strong> itself.</li>
+            <li>An implementation example.</li>
+            <li>Instructions for training an Actor-Critic agent.</li>
+          </ul>
+
+          <hr style="border: none; border-top: 1px solid rgba(170,170,170,0.12); margin: 3rem auto; max-width: 680px;">
+
+          <h2>The Actor</h2>
+
+          <p>Actors learn parametrized policies $\pi_\theta$ using the policy gradient — very similar to REINFORCE, except the <strong>advantage</strong> $A_t^\pi$ is used as the reinforcing signal instead of the Monte Carlo return $R_t(\tau)$.</p>
+
+          <div class="eq-block">
+            <strong>Actor-Critic:</strong> $\displaystyle \nabla_\theta J(\pi_\theta) = \mathbb{E}_t\big[A_t^\pi \nabla_\theta \log \pi_\theta(a_t\mid s_t)\big] \tag{3.1}$
           </div>
 
-          <h2>From REINFORCE to Actor-Critic</h2>
-
-          <p>Recall the REINFORCE update:</p>
-
-          <p>$$\nabla_\theta J(\pi_\theta) \approx \sum_{t=0}^{T} R_t(\tau) \nabla_\theta \log \pi_\theta(a_t\mid s_t)$$</p>
-
-          <p>The return $R_t(\tau)$ is a random variable with high variance. In Actor-Critic, we replace $R_t(\tau)$ with an estimate that uses the critic:</p>
-
-          <p>$$\nabla_\theta J(\pi_\theta) \approx \sum_{t=0}^{T} \big(\text{advantage estimate}\big) \nabla_\theta \log \pi_\theta(a_t\mid s_t)$$</p>
-
-          <p>The simplest advantage estimate is the <strong>TD error</strong>:</p>
-
-          <p>$$\delta_t = r_t + \gamma V_\phi(s_{t+1}) - V_\phi(s_t)$$</p>
-
-          <p>where $V_\phi$ is the critic's estimate of the value function. The critic is trained to minimize the TD error (or a related loss), making it a more accurate value estimator over time.</p>
-
-          <h2>Types of Actor-Critic Methods</h2>
-
-          <table>
-            <tr><th>Method</th><th>Actor Update</th><th>Critic Update</th></tr>
-            <tr><td>Q Actor-Critic</td><td>Uses $Q_\phi(s,a)$ as the score</td><td>Learns $Q_\phi$ via TD learning</td></tr>
-            <tr><td>Advantage Actor-Critic (A2C)</td><td>Uses advantage $A(s,a) = Q(s,a) - V(s)$</td><td>Learns $V_\phi$ via TD error</td></tr>
-            <tr><td>A3C</td><td>Asynchronous version of A2C</td><td>Same as A2C, with parallel workers</td></tr>
-          </table>
-
-          <h2>Pseudocode Skeleton</h2>
-
-          <div class="key-concept">
-            <strong>Basic Actor-Critic loop (per step):</strong>
-            <ol>
-              <li>Take action $a_t \sim \pi_\theta(\cdot\mid s_t)$, observe $r_t, s_{t+1}$.</li>
-              <li>Compute TD error: $\delta_t = r_t + \gamma V_\phi(s_{t+1}) - V_\phi(s_t)$.</li>
-              <li>Update actor: $\theta \leftarrow \theta + \alpha_\pi \delta_t \nabla_\theta \log \pi_\theta(a_t\mid s_t)$.</li>
-              <li>Update critic: $\phi \leftarrow \phi + \alpha_V \delta_t \nabla_\phi V_\phi(s_t)$.</li>
-            </ol>
+          <div class="eq-block">
+            <strong>REINFORCE:</strong> $\displaystyle \nabla_\theta J(\pi_\theta) = \mathbb{E}_t\big[R_t(\tau) \nabla_\theta \log \pi_\theta(a_t\mid s_t)\big] \tag{3.2}$
           </div>
 
-          <p>This is the simplest form. More sophisticated variants (A2C, GAE) use multi-step returns and more accurate advantage estimates, which we cover in the following sections.</p>
+          <p>The only structural difference between the two: $A_t^\pi$ replaces $R_t(\tau)$.</p>
+
+          <hr style="border: none; border-top: 1px solid rgba(170,170,170,0.12); margin: 3rem auto; max-width: 680px;">
+
+          <h2>The Critic</h2>
+
+          <p>Critics are responsible for learning how to evaluate $(s,a)$ pairs, and using this to generate $A^\pi$.</p>
+
+          <p>Covered here: (1) the advantage function and why it's a good reinforcing signal, (2) two estimation methods — n-step returns and GAE, (3) how they're learned in practice.</p>
+
+          <h3>The Advantage Function</h3>
+
+          <p>Intuitively, $A^\pi(s_t,a_t)$ measures the extent to which an action is better or worse than the policy's <strong>average</strong> action in a particular state.</p>
+
+          <p>$$A^\pi(s_t,a_t) = Q^\pi(s_t,a_t) - V^\pi(s_t) \tag{3.3}$$</p>
+
+          <h4>Property 1 — zero-mean over actions</h4>
+
+          <p>$$\mathbb{E}_{a \in \mathcal{A}}[A^\pi(s_t,a)] = 0$$</p>
+
+          <ul>
+            <li>If all actions are essentially equivalent, $A^\pi = 0$ for all of them → probability of taking these actions stays unchanged when the policy is trained using $A^\pi$.</li>
+            <li>Compare to a reinforcing signal based on <em>absolute</em> state/state-action values: this would have a constant value in the same situation, but that constant may not be 0 → it would actively encourage (if positive) or discourage (if negative) the action, even though all actions are equivalent.</li>
+            <li>In practice, this specific case (all actions equivalent) may not be too problematic, though it is unintuitive.</li>
+          </ul>
+
+          <h4>Property 2 — matches intuition when an action is below average but still has positive expected return</h4>
+
+          <ul>
+            <li>More problematic example: action taken was worse than the average action, but expected return is still positive — i.e. $Q^\pi(s_t,a_t) > 0$ but $A^\pi(s_t,a_t) < 0$.</li>
+            <li>Ideally, this action should become <strong>less likely</strong>, since better options were available.</li>
+            <li>Using $A^\pi$ produces behavior matching this intuition (discourages the action).</li>
+            <li>Using $Q^\pi$ alone — or even $Q^\pi$ with a baseline — may incorrectly <strong>encourage</strong> the action instead.</li>
+          </ul>
+
+          <h4>Property 3 — advantage is a relative measure</h4>
+
+          <ul>
+            <li>For a given state $s$ and action $a$, it considers $Q^\pi(s,a)$ and evaluates whether $a$ takes the policy to a better or worse place, <strong>relative to</strong> $V^\pi(s)$.</li>
+            <li>This avoids penalizing an action for the policy currently being in a particularly bad state, and avoids crediting an action for the policy being in a good state.</li>
+            <li>Rationale: action $a$ can only affect the <em>future</em> trajectory, not how the policy arrived at the current state — so the action should be evaluated based on how it changes value going forward.</li>
+          </ul>
+
+          <h4>Example — same advantage, very different absolute values (good state vs. bad state)</h4>
+
+          <div class="cond">
+            <strong>Good state:</strong> $Q^\pi(s,a) = 110,\ V^\pi(s) = 100,\ A^\pi(s,a) = 10 \tag{3.4}$
+          </div>
+
+          <div class="cond">
+            <strong>Bad state:</strong> $Q^\pi(s,a) = -90,\ V^\pi(s) = -100,\ A^\pi(s,a) = 10 \tag{3.5}$
+          </div>
+
+          <ul>
+            <li>In both cases, action $a$ yields the same <strong>relative improvement of 10</strong>, captured identically by $A^\pi$ in both cases.</li>
+            <li>This equivalence would <strong>not</strong> be clear if only $Q^\pi(s,a)$ were considered.</li>
+          </ul>
+
+          <h3>Why the advantage captures long-term effects</h3>
+
+          <p>The advantage function is able to capture the long-term effects of an action, because it considers all future time steps (within the time horizon implicitly given by $\gamma$) and ignores the effects of all actions taken to date.</p>
+
+          <p>Schulman et al. present a similar interpretation in their paper <em>"Generalized Advantage Estimation."</em></p>
+
+          <p>Having established why $A^\pi(s,a)$ is a good reinforcing signal, the next step is to look at two ways of <strong>estimating</strong> it: n-step returns and Generalized Advantage Estimation (GAE).</p>
 
         </div>
       </div>
